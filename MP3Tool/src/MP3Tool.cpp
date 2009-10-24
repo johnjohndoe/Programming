@@ -1,3 +1,9 @@
+/*
+ * MP3Tool
+ * @author 20091024
+ */
+
+
 // MP3Tool.cpp : main project file.
 
 #include "stdafx.h"

@@ -1,2 +1,7 @@
 libs/*
 libs
+MP3Tool/bin/*
+MP3Tool/bin
+MP3Tool/prj/Debug/
+build/Programming.ncb
+build/Programming.suo
