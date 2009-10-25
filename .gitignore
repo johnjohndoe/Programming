@@ -1,7 +1,11 @@
 libs/*
 libs
-MP3Tool/bin/*
-MP3Tool/bin
-MP3Tool/prj/Debug/
 build/Programming.ncb
 build/Programming.suo
+*/prj/Debug/
+*/prj/Release/
+*.mp3
+*.exe
+*.ilk
+*.pdb
+*.dll
