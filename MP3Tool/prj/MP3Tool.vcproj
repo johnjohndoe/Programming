@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MP3Connector.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MP3Tool.cpp"
 				>
 			</File>
@@ -249,6 +253,10 @@
 					SubType="Designer"
 					>
 				</File>
+			</File>
+			<File
+				RelativePath="..\src\MP3Connector.h"
+				>
 			</File>
 			<File
 				RelativePath="..\src\resource.h"
