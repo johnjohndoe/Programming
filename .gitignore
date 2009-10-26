@@ -4,6 +4,7 @@ build/Programming.ncb
 build/Programming.suo
 */prj/Debug/
 */prj/Release/
+*.user
 *.mp3
 *.exe
 *.ilk
