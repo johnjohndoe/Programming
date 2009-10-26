@@ -4,10 +4,11 @@
 #include <iostream>
 #include <set>
 
-
+// Constructor
 MP3Connector::MP3Connector( void)
 {
 }
+// Destructor
 MP3Connector::~MP3Connector( void)
 {
 }
