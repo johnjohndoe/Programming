@@ -1,6 +1,10 @@
 #pragma once
+#if !defined ( FORM1_H )
+#define FORM1_H
+
 
 #include "MP3Connector.h"
+#include <map>
 
 namespace MP3Tool {
 
@@ -123,12 +127,40 @@ namespace MP3Tool {
 			{
 				myListBox->Items->Add( "// File read successfully.");
 				// Read metadata from file to MP3Connector
-				myMP3Connector->retrieveMetadata();
+				std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
 
+				// If not null
+				if( metadata)
+				{
+					std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
+					String ^ tempKey;
+					String ^ tempValue;
+					for ( mdIter; mdIter != metadata->end(); ++mdIter)
+					{
+						// @TODO Replace Fieldname with ID3_FrameID_Lut->getRealname()
+						tempKey = gcnew String( "Fieldname");
+						tempValue = gcnew String( (mdIter->second).c_str());
+						myListBox->Items->Add( String::Format( "{0}: {1}", tempKey, tempValue));
+					}
+				}
+
+				
+				
+				/*
+				// Get single fields
 				String ^ tempTitle = gcnew String( myMP3Connector->getTitle());
 				myListBox->Items->Add( String::Format( "Title: {0}", tempTitle));
 				String ^ tempAlbum = gcnew String( myMP3Connector->getAlbum());
 				myListBox->Items->Add( String::Format( "Album: {0}", tempAlbum));
+				String ^ tempArtist = gcnew String( myMP3Connector->getArtist());
+				myListBox->Items->Add( String::Format( "Lead artist: {0}", tempArtist));
+				String ^ tempTrack = gcnew String( myMP3Connector->getTrack());
+				myListBox->Items->Add( String::Format( "Track num: {0}", tempTrack));
+				String ^ tempYear = gcnew String( myMP3Connector->getYear());
+				myListBox->Items->Add( String::Format( "Year: {0}", tempYear));
+				String ^ tempGenre = gcnew String( myMP3Connector->getGenre());
+				myListBox->Items->Add( String::Format( "Genre: {0}", tempGenre));
+				*/
 			}
 			else
 			{
@@ -145,3 +177,4 @@ namespace MP3Tool {
 	};
 }
 
+#endif;

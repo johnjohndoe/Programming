@@ -2,21 +2,31 @@
 #include "MP3Connector.h"
 #include <id3/tag.h>
 #include <iostream>
-#include <set>
 
-// Constructor
+
 MP3Connector::MP3Connector( void)
 {
+	init();
 }
-// Destructor
 MP3Connector::~MP3Connector( void)
 {
 }
-
+void MP3Connector::init( void)
+{
+	interestingID3_FrameIDs = new std::set<ID3_FrameID>();
+	interestingID3_FrameIDs->insert( ID3FID_TITLE);
+	interestingID3_FrameIDs->insert( ID3FID_ALBUM);
+	interestingID3_FrameIDs->insert( ID3FID_LEADARTIST);	// Artist
+	interestingID3_FrameIDs->insert( ID3FID_YEAR);
+	interestingID3_FrameIDs->insert( ID3FID_TRACKNUM);
+	interestingID3_FrameIDs->insert( ID3FID_CONTENTTYPE);	// Genre
+}
 bool MP3Connector::getFile( const char * pPath)
 {
+	// Check if path is given
 	if( pPath)
 	{
+		// @TODO Check if file is accessible
 		myTag.Link( pPath);
 		return true;
 	}
@@ -24,33 +34,10 @@ bool MP3Connector::getFile( const char * pPath)
 		return false;
 	
 }
-void MP3Connector::retrieveTitle( void)
+std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 {
-	ID3_FrameID frameId = ID3FID_TITLE;
+	metadata = new std::map<ID3_FrameID, std::string>();
 	ID3_FieldID fieldId = ID3FN_TEXT;
-	
-	ID3_Frame * myFrame = myTag.Find( frameId);
-	if ( NULL != myFrame)
-	{
-		ID3_Field * myField = myFrame->GetField( fieldId);
-		if ( NULL != myField)
-		{
-			mTitle = myField->GetRawText();
-		}
-	}
-}
-void MP3Connector::retrieveMetadata( void)
-{
-	ID3_FrameID frameId = ID3FID_TITLE;
-	ID3_FieldID fieldId = ID3FN_TEXT;
-
-	std::set<ID3_FrameID> * myFrames = new std::set<ID3_FrameID>();
-	myFrames->insert( ID3FID_TITLE);
-	myFrames->insert( ID3FID_ALBUM);
-	myFrames->insert( ID3FID_LEADARTIST);
-	myFrames->insert( ID3FID_YEAR);
-	myFrames->insert( ID3FID_TRACKNUM);
-	//myFrames->insert( ID3FID_); Genre?
 
 	std::set<ID3_FieldID> * myFields = new std::set<ID3_FieldID>();
 	myFields->insert( ID3FN_TEXT);
@@ -62,20 +49,27 @@ void MP3Connector::retrieveMetadata( void)
 		if( NULL != myFrame)
 		{
 			ID3_Field * myField = myFrame->GetField( fieldId);
-			if ( NULL != myField)
+			// Check if current frame is part of the set aka a field of interest
+			std::set<ID3_FrameID>::iterator current = interestingID3_FrameIDs->find( myFrame->GetID());
+			if ( NULL != myField && current != interestingID3_FrameIDs->end())
 			{
+				metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
+				/*
 				if( myFrame->GetID() == ID3FID_TITLE)
 					mTitle = myField->GetRawText();
 				else if( myFrame->GetID() == ID3FID_ALBUM)
 					mAlbum = myField->GetRawText();
+				else if( myFrame->GetID() == ID3FID_LEADARTIST)
+					mArtist = myField->GetRawText();
+				else if( myFrame->GetID() == ID3FID_YEAR)
+					mYear = myField->GetRawText();
+				else if( myFrame->GetID() == ID3FID_TRACKNUM)
+					mTrack = myField->GetRawText();
+				else if( myFrame->GetID() == ID3FID_CONTENTTYPE)
+					mGenre = myField->GetRawText();
+				*/
 			}
 		}
 	}
+	return metadata;
 }
-
-const char *MP3Connector::getTitle() const	{	return mTitle;	}
-const char *MP3Connector::getAuthor() const	{	return mAuthor.c_str();	}
-const char *MP3Connector::getAlbum() const	{	return mAlbum.c_str();	}
-const char *MP3Connector::getGenre() const	{	return mGenre.c_str();	}
-int MP3Connector::getYear() const			{	return mYear;			}
-int MP3Connector::getTrack() const			{	return mTrack;			}

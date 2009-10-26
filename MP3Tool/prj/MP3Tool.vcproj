@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ID3_FrameID_LUT.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MP3Connector.cpp"
 				>
 			</File>
@@ -253,6 +257,10 @@
 					SubType="Designer"
 					>
 				</File>
+			</File>
+			<File
+				RelativePath="..\src\ID3_FrameID_LUT.h"
+				>
 			</File>
 			<File
 				RelativePath="..\src\MP3Connector.h"

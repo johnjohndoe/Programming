@@ -38,7 +38,11 @@ int main(array<System::String ^> ^args)
 			const char * text;
 			if( NULL != myField)
 			{
+				ID3_FieldID fieldId = myField->GetID();
+				ID3_FrameID frameId = myFrame->GetID();
 				text = myField->GetRawText();
+				if( myField->GetID() == ID3FID_CONTENTTYPE)
+					text = myField->GetRawText();
 				//ID3_TextEnc enc = myField->GetEncoding();
 			}
 		}

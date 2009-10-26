@@ -1,14 +1,19 @@
 #pragma once
+#if !defined ( MP3CONNECTOR_H )
+#define MP3CONNECTOR_H
+
 
 #include "id3/tag.h"
 #include <string>
+#include <set>
+#include <map>
 
 /**
  * \file	src\MP3Connector.h
  *
  * \brief	Class to access the MP3 file.
  * \author	Tobias Preuss
- * \date	20091026_0025
+ * \date	20091026_2119
  * \see		http://id3lib.sourceforge.net/api/index.html
  *
 **/
@@ -28,12 +33,7 @@ public:
 	**/
 	~MP3Connector( void);
 
-	const char * getTitle( void) const;
-	const char * getAuthor( void) const;
-	const char * getAlbum( void) const;
-	const char * getGenre( void) const;
-	int getYear( void) const;
-	int getTrack( void) const;
+	void init( void);
 
 	/**
 	 * \fn						bool getFile( const char * pPath)
@@ -42,17 +42,22 @@ public:
 	 * \return					true if it succeeds, false if it fails. 
 	**/
 	bool getFile( const char * pPath);
-	
-	void retrieveTitle( void);
-	void retrieveMetadata( void);
+
+	/**
+	 * \fn	std::map<ID3_FrameID, std::string> * getMetadata( void)
+	 * \brief	Gets the metadata. 
+	 * \return	Returns the metadata or null.
+	**/
+	std::map<ID3_FrameID, std::string> * getMetadata( void);
 
 private:
-	const char * mTitle;
-	std::string mAuthor;
-	std::string mAlbum;
-	std::string mGenre;
-	int mYear;
-	int mTrack;
 
+	// \brief Handler for the mp3 file
 	ID3_Tag myTag;
+	// \brief Container stores frame ids of the metadata of interest
+	std::set<ID3_FrameID> * interestingID3_FrameIDs;
+	// \brief Container stores frame id as key and its value
+	std::map<ID3_FrameID, std::string> * metadata;
 };
+
+#endif;
