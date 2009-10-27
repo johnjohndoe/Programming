@@ -122,6 +122,7 @@ namespace MP3Tool {
 			myListBox->Items->Clear();
 
 			// @TODO Substitute with conversion System::String -> const char *
+			//const char * textFromMyTextBox = netstr2cppstr( myTextBox->Text);
 			const char * textFromMyTextBox = "..\\data\\song.mp3";
 
 			if( myMP3Connector->getFile( textFromMyTextBox))
@@ -170,11 +171,10 @@ namespace MP3Tool {
 			}
 		}
 		// @see: http://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.stringtohglobaluni.aspx
-		// @TODO Status: not working yet; test in empty CLR project
 		const char * netstr2cppstr( System::String ^ managedString)
 		{
-			const char * stringPointer = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalUni( managedString).ToPointer();
-			return stringPointer;
+			std::string out = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer();
+			return out.c_str();
 		}
 	};
 }
