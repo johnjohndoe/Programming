@@ -1,6 +1,9 @@
 #pragma once
-
+#if !defined ( FORM1_H)
+#define FORM1_H
 #include "MP3Connector.h"
+#include "MP3Controller.h"
+// #include <Stream>;
 
 namespace MP3Tool {
 
@@ -35,6 +38,9 @@ namespace MP3Tool {
 			myMP3Connector = new MP3Connector();
 		}
 
+
+		
+
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -49,6 +55,9 @@ namespace MP3Tool {
 	private: System::Windows::Forms::Button^  btGetMp3Information;
 	private: System::Windows::Forms::ListBox^  myListBox;
 	private: System::Windows::Forms::TextBox^  myTextBox;
+	private: System::Windows::Forms::Button^  btLoadFiles;
+	public: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+
 	protected: 
 
 	private:
@@ -67,6 +76,8 @@ namespace MP3Tool {
 			this->btGetMp3Information = (gcnew System::Windows::Forms::Button());
 			this->myListBox = (gcnew System::Windows::Forms::ListBox());
 			this->myTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->btLoadFiles = (gcnew System::Windows::Forms::Button());
+			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SuspendLayout();
 			// 
 			// btGetMp3Information
@@ -91,14 +102,29 @@ namespace MP3Tool {
 			// 
 			this->myTextBox->Location = System::Drawing::Point(12, 12);
 			this->myTextBox->Name = L"myTextBox";
-			this->myTextBox->Size = System::Drawing::Size(612, 20);
+			this->myTextBox->Size = System::Drawing::Size(504, 20);
 			this->myTextBox->TabIndex = 2;
+			// 
+			// btLoadFiles
+			// 
+			this->btLoadFiles->Location = System::Drawing::Point(549, 10);
+			this->btLoadFiles->Name = L"btLoadFiles";
+			this->btLoadFiles->Size = System::Drawing::Size(75, 23);
+			this->btLoadFiles->TabIndex = 3;
+			this->btLoadFiles->Text = L"...";
+			this->btLoadFiles->UseVisualStyleBackColor = true;
+			this->btLoadFiles->Click += gcnew System::EventHandler(this, &Form1::btLoadFiles_Click);
+			// 
+			// openFileDialog1
+			// 
+			this->openFileDialog1->FileName = L"openFileDialog1";
 			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(636, 273);
+			this->Controls->Add(this->btLoadFiles);
 			this->Controls->Add(this->myTextBox);
 			this->Controls->Add(this->myListBox);
 			this->Controls->Add(this->btGetMp3Information);
@@ -142,6 +168,31 @@ namespace MP3Tool {
 			const char * stringPointer = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalUni( managedString).ToPointer();
 			return stringPointer;
 		}
-	};
+
+private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 //System::Windows::Forms::DialogResult dr;
+
+			 openFileDialog1 = gcnew OpenFileDialog;
+			 openFileDialog1->InitialDirectory = "c:\\";
+			 openFileDialog1->Filter = "mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+			 openFileDialog1->FilterIndex =	2; // Muss auf 1 wenn MP3 die Standartauswahl sein soll.
+			 openFileDialog1->RestoreDirectory = true;
+			 openFileDialog1->Multiselect = true;
+
+			 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK )
+			 {
+				 // erzeugt aus dem FileNames-Array ein IEnumerator
+				 System::Collections::IEnumerator^ a_enumerator = openFileDialog1->FileNames->GetEnumerator();
+				 while (a_enumerator->MoveNext())
+				 {
+					// iteriert durch das Array und gibt jeden Eintrag in die ItemLIst aus
+					 // Muss in den Controller ausgelagert werden
+					 myListBox->Items->Add(a_enumerator->Current);
+				 }
+			 }
+		}
+};
 }
 
+#endif

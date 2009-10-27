@@ -8,6 +8,13 @@
 MP3Connector::MP3Connector( void)
 {
 }
+
+// Constructor
+MP3Connector::MP3Connector( const char * temp_String)
+{
+	this->getFile(temp_String);
+}
+
 // Destructor
 MP3Connector::~MP3Connector( void)
 {

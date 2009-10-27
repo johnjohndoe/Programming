@@ -21,6 +21,7 @@ public:
 	 * \brief	Default constructor. 
 	**/
 	MP3Connector( void);
+	MP3Connector( const char * temp_String);
 
 	/**
 	 * \fn		~MP3Connector( void)
