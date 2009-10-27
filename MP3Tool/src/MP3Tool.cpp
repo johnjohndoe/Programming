@@ -9,6 +9,7 @@
 
 #include "stdafx.h"
 #include "Form1.h"
+#include "MP3Controller.h"
 
 using namespace MP3Tool;
 
@@ -20,7 +21,12 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 
 	// Create the main window and run it
-	Application::Run(gcnew Form1());
+
+	Form1^ myForm = gcnew Form1();
+
+	MP3Controller^ myController = gcnew MP3Controller(myForm);
+
+	Application::Run(myForm);
 
 	// Simple library test: debug variable 'text'
 /*

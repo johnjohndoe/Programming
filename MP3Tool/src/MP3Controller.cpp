@@ -9,7 +9,7 @@ MP3Controller::MP3Controller(void)
 }
 
 
-MP3Controller::MP3Controller(MP3Tool::Form1^ myForm)
+MP3Controller::MP3Controller(Form1^ myForm)
 {	
 	
 }
