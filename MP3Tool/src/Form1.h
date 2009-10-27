@@ -2,9 +2,10 @@
 #if !defined ( FORM1_H )
 #define FORM1_H
 
-
-#include "MP3Connector.h"
 #include <map>
+#include "MP3Connector.h"
+#include "ID3_FrameID_LUT.h"
+
 
 namespace MP3Tool {
 
@@ -135,10 +136,11 @@ namespace MP3Tool {
 					std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
 					String ^ tempKey;
 					String ^ tempValue;
+					ID3_FrameID_LUT * myLUT = new ID3_FrameID_LUT();
 					for ( mdIter; mdIter != metadata->end(); ++mdIter)
 					{
-						// @TODO Replace Fieldname with ID3_FrameID_Lut->getRealname()
-						tempKey = gcnew String( "Fieldname");
+						tempKey = gcnew String( myLUT->getRealname( mdIter->first));
+						// @TODO Translate genre from number into string
 						tempValue = gcnew String( (mdIter->second).c_str());
 						myListBox->Items->Add( String::Format( "{0}: {1}", tempKey, tempValue));
 					}

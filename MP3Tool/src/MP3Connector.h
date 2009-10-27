@@ -13,7 +13,7 @@
  *
  * \brief	Class to access the MP3 file.
  * \author	Tobias Preuss
- * \date	20091026_2119
+ * \date	20091027
  * \see		http://id3lib.sourceforge.net/api/index.html
  *
 **/
@@ -21,19 +21,12 @@ class MP3Connector
 {
 public:
 
-	/**
-	 * \fn		MP3Connector( void)
-	 * \brief	Default constructor. 
-	**/
+
+	/// \brief	Default constructor. 
 	MP3Connector( void);
 
-	/**
-	 * \fn		~MP3Connector( void)
-	 * \brief	Destructor. 
-	**/
+	/// \brief	Destructor.
 	~MP3Connector( void);
-
-	void init( void);
 
 	/**
 	 * \fn						bool getFile( const char * pPath)
@@ -52,11 +45,11 @@ public:
 
 private:
 
-	// \brief Handler for the mp3 file
+	/// \brief Handler for the mp3 file
 	ID3_Tag myTag;
-	// \brief Container stores frame ids of the metadata of interest
+	/// \brief Container stores frame ids of the metadata of interest
 	std::set<ID3_FrameID> * interestingID3_FrameIDs;
-	// \brief Container stores frame id as key and its value
+	/// \brief Container stores frame id as key and its value
 	std::map<ID3_FrameID, std::string> * metadata;
 };
 
