@@ -1,11 +1,13 @@
 #pragma once
 #if !defined ( FORM1_H )
 #define FORM1_H
+
+
 #include <map>
+#include <string>
 #include "MP3Connector.h"
-#include "MP3Container.h"
 #include "ID3_FrameID_LUT.h"
-//#include <msclr/marshal_cppstd.h> 
+
 
 namespace MP3Tool {
 
@@ -34,9 +36,6 @@ namespace MP3Tool {
 		Form1(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
 			myMP3Connector = new MP3Connector();
 		}
 
@@ -276,9 +275,8 @@ namespace MP3Tool {
 			// Remove all items before adding new
 			myListBox->Items->Clear();
 
-			// @TODO Substitute with conversion System::String -> const char *
-			//const char * textFromMyTextBox = netstr2cppstr( myTextBox->Text);
-			const char * textFromMyTextBox = "..\\data\\song.mp3";
+			std::string path = netstr2cppstr( myTextBox->Text);
+			const char * textFromMyTextBox = path.c_str();
 
 			if( myMP3Connector->getFile( textFromMyTextBox))
 			{
@@ -301,21 +299,6 @@ namespace MP3Tool {
 						myListBox->Items->Add( String::Format( "{0}: {1}", tempKey, tempValue));
 					}
 				}
-				/*
-				// Get single fields
-				String ^ tempTitle = gcnew String( myMP3Connector->getTitle());
-				myListBox->Items->Add( String::Format( "Title: {0}", tempTitle));
-				String ^ tempAlbum = gcnew String( myMP3Connector->getAlbum());
-				myListBox->Items->Add( String::Format( "Album: {0}", tempAlbum));
-				String ^ tempArtist = gcnew String( myMP3Connector->getArtist());
-				myListBox->Items->Add( String::Format( "Lead artist: {0}", tempArtist));
-				String ^ tempTrack = gcnew String( myMP3Connector->getTrack());
-				myListBox->Items->Add( String::Format( "Track num: {0}", tempTrack));
-				String ^ tempYear = gcnew String( myMP3Connector->getYear());
-				myListBox->Items->Add( String::Format( "Year: {0}", tempYear));
-				String ^ tempGenre = gcnew String( myMP3Connector->getGenre());
-				myListBox->Items->Add( String::Format( "Genre: {0}", tempGenre));
-				*/
 			}
 			else
 			{
@@ -323,19 +306,16 @@ namespace MP3Tool {
 			}
 		}
 		// @see: http://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.stringtohglobaluni.aspx
-		const char * netstr2cppstr( System::String ^ managedString)
+		std::string netstr2cppstr( System::String ^ managedString)
 		{
-			IntPtr pstr = System::Runtime::InteropServices::Marshal::StringToHGlobalUni( managedString );
-			if( pstr != IntPtr::Zero )
-			{
-			char* punmanagedString = reinterpret_cast<char*>(static_cast<void*>(pstr));
-			System::Runtime::InteropServices::Marshal::FreeHGlobal( pstr ); // Do not forget to free the memory.
-			return punmanagedString;
-		}
+			std::string out = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer();
+			return out;
 		}
 
 private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 myListBox->Items->Clear();
+
 			 //System::Windows::Forms::DialogResult dr;
 
 			 openFileDialog1 = gcnew OpenFileDialog;
@@ -351,26 +331,23 @@ private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventAr
 				 int zaehler = 0;
 //				 myArray = gcnew cli::array<MP3Connector*>(openFileDialog1->FileNames->Length);
 //				 myFilenameArray = gcnew cli::array<String^>(openFileDialog1->FileNames->Length);
-				 while (a_enumerator->MoveNext())
+				 while ( a_enumerator->MoveNext())
 				 {
 					// iteriert durch das Array und gibt jeden Eintrag in die ItemLIst aus
 					 // Muss in den Controller ausgelagert werden
-					 myListBox->Items->Add(a_enumerator->Current);
-
+					 myListBox->Items->Add( a_enumerator->Current);
+					 myTextBox->Text = (String ^) a_enumerator->Current;
 				 }
 			 }
 		}
 private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 
 			 String ^ currentItem = myListBox->SelectedItem->ToString();
-			 const char * textFromMyTextBox = netstr2cppstr( currentItem);
-			 //const char * textFromMyTextBox = netstr2cppstr( msclr::interop::marshal_as<std::string>(files[i]->FullName) );
+			 myTextBox->Text = myListBox->SelectedItem->ToString();
+			 std::string path = netstr2cppstr( currentItem);
+			 const char * textFromMyTextBox = path.c_str();			 
 			 
-			 
-			 // @TODO getFile or netstr2cppstr does not work yet
-			 //if( myMP3Connector->getFile( "..\\data\\song.mp3"))
-			
-			if( myMP3Connector->getFile( textFromMyTextBox))
+			 if( myMP3Connector->getFile( textFromMyTextBox))
 			 {
 				 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
 				 // If not null
@@ -404,5 +381,5 @@ private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, Sy
 			} // eo fn
 
 	}; // eo Form1 class
-} // eo namesspace MP3Tool
+} // eo namespace MP3Tool
 #endif
