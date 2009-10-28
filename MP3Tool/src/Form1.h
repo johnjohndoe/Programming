@@ -3,7 +3,7 @@
 #define FORM1_H
 #include <map>
 #include "MP3Connector.h"
-
+#include "MP3Container.h"
 #include "ID3_FrameID_LUT.h"
 
 namespace MP3Tool {
@@ -57,11 +57,8 @@ namespace MP3Tool {
 	private: System::Windows::Forms::ListBox^  myListBox;
 	private: System::Windows::Forms::TextBox^  myTextBox;
 	private: System::Windows::Forms::Button^  btLoadFiles;
-	public: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::Label^  lb_Interpret;
-	public: 
-
-	public: 
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Label^  lb_Album;
 
@@ -74,11 +71,6 @@ namespace MP3Tool {
 	private: System::Windows::Forms::TextBox^  tb_Genre;
 	private: System::Windows::Forms::TextBox^  tb_Track;
 	private: System::Windows::Forms::TextBox^  tb_Year;
-
-
-
-
-	protected: 
 
 	private:
 		/// <summary>
@@ -308,9 +300,6 @@ namespace MP3Tool {
 						myListBox->Items->Add( String::Format( "{0}: {1}", tempKey, tempValue));
 					}
 				}
-
-				
-				
 				/*
 				// Get single fields
 				String ^ tempTitle = gcnew String( myMP3Connector->getTitle());
@@ -349,16 +338,31 @@ private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventAr
 			 openFileDialog1->FilterIndex =	2; // Muss auf 1 wenn MP3 die Standartauswahl sein soll.
 			 openFileDialog1->RestoreDirectory = true;
 			 openFileDialog1->Multiselect = true;
-
+//			 myMap = new std::map<std::string, MP3Connector>();
+			 
 			 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK )
 			 {
 				 // erzeugt aus dem FileNames-Array ein IEnumerator
 				 System::Collections::IEnumerator^ a_enumerator = openFileDialog1->FileNames->GetEnumerator();
+				 int zaehler = 0;
+//				 myArray = gcnew cli::array<MP3Connector*>(openFileDialog1->FileNames->Length);
+//				 myFilenameArray = gcnew cli::array<String^>(openFileDialog1->FileNames->Length);
 				 while (a_enumerator->MoveNext())
 				 {
 					// iteriert durch das Array und gibt jeden Eintrag in die ItemLIst aus
 					 // Muss in den Controller ausgelagert werden
+
+					 MP3Connector* tempConn = new MP3Connector();
+					 tempConn->getFile( netstr2cppstr((System::String^)a_enumerator->Current));
+					 tempConn->getMetadata();
+					 MP3Container^ myCon = gcnew MP3Container();
+					 myCon->insertItem( netstr2cppstr((System::String^)a_enumerator->Current), *tempConn);
+
+					 zaehler++;
+
+					 tb_Track->Text = zaehler.ToString();
 					 myListBox->Items->Add(a_enumerator->Current);
+
 				 }
 			 }
 		}
