@@ -364,14 +364,44 @@ private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventAr
 		}
 private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 
-			 // Test -> wird wird beim markieren eines Eintrages aus myListBox der eintrag genommen und
-			 // in das Feld tb-Album übertragen.
-			 // TODO: auslesen der Datei, nachschauen in der noch zu erstellenen map<String dateiname, MP3Connector myConn>, 
-			 // das passende MP3Connector-Objekt auslesen und die werte in die Passenden Felder eintragen.
+			 String ^ currentItem = myListBox->SelectedItem->ToString();
+			 const char * textFromMyTextBox = netstr2cppstr( currentItem);
+			 
+			 // @TODO getFile or netstr2cppstr does not work yet
+			 if( myMP3Connector->getFile( "..\\data\\song.mp3"))
+			 //if( myMP3Connector->getFile( textFromMyTextBox))
+			 {
+				 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
+				 // If not null
+				 if( metadata)
+					{
+						std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
+						String ^ tempKey;
+						String ^ tempValue;
+						ID3_FrameID_LUT * myLUT = new ID3_FrameID_LUT();
+						for ( mdIter; mdIter != metadata->end(); ++mdIter)
+						{
+							tempKey = gcnew String( myLUT->getRealname( mdIter->first));
+							// @TODO Translate genre from number into string
+							tempValue = gcnew String( (mdIter->second).c_str());
 
-			 String ^ temp_string = myListBox->SelectedItem->ToString();
-			 tb_Album->Text = temp_string;
-		 }
-};
-}
+							if( mdIter->first == ID3FID_ALBUM)
+								tb_Album->Text = tempValue;
+							if( mdIter->first == ID3FID_LEADARTIST)
+								tb_Interpret->Text = tempValue;
+							if( mdIter->first == ID3FID_TRACKNUM)
+								tb_Track->Text = tempValue;
+							if( mdIter->first == ID3FID_CONTENTTYPE)
+								tb_Genre->Text = tempValue;
+							if( mdIter->first == ID3FID_YEAR)
+								tb_Year->Text = tempValue;
+							if( mdIter->first == ID3FID_TITLE)
+								tb_Title->Text = tempValue;
+						}
+					}
+				 }
+			} // eo fn
+
+	}; // eo Form1 class
+} // eo namesspace MP3Tool
 #endif
