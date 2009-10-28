@@ -13,7 +13,7 @@
  *
  * \brief	Class to access the MP3 file.
  * \author	Tobias Preuss
- * \date	20091027
+ * \date	20091028
  * \see		http://id3lib.sourceforge.net/api/index.html
  *
 **/
@@ -51,6 +51,8 @@ private:
 	std::set<ID3_FrameID> * interestingID3_FrameIDs;
 	/// \brief Container stores frame id as key and its value
 	std::map<ID3_FrameID, std::string> * metadata;
+	/// \brief Removes the round brackets surrounding the text (array index)
+	unsigned int removeBrackets( const char * text);
 };
 
 #endif;
