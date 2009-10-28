@@ -323,15 +323,22 @@ namespace MP3Tool {
 			}
 		}
 		// @see: http://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.stringtohglobaluni.aspx
-		const char * netstr2cppstr( System::String ^ managedString)
+		/*const char * netstr2cppstr( System::String ^ managedString)
 		{
-			IntPtr pstr = System::Runtime::InteropServices::Marshal::StringToHGlobalUni( managedString );
+			IntPtr pstr =(char*)( System::Runtime::InteropServices::Marshal::StringToHGlobalUni( managedString ).ToPointer);
 			if( pstr != IntPtr::Zero )
 			{
 			char* punmanagedString = reinterpret_cast<char*>(static_cast<void*>(pstr));
 			System::Runtime::InteropServices::Marshal::FreeHGlobal( pstr ); // Do not forget to free the memory.
 			return punmanagedString;
-		}
+		}*/
+
+		const char * netstr2cppstr( System::String ^ managedString)
+		{
+			std::string out = (char *)(System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer());
+			return out.c_str();
+		
+
 		}
 
 private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -363,14 +370,9 @@ private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventAr
 private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 
 			 String ^ currentItem = myListBox->SelectedItem->ToString();
-			 const char * textFromMyTextBox = netstr2cppstr( currentItem);
-			 //const char * textFromMyTextBox = netstr2cppstr( msclr::interop::marshal_as<std::string>(files[i]->FullName) );
-			 
-			 
-			 // @TODO getFile or netstr2cppstr does not work yet
-			 //if( myMP3Connector->getFile( "..\\data\\song.mp3"))
-			
-			if( myMP3Connector->getFile( textFromMyTextBox))
+			 std::string * textFromMyTextBox = new std::string(netstr2cppstr( currentItem));
+			 			 
+			 if( myMP3Connector->getFile(textFromMyTextBox->c_str()))
 			 {
 				 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
 				 // If not null
