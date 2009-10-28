@@ -5,6 +5,7 @@
 #include "MP3Connector.h"
 #include "MP3Container.h"
 #include "ID3_FrameID_LUT.h"
+//#include <msclr/marshal_cppstd.h> 
 
 namespace MP3Tool {
 
@@ -324,8 +325,13 @@ namespace MP3Tool {
 		// @see: http://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.stringtohglobaluni.aspx
 		const char * netstr2cppstr( System::String ^ managedString)
 		{
-			std::string out = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer();
-			return out.c_str();
+			IntPtr pstr = System::Runtime::InteropServices::Marshal::StringToHGlobalUni( managedString );
+			if( pstr != IntPtr::Zero )
+			{
+			char* punmanagedString = reinterpret_cast<char*>(static_cast<void*>(pstr));
+			System::Runtime::InteropServices::Marshal::FreeHGlobal( pstr ); // Do not forget to free the memory.
+			return punmanagedString;
+		}
 		}
 
 private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -338,8 +344,6 @@ private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventAr
 			 openFileDialog1->FilterIndex =	2; // Muss auf 1 wenn MP3 die Standartauswahl sein soll.
 			 openFileDialog1->RestoreDirectory = true;
 			 openFileDialog1->Multiselect = true;
-//			 myMap = new std::map<std::string, MP3Connector>();
-			 
 			 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK )
 			 {
 				 // erzeugt aus dem FileNames-Array ein IEnumerator
@@ -351,16 +355,6 @@ private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventAr
 				 {
 					// iteriert durch das Array und gibt jeden Eintrag in die ItemLIst aus
 					 // Muss in den Controller ausgelagert werden
-
-					 MP3Connector* tempConn = new MP3Connector();
-					 tempConn->getFile( netstr2cppstr((System::String^)a_enumerator->Current));
-					 tempConn->getMetadata();
-					 MP3Container^ myCon = gcnew MP3Container();
-					 myCon->insertItem( netstr2cppstr((System::String^)a_enumerator->Current), *tempConn);
-
-					 zaehler++;
-
-					 tb_Track->Text = zaehler.ToString();
 					 myListBox->Items->Add(a_enumerator->Current);
 
 				 }
@@ -370,10 +364,13 @@ private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, Sy
 
 			 String ^ currentItem = myListBox->SelectedItem->ToString();
 			 const char * textFromMyTextBox = netstr2cppstr( currentItem);
+			 //const char * textFromMyTextBox = netstr2cppstr( msclr::interop::marshal_as<std::string>(files[i]->FullName) );
+			 
 			 
 			 // @TODO getFile or netstr2cppstr does not work yet
-			 if( myMP3Connector->getFile( "..\\data\\song.mp3"))
-			 //if( myMP3Connector->getFile( textFromMyTextBox))
+			 //if( myMP3Connector->getFile( "..\\data\\song.mp3"))
+			
+			if( myMP3Connector->getFile( textFromMyTextBox))
 			 {
 				 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
 				 // If not null
