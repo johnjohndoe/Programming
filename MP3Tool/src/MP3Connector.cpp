@@ -2,7 +2,7 @@
 #include "MP3Connector.h"
 #include <id3/tag.h>
 #include <iostream>
-
+#include <sstream>
 
 MP3Connector::MP3Connector( void)
 {
@@ -50,9 +50,27 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 			std::set<ID3_FrameID>::iterator current = interestingID3_FrameIDs->find( myFrame->GetID());
 			if ( NULL != myField && current != interestingID3_FrameIDs->end())
 			{
-				metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
+				// Genre needs to be converted
+				if( myFrame->GetID() == ID3FID_CONTENTTYPE)
+					metadata->insert( std::make_pair( myFrame->GetID(), ID3_v1_genre_description[ removeBrackets( myField->GetRawText())] ));
+				// All other tags
+				else
+					metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
 			}
 		}
 	}
 	return metadata;
+}
+unsigned int MP3Connector::removeBrackets( const char * text)
+{
+	std::string s = text;
+	if( s[0] == '(')
+		s = s.substr(1);
+	if( s[s.length()-1] == ')')
+		s = s.substr( 0, s.length()-1);
+	std::stringstream ss;
+	ss << s;
+	unsigned int i;
+	ss >> i;
+	return i;
 }
