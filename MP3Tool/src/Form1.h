@@ -114,6 +114,7 @@ namespace MP3Tool {
 			// myListBox
 			// 
 			this->myListBox->FormattingEnabled = true;
+			this->myListBox->HorizontalScrollbar = true;
 			this->myListBox->Location = System::Drawing::Point(12, 38);
 			this->myListBox->Name = L"myListBox";
 			this->myListBox->Size = System::Drawing::Size(314, 186);
@@ -323,13 +324,19 @@ namespace MP3Tool {
 			 }
 
 	private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+				 int selection = myListBox->SelectedIndex;
+				 int max = myListBox->Items->Count;
+
+				 // Stop handler when selected item is invalid
+				 if( selection > max || selection < 0)
+				 return;
 
 				 String ^ currentItem = myListBox->SelectedItem->ToString();
 				 std::string path = netstr2cppstr( currentItem);
 				 const char * textFromMyTextBox = path.c_str();	
 				 myMP3Connector = new MP3Connector();
 
-				 if( myMP3Connector->getFile(textFromMyTextBox))
+				 if( myMP3Connector->getFile( textFromMyTextBox))
 
 				 {
 					 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
@@ -343,7 +350,6 @@ namespace MP3Tool {
 						 for ( mdIter; mdIter != metadata->end(); ++mdIter)
 						 {
 							 tempKey = gcnew String( myLUT->getRealname( mdIter->first));
-							 // @TODO Translate genre from number into string
 							 tempValue = gcnew String( (mdIter->second).c_str());
 
 							 if( mdIter->first == ID3FID_ALBUM)
