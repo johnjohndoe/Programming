@@ -50,9 +50,18 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 			std::set<ID3_FrameID>::iterator current = interestingID3_FrameIDs->find( myFrame->GetID());
 			if ( NULL != myField && current != interestingID3_FrameIDs->end())
 			{
+				ID3_FrameID fid = myFrame->GetID();
+				ID3_FieldID id = myField->GetID();
 				// Genre needs to be converted
-				if( myFrame->GetID() == ID3FID_CONTENTTYPE)
-					metadata->insert( std::make_pair( myFrame->GetID(), ID3_v1_genre_description[ removeBrackets( myField->GetRawText())] ));
+				if( myFrame->GetID() == ID3FID_CONTENTTYPE) // ID3_FrameID = 32
+				{
+					std::string genre = myField->GetRawText();
+					// ID3V1 genre has is an int surrounded by round brackets; ID3V2 genre is text
+					if( genre[0] == '(')
+						metadata->insert( std::make_pair( myFrame->GetID(), ID3_v1_genre_description[ removeBrackets( genre.c_str())] ));
+					else
+						metadata->insert( std::make_pair( myFrame->GetID(), genre));
+				}
 				// All other tags
 				else
 					metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
