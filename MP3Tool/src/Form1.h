@@ -1,11 +1,13 @@
 #pragma once
 #if !defined ( FORM1_H )
 #define FORM1_H
+
+
 #include <map>
+#include <string>
 #include "MP3Connector.h"
-#include "MP3Container.h"
 #include "ID3_FrameID_LUT.h"
-//#include <msclr/marshal_cppstd.h> 
+
 
 namespace MP3Tool {
 
@@ -34,14 +36,11 @@ namespace MP3Tool {
 		Form1(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
 			myMP3Connector = new MP3Connector();
 		}
 
 
-		
+
 
 	protected:
 		/// <summary>
@@ -54,9 +53,9 @@ namespace MP3Tool {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Button^  btGetMp3Information;
+
 	private: System::Windows::Forms::ListBox^  myListBox;
-	private: System::Windows::Forms::TextBox^  myTextBox;
+
 	private: System::Windows::Forms::Button^  btLoadFiles;
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::Label^  lb_Interpret;
@@ -72,6 +71,12 @@ namespace MP3Tool {
 	private: System::Windows::Forms::TextBox^  tb_Genre;
 	private: System::Windows::Forms::TextBox^  tb_Track;
 	private: System::Windows::Forms::TextBox^  tb_Year;
+	private: System::Windows::Forms::Label^  lb_countText;
+	private: System::Windows::Forms::Label^  lb_count;
+	private: System::Windows::Forms::Label^  label1;
+
+
+
 
 	private:
 		/// <summary>
@@ -79,16 +84,14 @@ namespace MP3Tool {
 		/// </summary>
 		System::ComponentModel::Container ^components;
 
-	#pragma region Windows Form Designer generated code
+#pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->btGetMp3Information = (gcnew System::Windows::Forms::Button());
 			this->myListBox = (gcnew System::Windows::Forms::ListBox());
-			this->myTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->btLoadFiles = (gcnew System::Windows::Forms::Button());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->lb_Interpret = (gcnew System::Windows::Forms::Label());
@@ -103,41 +106,27 @@ namespace MP3Tool {
 			this->tb_Genre = (gcnew System::Windows::Forms::TextBox());
 			this->tb_Track = (gcnew System::Windows::Forms::TextBox());
 			this->tb_Year = (gcnew System::Windows::Forms::TextBox());
+			this->lb_countText = (gcnew System::Windows::Forms::Label());
+			this->lb_count = (gcnew System::Windows::Forms::Label());
+			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
-			// 
-			// btGetMp3Information
-			// 
-			this->btGetMp3Information->Location = System::Drawing::Point(12, 238);
-			this->btGetMp3Information->Name = L"btGetMp3Information";
-			this->btGetMp3Information->Size = System::Drawing::Size(612, 23);
-			this->btGetMp3Information->TabIndex = 0;
-			this->btGetMp3Information->Text = L"Get MP3 information";
-			this->btGetMp3Information->UseVisualStyleBackColor = true;
-			this->btGetMp3Information->Click += gcnew System::EventHandler(this, &Form1::btGetMp3Information_Click);
 			// 
 			// myListBox
 			// 
 			this->myListBox->FormattingEnabled = true;
-			this->myListBox->Location = System::Drawing::Point(12, 51);
+			this->myListBox->Location = System::Drawing::Point(12, 38);
 			this->myListBox->Name = L"myListBox";
-			this->myListBox->Size = System::Drawing::Size(314, 173);
+			this->myListBox->Size = System::Drawing::Size(314, 186);
 			this->myListBox->TabIndex = 1;
 			this->myListBox->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::myListBox_SelectedIndexChanged);
 			// 
-			// myTextBox
-			// 
-			this->myTextBox->Location = System::Drawing::Point(12, 12);
-			this->myTextBox->Name = L"myTextBox";
-			this->myTextBox->Size = System::Drawing::Size(504, 20);
-			this->myTextBox->TabIndex = 2;
-			// 
 			// btLoadFiles
 			// 
-			this->btLoadFiles->Location = System::Drawing::Point(549, 10);
+			this->btLoadFiles->Location = System::Drawing::Point(352, 10);
 			this->btLoadFiles->Name = L"btLoadFiles";
-			this->btLoadFiles->Size = System::Drawing::Size(75, 23);
+			this->btLoadFiles->Size = System::Drawing::Size(272, 23);
 			this->btLoadFiles->TabIndex = 3;
-			this->btLoadFiles->Text = L"...";
+			this->btLoadFiles->Text = L"Open MP3\'s";
 			this->btLoadFiles->UseVisualStyleBackColor = true;
 			this->btLoadFiles->Click += gcnew System::EventHandler(this, &Form1::btLoadFiles_Click);
 			// 
@@ -222,7 +211,7 @@ namespace MP3Tool {
 			// 
 			// tb_Genre
 			// 
-			this->tb_Genre->Location = System::Drawing::Point(398, 125);
+			this->tb_Genre->Location = System::Drawing::Point(398, 126);
 			this->tb_Genre->Name = L"tb_Genre";
 			this->tb_Genre->Size = System::Drawing::Size(226, 20);
 			this->tb_Genre->TabIndex = 5;
@@ -241,11 +230,41 @@ namespace MP3Tool {
 			this->tb_Year->Size = System::Drawing::Size(226, 20);
 			this->tb_Year->TabIndex = 5;
 			// 
+			// lb_countText
+			// 
+			this->lb_countText->AutoSize = true;
+			this->lb_countText->Location = System::Drawing::Point(349, 210);
+			this->lb_countText->Name = L"lb_countText";
+			this->lb_countText->Size = System::Drawing::Size(97, 13);
+			this->lb_countText->TabIndex = 6;
+			this->lb_countText->Text = L"Total count of files:";
+			this->lb_countText->Click += gcnew System::EventHandler(this, &Form1::label1_Click);
+			// 
+			// lb_count
+			// 
+			this->lb_count->AutoSize = true;
+			this->lb_count->Location = System::Drawing::Point(452, 210);
+			this->lb_count->Name = L"lb_count";
+			this->lb_count->Size = System::Drawing::Size(0, 13);
+			this->lb_count->TabIndex = 4;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(12, 13);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(59, 13);
+			this->label1->TabIndex = 7;
+			this->label1->Text = L"List of files:";
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(636, 273);
+			this->ClientSize = System::Drawing::Size(636, 239);
+			this->Controls->Add(this->label1);
+			this->Controls->Add(this->lb_count);
+			this->Controls->Add(this->lb_countText);
 			this->Controls->Add(this->tb_Year);
 			this->Controls->Add(this->tb_Track);
 			this->Controls->Add(this->tb_Album);
@@ -259,152 +278,87 @@ namespace MP3Tool {
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->lb_Interpret);
 			this->Controls->Add(this->btLoadFiles);
-			this->Controls->Add(this->myTextBox);
 			this->Controls->Add(this->myListBox);
-			this->Controls->Add(this->btGetMp3Information);
 			this->Name = L"Form1";
-			this->Text = L"Form1";
+			this->Text = L"MP3-Tag-Viewer";
+			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
-	#pragma endregion
+#pragma endregion
 	private: 
-	
-		System::Void btGetMp3Information_Click( System::Object^  sender, System::EventArgs^  e)
+		std::string netstr2cppstr( System::String ^ managedString)
 		{
-			// Remove all items before adding new
-			myListBox->Items->Clear();
-
-			// @TODO Substitute with conversion System::String -> const char *
-			//const char * textFromMyTextBox = netstr2cppstr( myTextBox->Text);
-			const char * textFromMyTextBox = "..\\data\\song.mp3";
-
-			if( myMP3Connector->getFile( textFromMyTextBox))
-			{
-				myListBox->Items->Add( "// File read successfully.");
-				// Read metadata from file to MP3Connector
-				std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
-
-				// If not null
-				if( metadata)
-				{
-					std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
-					String ^ tempKey;
-					String ^ tempValue;
-					ID3_FrameID_LUT * myLUT = new ID3_FrameID_LUT();
-					for ( mdIter; mdIter != metadata->end(); ++mdIter)
-					{
-						tempKey = gcnew String( myLUT->getRealname( mdIter->first));
-						// @TODO Translate genre from number into string
-						tempValue = gcnew String( (mdIter->second).c_str());
-						myListBox->Items->Add( String::Format( "{0}: {1}", tempKey, tempValue));
-					}
-				}
-				/*
-				// Get single fields
-				String ^ tempTitle = gcnew String( myMP3Connector->getTitle());
-				myListBox->Items->Add( String::Format( "Title: {0}", tempTitle));
-				String ^ tempAlbum = gcnew String( myMP3Connector->getAlbum());
-				myListBox->Items->Add( String::Format( "Album: {0}", tempAlbum));
-				String ^ tempArtist = gcnew String( myMP3Connector->getArtist());
-				myListBox->Items->Add( String::Format( "Lead artist: {0}", tempArtist));
-				String ^ tempTrack = gcnew String( myMP3Connector->getTrack());
-				myListBox->Items->Add( String::Format( "Track num: {0}", tempTrack));
-				String ^ tempYear = gcnew String( myMP3Connector->getYear());
-				myListBox->Items->Add( String::Format( "Year: {0}", tempYear));
-				String ^ tempGenre = gcnew String( myMP3Connector->getGenre());
-				myListBox->Items->Add( String::Format( "Genre: {0}", tempGenre));
-				*/
-			}
-			else
-			{
-				myListBox->Items->Add( "// Error reading file.");
-			}
-		}
-		// @see: http://msdn.microsoft.com/en-us/library/system.runtime.interopservices.marshal.stringtohglobaluni.aspx
-		/*const char * netstr2cppstr( System::String ^ managedString)
-		{
-			IntPtr pstr =(char*)( System::Runtime::InteropServices::Marshal::StringToHGlobalUni( managedString ).ToPointer);
-			if( pstr != IntPtr::Zero )
-			{
-			char* punmanagedString = reinterpret_cast<char*>(static_cast<void*>(pstr));
-			System::Runtime::InteropServices::Marshal::FreeHGlobal( pstr ); // Do not forget to free the memory.
-			return punmanagedString;
-		}*/
-
-		const char * netstr2cppstr( System::String ^ managedString)
-		{
-			std::string out = (char *)(System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer());
-			return out.c_str();
-		
-
+			std::string out = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer();
+			return out;
 		}
 
-private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
-		 {
-			 //System::Windows::Forms::DialogResult dr;
-
-			 openFileDialog1 = gcnew OpenFileDialog;
-			 openFileDialog1->InitialDirectory = "c:\\";
-			 openFileDialog1->Filter = "mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
-			 openFileDialog1->FilterIndex =	2; // Muss auf 1 wenn MP3 die Standartauswahl sein soll.
-			 openFileDialog1->RestoreDirectory = true;
-			 openFileDialog1->Multiselect = true;
-			 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK )
+	private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				 // erzeugt aus dem FileNames-Array ein IEnumerator
-				 System::Collections::IEnumerator^ a_enumerator = openFileDialog1->FileNames->GetEnumerator();
-				 int zaehler = 0;
-//				 myArray = gcnew cli::array<MP3Connector*>(openFileDialog1->FileNames->Length);
-//				 myFilenameArray = gcnew cli::array<String^>(openFileDialog1->FileNames->Length);
-				 while (a_enumerator->MoveNext())
+				 myListBox->Items->Clear();
+				 openFileDialog1 = gcnew OpenFileDialog;
+				 openFileDialog1->InitialDirectory = "c:\\";
+				 openFileDialog1->Filter = "mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
+				 openFileDialog1->FilterIndex =	1; 
+				 openFileDialog1->RestoreDirectory = true;
+				 openFileDialog1->Multiselect = true;
+				 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK )
 				 {
-					// iteriert durch das Array und gibt jeden Eintrag in die ItemLIst aus
-					 // Muss in den Controller ausgelagert werden
-					 myListBox->Items->Add(a_enumerator->Current);
-
+					 System::Collections::IEnumerator^ a_enumerator = openFileDialog1->FileNames->GetEnumerator();
+					 int zaehler = 0;
+					 while ( a_enumerator->MoveNext())
+					 {
+						 myListBox->Items->Add( a_enumerator->Current);
+					 }
+					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
 				 }
 			 }
-		}
-private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 
-			 String ^ currentItem = myListBox->SelectedItem->ToString();
-			 std::string * textFromMyTextBox = new std::string(netstr2cppstr( currentItem));
-			 			 
-			 if( myMP3Connector->getFile(textFromMyTextBox->c_str()))
-			 {
-				 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
-				 // If not null
-				 if( metadata)
-					{
-						std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
-						String ^ tempKey;
-						String ^ tempValue;
-						ID3_FrameID_LUT * myLUT = new ID3_FrameID_LUT();
-						for ( mdIter; mdIter != metadata->end(); ++mdIter)
-						{
-							tempKey = gcnew String( myLUT->getRealname( mdIter->first));
-							// @TODO Translate genre from number into string
-							tempValue = gcnew String( (mdIter->second).c_str());
+	private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 
-							if( mdIter->first == ID3FID_ALBUM)
-								tb_Album->Text = tempValue;
-							if( mdIter->first == ID3FID_LEADARTIST)
-								tb_Interpret->Text = tempValue;
-							if( mdIter->first == ID3FID_TRACKNUM)
-								tb_Track->Text = tempValue;
-							if( mdIter->first == ID3FID_CONTENTTYPE)
-								tb_Genre->Text = tempValue;
-							if( mdIter->first == ID3FID_YEAR)
-								tb_Year->Text = tempValue;
-							if( mdIter->first == ID3FID_TITLE)
-								tb_Title->Text = tempValue;
-						}
-					}
+				 String ^ currentItem = myListBox->SelectedItem->ToString();
+				 std::string path = netstr2cppstr( currentItem);
+				 const char * textFromMyTextBox = path.c_str();	
+
+				 if( myMP3Connector->getFile(textFromMyTextBox))
+
+				 {
+					 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
+					 // If not null
+					 if( metadata)
+					 {
+						 std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
+						 String ^ tempKey;
+						 String ^ tempValue;
+						 ID3_FrameID_LUT * myLUT = new ID3_FrameID_LUT();
+						 for ( mdIter; mdIter != metadata->end(); ++mdIter)
+						 {
+							 tempKey = gcnew String( myLUT->getRealname( mdIter->first));
+							 // @TODO Translate genre from number into string
+							 tempValue = gcnew String( (mdIter->second).c_str());
+
+							 if( mdIter->first == ID3FID_ALBUM)
+								 tb_Album->Text = tempValue;
+							 if( mdIter->first == ID3FID_LEADARTIST)
+								 tb_Interpret->Text = tempValue;
+							 if( mdIter->first == ID3FID_TRACKNUM)
+								 tb_Track->Text = tempValue;
+							 if( mdIter->first == ID3FID_CONTENTTYPE)
+								 tb_Genre->Text = tempValue;
+							 if( mdIter->first == ID3FID_YEAR)
+								 tb_Year->Text = tempValue;
+							 if( mdIter->first == ID3FID_TITLE)
+								 tb_Title->Text = tempValue;
+						 }
+					 }
 				 }
-			} // eo fn
+			 } // eo fn
 
+	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
+			 }
+	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
+			 }
 	}; // eo Form1 class
-} // eo namesspace MP3Tool
+} // eo namespace MP3Tool
 #endif
