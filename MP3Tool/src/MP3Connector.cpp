@@ -41,6 +41,7 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 
 	ID3_Tag::Iterator * tagIter = myTag.CreateIterator();
 	ID3_Frame * myFrame = NULL;
+	// @TODO Files without or with some frames need to be covered
 	while( NULL != ( myFrame = tagIter->GetNext()))
 	{			
 		if( NULL != myFrame)
