@@ -36,7 +36,7 @@ namespace MP3Tool {
 		Form1(void)
 		{
 			InitializeComponent();
-			myMP3Connector = new MP3Connector();
+			
 		}
 
 
@@ -313,6 +313,13 @@ namespace MP3Tool {
 					 }
 					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
 				 }
+				 myListBox->SelectedIndex = -1;
+				 tb_Interpret->Text = "";
+				 tb_Title->Text = "";
+				 tb_Album->Text = "";
+				 tb_Track->Text = "";
+				 tb_Year->Text = "";
+				 tb_Genre->Text = "";
 			 }
 
 	private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -320,6 +327,7 @@ namespace MP3Tool {
 				 String ^ currentItem = myListBox->SelectedItem->ToString();
 				 std::string path = netstr2cppstr( currentItem);
 				 const char * textFromMyTextBox = path.c_str();	
+				 myMP3Connector = new MP3Connector();
 
 				 if( myMP3Connector->getFile(textFromMyTextBox))
 
