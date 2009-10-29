@@ -12,8 +12,8 @@
  * \file	src\MP3Connector.h
  *
  * \brief	Class to access the MP3 file.
- * \author	Tobias Preuss
- * \date	20091028
+ * \author	Tobias Preuss (s0516424) & Alexander Kramer (s0516343)
+ * \date	20091029
  * \see		http://id3lib.sourceforge.net/api/index.html
  *
 **/

@@ -2,8 +2,8 @@
  * \file	src\MP3Tool.cpp
  *
  * \brief	Main project file.
- * \author	Tobias Preuss
- * \date	20091026_0042
+ * \author	Tobias Preuss (s0516424) & Alexander Kramer (s0516343)
+ * \date	20091029
  *
 **/
 
@@ -23,10 +23,10 @@ int main(array<System::String ^> ^args)
 	Application::Run(gcnew Form1());
 
 	// Simple library test: debug variable 'text'
-/*
+
 	ID3_Tag myTag;
 	myTag.Link("..\\data\\song.mp3");
-
+/*
 	ID3_Tag::Iterator * tagIter = myTag.CreateIterator();
 	ID3_Frame * myFrame = NULL;
 	while( NULL != ( myFrame = tagIter->GetNext()))

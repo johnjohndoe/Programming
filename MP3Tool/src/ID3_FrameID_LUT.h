@@ -9,8 +9,8 @@
  * \class	ID3_FrameID_LUT
  *
  * \brief	Stores the real names associated with the ID3_FrameIDs
- * \author	Tobias Preuss
- * \date	20091027
+ * \author	Tobias Preuss (s0516424) & Alexander Kramer (s0516343)
+ * \date	20091029
 **/
 class ID3_FrameID_LUT
 {
