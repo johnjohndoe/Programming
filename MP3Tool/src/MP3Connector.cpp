@@ -46,11 +46,14 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 	{			
 		if( NULL != myFrame)
 		{
+			
 			ID3_Field * myField = myFrame->GetField( fieldId);
 			// Check if current frame is part of the set aka a field of interest
 			std::set<ID3_FrameID>::iterator current = interestingID3_FrameIDs->find( myFrame->GetID());
 			if ( NULL != myField && current != interestingID3_FrameIDs->end())
 			{
+				if(myField->GetEncoding() == 0)
+				{
 				ID3_FrameID fid = myFrame->GetID();
 				ID3_FieldID id = myField->GetID();
 				// Genre needs to be converted
@@ -67,6 +70,7 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 				// All other tags
 				else
 					metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
+				}
 			}
 		}
 	}
