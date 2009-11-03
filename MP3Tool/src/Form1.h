@@ -331,6 +331,8 @@ namespace MP3Tool {
 				 if( selection > max || selection < 0)
 				 return;
 
+				 clearTextboxes();
+
 				 String ^ currentItem = myListBox->SelectedItem->ToString();
 				 std::string path = netstr2cppstr( currentItem);
 				 const char * textFromMyTextBox = path.c_str();	
@@ -368,6 +370,16 @@ namespace MP3Tool {
 					 }
 				 }
 			 } // eo fn
+
+	private: System::Void clearTextboxes()
+			 {
+				 tb_Title->Text = "<no information>";
+				 tb_Interpret->Text = "<no information>";
+				 tb_Album->Text = "<no information>";
+				 tb_Genre->Text = "<no information>";
+				 tb_Track->Text = "<no information>";
+				 tb_Year->Text = "<no information>";
+			 }
 
 	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
 			 }
