@@ -45,32 +45,33 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 	while( NULL != ( myFrame = tagIter->GetNext()))
 	{			
 		if( NULL != myFrame)
-		{
-			
+		{			
 			ID3_Field * myField = myFrame->GetField( fieldId);
 			// Check if current frame is part of the set aka a field of interest
 			std::set<ID3_FrameID>::iterator current = interestingID3_FrameIDs->find( myFrame->GetID());
 			if ( NULL != myField && current != interestingID3_FrameIDs->end())
 			{
-				if(myField->GetEncoding() == 0)
+				if( myField->GetEncoding() == ID3TE_ASCII || ID3TE_ISO8859_1)
 				{
-				ID3_FrameID fid = myFrame->GetID();
-				ID3_FieldID id = myField->GetID();
-				// Genre needs to be converted
-				if( myFrame->GetID() == ID3FID_CONTENTTYPE) // ID3_FrameID = 32
-				{
-					std::string genre = myField->GetRawText();
-					// ID3V1 genre has is an int surrounded by round brackets; ID3V2 genre is text
-					unsigned int genreIntegerAlias = removeBrackets( genre.c_str());
-					if( genreIntegerAlias < ID3_NR_OF_V1_GENRES)
-						metadata->insert( std::make_pair( myFrame->GetID(), ID3_v1_genre_description[ genreIntegerAlias] ));
+					ID3_FrameID fid = myFrame->GetID();
+					ID3_FieldID id = myField->GetID();
+					// Genre needs to be converted
+					if( myFrame->GetID() == ID3FID_CONTENTTYPE) // ID3_FrameID = 32
+					{
+						std::string genre = myField->GetRawText();
+						// ID3V1 genre has is an int surrounded by round brackets; ID3V2 genre is text
+						unsigned int genreIntegerAlias = removeBrackets( genre.c_str());
+						if( genreIntegerAlias < ID3_NR_OF_V1_GENRES)
+							metadata->insert( std::make_pair( myFrame->GetID(), ID3_v1_genre_description[ genreIntegerAlias] ));
+						else
+							metadata->insert( std::make_pair( myFrame->GetID(), genre));
+					}
+					// All other tags
 					else
-						metadata->insert( std::make_pair( myFrame->GetID(), genre));
+						metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
 				}
-				// All other tags
 				else
-					metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
-				}
+					metadata->insert( std::make_pair( myFrame->GetID(), "<unicode value>"));
 			}
 		}
 	}
