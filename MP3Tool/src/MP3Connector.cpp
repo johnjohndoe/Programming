@@ -41,7 +41,6 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 
 	ID3_Tag::Iterator * tagIter = myTag.CreateIterator();
 	ID3_Frame * myFrame = NULL;
-	// @TODO Files without or with some frames need to be covered
 	while( NULL != ( myFrame = tagIter->GetNext()))
 	{			
 		if( NULL != myFrame)
@@ -51,10 +50,9 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 			std::set<ID3_FrameID>::iterator current = interestingID3_FrameIDs->find( myFrame->GetID());
 			if ( NULL != myField && current != interestingID3_FrameIDs->end())
 			{
+				// @TODO Show encoding in gui (optional)
 				if( myField->GetEncoding() == ID3TE_ASCII || ID3TE_ISO8859_1)
 				{
-					ID3_FrameID fid = myFrame->GetID();
-					ID3_FieldID id = myField->GetID();
 					// Genre needs to be converted
 					if( myFrame->GetID() == ID3FID_CONTENTTYPE) // ID3_FrameID = 32
 					{
@@ -70,8 +68,21 @@ std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 					else
 						metadata->insert( std::make_pair( myFrame->GetID(), myField->GetRawText()));
 				}
+				else if( myField->GetEncoding() == ID3TE_UTF8)
+					metadata->insert( std::make_pair( myFrame->GetID(), "<unicode utf8 encoding>"));
+				else if( myField->GetEncoding() == ID3TE_UNICODE || ID3TE_UTF16)
+				{
+					// @TODO Conversion to std::string ... myField->GetRawUnicodeText();
+					metadata->insert( std::make_pair( myFrame->GetID(), "<unicode utf16 encoding>: "));
+				}
+				else if( myField->GetEncoding() == ID3TE_UTF16BE)
+					metadata->insert( std::make_pair( myFrame->GetID(), "<unicode utf16be encoding>"));
+				else if( myField->GetEncoding() == ID3TE_NUMENCODINGS)
+					metadata->insert( std::make_pair( myFrame->GetID(), "<numencoding>"));
 				else
-					metadata->insert( std::make_pair( myFrame->GetID(), "<unicode value>"));
+				{
+					metadata->insert( std::make_pair( myFrame->GetID(), "<unknown encoding>"));
+				}
 			}
 		}
 	}
