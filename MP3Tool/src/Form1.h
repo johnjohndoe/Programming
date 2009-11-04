@@ -74,6 +74,8 @@ namespace MP3Tool {
 	private: System::Windows::Forms::Label^  lb_countText;
 	private: System::Windows::Forms::Label^  lb_count;
 	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::StatusStrip^  statusStrip1;
+	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 
 
 
@@ -109,23 +111,26 @@ namespace MP3Tool {
 			this->lb_countText = (gcnew System::Windows::Forms::Label());
 			this->lb_count = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
+			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+			this->statusStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// myListBox
 			// 
 			this->myListBox->FormattingEnabled = true;
 			this->myListBox->HorizontalScrollbar = true;
-			this->myListBox->Location = System::Drawing::Point(12, 38);
+			this->myListBox->Location = System::Drawing::Point(12, 51);
 			this->myListBox->Name = L"myListBox";
-			this->myListBox->Size = System::Drawing::Size(314, 186);
+			this->myListBox->Size = System::Drawing::Size(314, 173);
 			this->myListBox->TabIndex = 1;
 			this->myListBox->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::myListBox_SelectedIndexChanged);
 			// 
 			// btLoadFiles
 			// 
-			this->btLoadFiles->Location = System::Drawing::Point(352, 10);
+			this->btLoadFiles->Location = System::Drawing::Point(77, 8);
 			this->btLoadFiles->Name = L"btLoadFiles";
-			this->btLoadFiles->Size = System::Drawing::Size(272, 23);
+			this->btLoadFiles->Size = System::Drawing::Size(677, 23);
 			this->btLoadFiles->TabIndex = 3;
 			this->btLoadFiles->Text = L"Open MP3\'s";
 			this->btLoadFiles->UseVisualStyleBackColor = true;
@@ -138,7 +143,7 @@ namespace MP3Tool {
 			// lb_Interpret
 			// 
 			this->lb_Interpret->AutoSize = true;
-			this->lb_Interpret->Location = System::Drawing::Point(346, 51);
+			this->lb_Interpret->Location = System::Drawing::Point(476, 51);
 			this->lb_Interpret->Name = L"lb_Interpret";
 			this->lb_Interpret->Size = System::Drawing::Size(46, 13);
 			this->lb_Interpret->TabIndex = 4;
@@ -147,7 +152,7 @@ namespace MP3Tool {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(346, 78);
+			this->label2->Location = System::Drawing::Point(476, 78);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(27, 13);
 			this->label2->TabIndex = 4;
@@ -156,7 +161,7 @@ namespace MP3Tool {
 			// lb_Album
 			// 
 			this->lb_Album->AutoSize = true;
-			this->lb_Album->Location = System::Drawing::Point(346, 105);
+			this->lb_Album->Location = System::Drawing::Point(476, 105);
 			this->lb_Album->Name = L"lb_Album";
 			this->lb_Album->Size = System::Drawing::Size(36, 13);
 			this->lb_Album->TabIndex = 4;
@@ -165,7 +170,7 @@ namespace MP3Tool {
 			// lb_Genre
 			// 
 			this->lb_Genre->AutoSize = true;
-			this->lb_Genre->Location = System::Drawing::Point(346, 128);
+			this->lb_Genre->Location = System::Drawing::Point(476, 128);
 			this->lb_Genre->Name = L"lb_Genre";
 			this->lb_Genre->Size = System::Drawing::Size(36, 13);
 			this->lb_Genre->TabIndex = 4;
@@ -174,7 +179,7 @@ namespace MP3Tool {
 			// lb_Track
 			// 
 			this->lb_Track->AutoSize = true;
-			this->lb_Track->Location = System::Drawing::Point(346, 156);
+			this->lb_Track->Location = System::Drawing::Point(476, 156);
 			this->lb_Track->Name = L"lb_Track";
 			this->lb_Track->Size = System::Drawing::Size(35, 13);
 			this->lb_Track->TabIndex = 4;
@@ -183,7 +188,7 @@ namespace MP3Tool {
 			// lb_Year
 			// 
 			this->lb_Year->AutoSize = true;
-			this->lb_Year->Location = System::Drawing::Point(346, 182);
+			this->lb_Year->Location = System::Drawing::Point(476, 182);
 			this->lb_Year->Name = L"lb_Year";
 			this->lb_Year->Size = System::Drawing::Size(29, 13);
 			this->lb_Year->TabIndex = 4;
@@ -191,42 +196,42 @@ namespace MP3Tool {
 			// 
 			// tb_Interpret
 			// 
-			this->tb_Interpret->Location = System::Drawing::Point(398, 48);
+			this->tb_Interpret->Location = System::Drawing::Point(528, 48);
 			this->tb_Interpret->Name = L"tb_Interpret";
 			this->tb_Interpret->Size = System::Drawing::Size(226, 20);
 			this->tb_Interpret->TabIndex = 5;
 			// 
 			// tb_Title
 			// 
-			this->tb_Title->Location = System::Drawing::Point(398, 75);
+			this->tb_Title->Location = System::Drawing::Point(528, 75);
 			this->tb_Title->Name = L"tb_Title";
 			this->tb_Title->Size = System::Drawing::Size(226, 20);
 			this->tb_Title->TabIndex = 5;
 			// 
 			// tb_Album
 			// 
-			this->tb_Album->Location = System::Drawing::Point(398, 102);
+			this->tb_Album->Location = System::Drawing::Point(528, 102);
 			this->tb_Album->Name = L"tb_Album";
 			this->tb_Album->Size = System::Drawing::Size(226, 20);
 			this->tb_Album->TabIndex = 5;
 			// 
 			// tb_Genre
 			// 
-			this->tb_Genre->Location = System::Drawing::Point(398, 126);
+			this->tb_Genre->Location = System::Drawing::Point(528, 126);
 			this->tb_Genre->Name = L"tb_Genre";
 			this->tb_Genre->Size = System::Drawing::Size(226, 20);
 			this->tb_Genre->TabIndex = 5;
 			// 
 			// tb_Track
 			// 
-			this->tb_Track->Location = System::Drawing::Point(398, 152);
+			this->tb_Track->Location = System::Drawing::Point(528, 152);
 			this->tb_Track->Name = L"tb_Track";
 			this->tb_Track->Size = System::Drawing::Size(226, 20);
 			this->tb_Track->TabIndex = 5;
 			// 
 			// tb_Year
 			// 
-			this->tb_Year->Location = System::Drawing::Point(398, 179);
+			this->tb_Year->Location = System::Drawing::Point(528, 179);
 			this->tb_Year->Name = L"tb_Year";
 			this->tb_Year->Size = System::Drawing::Size(226, 20);
 			this->tb_Year->TabIndex = 5;
@@ -234,7 +239,7 @@ namespace MP3Tool {
 			// lb_countText
 			// 
 			this->lb_countText->AutoSize = true;
-			this->lb_countText->Location = System::Drawing::Point(349, 210);
+			this->lb_countText->Location = System::Drawing::Point(525, 210);
 			this->lb_countText->Name = L"lb_countText";
 			this->lb_countText->Size = System::Drawing::Size(97, 13);
 			this->lb_countText->TabIndex = 6;
@@ -258,11 +263,27 @@ namespace MP3Tool {
 			this->label1->TabIndex = 7;
 			this->label1->Text = L"List of files:";
 			// 
+			// statusStrip1
+			// 
+			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->toolStripStatusLabel1});
+			this->statusStrip1->Location = System::Drawing::Point(0, 238);
+			this->statusStrip1->Name = L"statusStrip1";
+			this->statusStrip1->Size = System::Drawing::Size(766, 22);
+			this->statusStrip1->TabIndex = 8;
+			this->statusStrip1->Text = L"statusStrip1";
+			// 
+			// toolStripStatusLabel1
+			// 
+			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
+			this->toolStripStatusLabel1->Size = System::Drawing::Size(109, 17);
+			this->toolStripStatusLabel1->Text = L"toolStripStatusLabel1";
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(636, 239);
+			this->ClientSize = System::Drawing::Size(766, 260);
+			this->Controls->Add(this->statusStrip1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->lb_count);
 			this->Controls->Add(this->lb_countText);
@@ -283,6 +304,8 @@ namespace MP3Tool {
 			this->Name = L"Form1";
 			this->Text = L"MP3-Tag-Viewer";
 			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
+			this->statusStrip1->ResumeLayout(false);
+			this->statusStrip1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -367,6 +390,11 @@ namespace MP3Tool {
 								 tb_Year->Text = tempValue;
 							 if( mdIter->first == ID3FID_TITLE)
 								 tb_Title->Text = tempValue;
+							 // Store the text encoding type for the current frame
+							 std::string encoding = myMP3Connector->getEncoding();
+							 String ^ encodingNetString = gcnew String( encoding.c_str());
+							 toolStripStatusLabel1->Text = encodingNetString;
+								 
 						 }
 					 }
 				 }

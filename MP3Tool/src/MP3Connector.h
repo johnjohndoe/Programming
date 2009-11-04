@@ -13,7 +13,7 @@
  *
  * \brief	Class to access the MP3 file.
  * \author	Tobias Preuss (s0516424) & Alexander Kramer (s0516343)
- * \date	20091029
+ * \date	20091104
  * \see		http://id3lib.sourceforge.net/api/index.html
  *
 **/
@@ -38,20 +38,29 @@ public:
 
 	/**
 	 * \fn	std::map<ID3_FrameID, std::string> * getMetadata( void)
-	 * \brief	Gets the metadata. 
+	 * \brief	Returns the metadata. 
 	 * \return	Returns the metadata or null.
 	**/
 	std::map<ID3_FrameID, std::string> * getMetadata( void);
 
+	/**
+	 * \fn		std::string getEncoding( void)
+	 * \brief	Returns the text encoding type. 
+	 * \return	A string. 
+	**/
+	std::string getEncoding( void);
+
 private:
 
-	/// \brief Handler for the mp3 file
+	/// \brief Handler for the mp3 file.
 	ID3_Tag myTag;
-	/// \brief Container stores frame ids of the metadata of interest
+	/// \brief Container stores frame ids of the metadata of interest.
 	std::set<ID3_FrameID> * interestingID3_FrameIDs;
-	/// \brief Container stores frame id as key and its value
+	/// \brief Container stores frame id as key and its value.
 	std::map<ID3_FrameID, std::string> * metadata;
-	/// \brief Removes the round brackets surrounding the text (array index)
+	/// \brief Stores the text encoding type of the frames read in.
+	std::string encoding;
+	/// \brief Removes the round brackets surrounding the text (array index).
 	unsigned int removeBrackets( const char * text);
 };
 
