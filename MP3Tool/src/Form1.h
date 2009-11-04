@@ -299,6 +299,7 @@ namespace MP3Tool {
 			 {
 				 myListBox->Items->Clear();
 				 openFileDialog1 = gcnew OpenFileDialog;
+				 // @TODO Store the last directory selected to be reopened
 				 openFileDialog1->InitialDirectory = "c:\\";
 				 openFileDialog1->Filter = "mp3 files (*.mp3)|*.mp3|All files (*.*)|*.*";
 				 openFileDialog1->FilterIndex =	1; 
