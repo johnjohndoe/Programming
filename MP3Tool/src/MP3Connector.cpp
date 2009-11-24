@@ -1,9 +1,11 @@
 #include "StdAfx.h"
 #include "MP3Connector.h"
+#include "MP3Data.h"
 #include "ID3_FrameID_LUT.h"
 #include <id3/tag.h>
 #include <iostream>
 #include <sstream>
+
 
 MP3Connector::MP3Connector( void)
 {
@@ -35,8 +37,12 @@ bool MP3Connector::getFile( const char * pPath)
 }
 std::map<ID3_FrameID, std::string> * MP3Connector::getMetadata( void)
 {
+
+	
+
 	metadata = new std::map<ID3_FrameID, std::string>();
 	ID3_FieldID fieldId = ID3FN_TEXT;
+
 
 	std::set<ID3_FieldID> * myFields = new std::set<ID3_FieldID>();
 	myFields->insert( ID3FN_TEXT);
