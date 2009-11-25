@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include "MP3Connector.h"
+#include "MP3Data.h"
 #include "ID3_FrameID_LUT.h"
 
 
@@ -31,6 +32,7 @@ namespace MP3Tool {
 	{
 	private:
 		MP3Connector * myMP3Connector;
+		MP3Data * myMP3Data;
 
 	public:
 		Form1(void)
@@ -320,6 +322,10 @@ namespace MP3Tool {
 
 	private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
+				MP3Data* myMP3Data = new MP3Data();
+				myMP3Data->setTitle("hsflhs");
+
+
 				 myListBox->Items->Clear();
 				 openFileDialog1 = gcnew OpenFileDialog;
 				 // @TODO Store the last directory selected to be reopened
@@ -339,7 +345,7 @@ namespace MP3Tool {
 					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
 				 }
 				 myListBox->SelectedIndex = -1;
-				 tb_Interpret->Text = "";
+				 tb_Interpret->Text = gcnew String(myMP3Data->getTitle().c_str());
 				 tb_Title->Text = "";
 				 tb_Album->Text = "";
 				 tb_Track->Text = "";
