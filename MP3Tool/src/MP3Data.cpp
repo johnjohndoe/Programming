@@ -2,8 +2,6 @@
 #include "MP3Data.h"
 
 
-
-
 MP3Data::MP3Data( void)
 {
 	this->index = -1;
