@@ -1,5 +1,5 @@
 #pragma once
-
+#include "MP3Data.h"
 class MP3List
 {
 
@@ -7,7 +7,7 @@ class MP3List
 	// einem Iterator. Muss durch interne Mechaniken aufgelöst werden
 public:
 	MP3List(void);
-	insertItem(MP3Data *);
+	void insertItem(MP3Data *);
 	MP3Data * removeItem(int identifier);
 	MP3Data * getItem(int identifier); // Fügt dem Array ein Item hinzu (Schon sortiert?)
 	// Wenn ja dann finde die Stelle an der das Teul einzufügen ist und tausche von dort zum Ende alle Pointer
@@ -23,9 +23,9 @@ public:
 
 
 private:
-	doubleArray(void); // Array wird mit einer default-groesse angelegt. Wenn das Array voll ist dann 
+	void doubleArray(void); // Array wird mit einer default-groesse angelegt. Wenn das Array voll ist dann 
 	// verdoppele die groesse und kopiere alle schon vorhandenen Element hinein.
-	MP3Data[]* myMp3DataArray; //Speichert Points in ein MP3Data-Array
+	//MP3Data[]* myMp3DataArray; //Speichert Points in ein MP3Data-Array
 
 
 };

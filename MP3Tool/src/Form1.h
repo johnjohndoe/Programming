@@ -5,8 +5,7 @@
 
 #include <map>
 #include <string>
-#include "MP3Data.h"
-#include "MP3DataGenerator.h"
+#include "MP3Connector.h"
 #include "ID3_FrameID_LUT.h"
 
 
@@ -31,7 +30,7 @@ namespace MP3Tool {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	private:
-		MP3DataGenerator * myMP3DataGenerator;
+		MP3Connector * myMP3Connector;
 
 	public:
 		Form1(void)
@@ -77,6 +76,10 @@ namespace MP3Tool {
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
+	private: System::Windows::Forms::Button^  bt_delete;
+	private: System::Windows::Forms::Button^  bt_polulate;
+	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Label^  label3;
 
 
 
@@ -114,6 +117,10 @@ namespace MP3Tool {
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+			this->bt_delete = (gcnew System::Windows::Forms::Button());
+			this->bt_polulate = (gcnew System::Windows::Forms::Button());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->statusStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -129,9 +136,9 @@ namespace MP3Tool {
 			// 
 			// btLoadFiles
 			// 
-			this->btLoadFiles->Location = System::Drawing::Point(77, 8);
+			this->btLoadFiles->Location = System::Drawing::Point(455, 8);
 			this->btLoadFiles->Name = L"btLoadFiles";
-			this->btLoadFiles->Size = System::Drawing::Size(677, 23);
+			this->btLoadFiles->Size = System::Drawing::Size(299, 23);
 			this->btLoadFiles->TabIndex = 3;
 			this->btLoadFiles->Text = L"Open MP3\'s";
 			this->btLoadFiles->UseVisualStyleBackColor = true;
@@ -258,7 +265,7 @@ namespace MP3Tool {
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(12, 13);
+			this->label1->Location = System::Drawing::Point(377, 13);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(59, 13);
 			this->label1->TabIndex = 7;
@@ -276,14 +283,55 @@ namespace MP3Tool {
 			// toolStripStatusLabel1
 			// 
 			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(109, 17);
+			this->toolStripStatusLabel1->Size = System::Drawing::Size(118, 17);
 			this->toolStripStatusLabel1->Text = L"toolStripStatusLabel1";
+			// 
+			// bt_delete
+			// 
+			this->bt_delete->Location = System::Drawing::Point(333, 200);
+			this->bt_delete->Name = L"bt_delete";
+			this->bt_delete->Size = System::Drawing::Size(75, 23);
+			this->bt_delete->TabIndex = 9;
+			this->bt_delete->Text = L"Delete";
+			this->bt_delete->UseVisualStyleBackColor = true;
+			this->bt_delete->Click += gcnew System::EventHandler(this, &Form1::bt_delete_clicked);
+			// 
+			// bt_polulate
+			// 
+			this->bt_polulate->Location = System::Drawing::Point(333, 171);
+			this->bt_polulate->Name = L"bt_polulate";
+			this->bt_polulate->Size = System::Drawing::Size(75, 23);
+			this->bt_polulate->TabIndex = 10;
+			this->bt_polulate->Text = L"Populate";
+			this->bt_polulate->UseVisualStyleBackColor = true;
+			this->bt_polulate->Click += gcnew System::EventHandler(this, &Form1::bt_populate_clicked);
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(66, 10);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(260, 20);
+			this->textBox1->TabIndex = 11;
+			this->textBox1->TextChanged += gcnew System::EventHandler(this, &Form1::searchfield_changed);
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Location = System::Drawing::Point(13, 13);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(47, 13);
+			this->label3->TabIndex = 12;
+			this->label3->Text = L"Search: ";
 			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(766, 260);
+			this->Controls->Add(this->label3);
+			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->bt_polulate);
+			this->Controls->Add(this->bt_delete);
 			this->Controls->Add(this->statusStrip1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->lb_count);
@@ -321,8 +369,6 @@ namespace MP3Tool {
 
 	private: System::Void btLoadFiles_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
-				MP3Data* myMP3Data = new MP3Data();
-
 				 myListBox->Items->Clear();
 				 openFileDialog1 = gcnew OpenFileDialog;
 				 // @TODO Store the last directory selected to be reopened
@@ -356,33 +402,50 @@ namespace MP3Tool {
 
 				 // Stop handler when selected item is invalid
 				 if( selection > max || selection < 0)
-					 return;
+				 return;
 
 				 clearTextboxes();
 
 				 String ^ currentItem = myListBox->SelectedItem->ToString();
 				 std::string path = netstr2cppstr( currentItem);
 				 const char * textFromMyTextBox = path.c_str();	
+				 myMP3Connector = new MP3Connector();
 
-				 myMP3DataGenerator = new MP3DataGenerator();
+				 if( myMP3Connector->getFile( textFromMyTextBox))
 
-				 if( MP3Data * myMP3Data = myMP3DataGenerator->readMetadata( textFromMyTextBox))
 				 {
-					 String ^ tempValue;
-					 tempValue = gcnew String( myMP3Data->getTitle());
-					 tb_Title->Text = tempValue;
-					 tempValue = gcnew String( myMP3Data->getArtist());
-					 tb_Interpret->Text = tempValue;
-					 tempValue = gcnew String( myMP3Data->getAlbum());
-					 tb_Album->Text = tempValue;
-					 tempValue = gcnew String( myMP3Data->getYear());
-					 tb_Year->Text = tempValue;
-					 tempValue = gcnew String( myMP3Data->getGenre());
-					 tb_Genre->Text = tempValue;
-					 tempValue = gcnew String( myMP3Data->getTracknumber());
-					 tb_Track->Text = tempValue;
+					 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
+					 // If not null
+					 if( metadata)
+					 {
+						 std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
+						 String ^ tempKey;
+						 String ^ tempValue;
+						 ID3_FrameID_LUT * myLUT = new ID3_FrameID_LUT();
+						 for ( mdIter; mdIter != metadata->end(); ++mdIter)
+						 {
+							 tempKey = gcnew String( myLUT->getRealname( mdIter->first));
+							 tempValue = gcnew String( (mdIter->second).c_str());
 
-					 myMP3Data->print( std::ofstream( "..\\data\\mp3data.txt"));
+							 if( mdIter->first == ID3FID_ALBUM)
+								 tb_Album->Text = tempValue;
+							 if( mdIter->first == ID3FID_LEADARTIST)
+								 tb_Interpret->Text = tempValue;
+							 if( mdIter->first == ID3FID_TRACKNUM)
+								 tb_Track->Text = tempValue;
+							 if( mdIter->first == ID3FID_CONTENTTYPE)
+								 tb_Genre->Text = tempValue;
+							 if( mdIter->first == ID3FID_YEAR)
+								 tb_Year->Text = tempValue;
+							 if( mdIter->first == ID3FID_TITLE)
+								 tb_Title->Text = tempValue;
+							 // Store the text encoding type for the current frame
+							 std::string encoding = myMP3Connector->getEncoding();
+							 String ^ encodingNetString = gcnew String( encoding.c_str());
+							 toolStripStatusLabel1->Text = encodingNetString;
+								 
+						 }
+					 }
 				 }
 			 } // eo fn
 
@@ -400,6 +463,12 @@ namespace MP3Tool {
 			 }
 	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 			 }
-	}; // eo Form1 class
+	private: System::Void searchfield_changed(System::Object^  sender, System::EventArgs^  e) {
+			 }
+private: System::Void bt_populate_clicked(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void bt_delete_clicked(System::Object^  sender, System::EventArgs^  e) {
+		 }
+}; // eo Form1 class
 } // eo namespace MP3Tool
 #endif
