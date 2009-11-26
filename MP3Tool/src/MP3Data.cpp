@@ -4,7 +4,7 @@
 
 MP3Data::MP3Data( void)
 {
-	this->index = -1;
+	this->index = -1;		// Default value.
 	this->title = NULL;
 	this->artist = NULL;
 	this->album = NULL;
@@ -24,21 +24,21 @@ const char * MP3Data::getYear()			{	return ( year) ? year : "<undefined>";					}
 const char * MP3Data::getTracknumber()	{	return ( tracknumber) ? tracknumber : "<undefined>";	}
 const char * MP3Data::getGenre()		{	return ( genre) ? genre : "<undefined>";				}
 
-void MP3Data::setIndex( int pIndex)							{	this->index = pIndex;				}
-void MP3Data::setTitle( const char * pTitle)				{	this->title = pTitle;				}
-void MP3Data::setArtist( const char * pArtist)				{	this->artist = pArtist;				}
-void MP3Data::setAlbum( const char * pAlbum)				{	this->album = pAlbum;				}
-void MP3Data::setYear( const char * pYear)					{	this->year = pYear;					}
-void MP3Data::setTracknumber( const char * pTracknumber)	{	this->tracknumber = pTracknumber;	}
-void MP3Data::setGenre( const char * pGenre)				{	this->genre = pGenre;				}
-void MP3Data::setAll( const char * pValue)
+void MP3Data::setIndex( int p_index)						{	this->index = p_index;				}
+void MP3Data::setTitle( const char * p_title)				{	this->title = p_title;				}
+void MP3Data::setArtist( const char * p_artist)				{	this->artist = p_artist;			}
+void MP3Data::setAlbum( const char * p_album)				{	this->album = p_album;				}
+void MP3Data::setYear( const char * p_year)					{	this->year = p_year;				}
+void MP3Data::setTracknumber( const char * p_tracknumber)	{	this->tracknumber = p_tracknumber;	}
+void MP3Data::setGenre( const char * p_genre)				{	this->genre = p_genre;				}
+void MP3Data::setAll( const char * p_value)
 {
-	this->title = pValue;
-	this->artist= pValue;
-	this->album = pValue;
-	this->year = pValue;
-	this->tracknumber = pValue;
-	this->genre = pValue;
+	this->title = p_value;
+	this->artist= p_value;
+	this->album = p_value;
+	this->year = p_value;
+	this->tracknumber = p_value;
+	this->genre = p_value;
 }
 
 void MP3Data::print( std::ostream & os)
