@@ -10,3 +10,5 @@ build/Programming.suo
 *.ilk
 *.pdb
 *.dll
+*.ncb
+*.suo
