@@ -2,10 +2,13 @@
 #if !defined ( FORM1_H )
 #define FORM1_H
 
-
 #include <map>
 #include <string>
+#include <iostream>
+#include "MP3Data.h"
+#include "MP3DataGenerator.h"
 #include "MP3Connector.h"
+#include "MP3Controller.h"
 #include "ID3_FrameID_LUT.h"
 
 
@@ -31,16 +34,16 @@ namespace MP3Tool {
 	{
 	private:
 		MP3Connector * myMP3Connector;
+		MP3Controller * myMP3Controller;
+		IMP3DataGenerator * myMP3DataGenerator;
+
 
 	public:
 		Form1(void)
 		{
 			InitializeComponent();
-			
+			myMP3Controller = new MP3Controller();
 		}
-
-
-
 
 	protected:
 		/// <summary>
@@ -78,7 +81,9 @@ namespace MP3Tool {
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 	private: System::Windows::Forms::Button^  bt_delete;
 	private: System::Windows::Forms::Button^  bt_polulate;
-	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::Button^  bt_clear;
+	private: System::Windows::Forms::TextBox^  searchfield;
+
 	private: System::Windows::Forms::Label^  label3;
 
 
@@ -119,8 +124,9 @@ namespace MP3Tool {
 			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bt_delete = (gcnew System::Windows::Forms::Button());
 			this->bt_polulate = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->searchfield = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->bt_clear = (gcnew System::Windows::Forms::Button());
 			this->statusStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -306,13 +312,13 @@ namespace MP3Tool {
 			this->bt_polulate->UseVisualStyleBackColor = true;
 			this->bt_polulate->Click += gcnew System::EventHandler(this, &Form1::bt_populate_clicked);
 			// 
-			// textBox1
+			// searchfield
 			// 
-			this->textBox1->Location = System::Drawing::Point(66, 10);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(260, 20);
-			this->textBox1->TabIndex = 11;
-			this->textBox1->TextChanged += gcnew System::EventHandler(this, &Form1::searchfield_changed);
+			this->searchfield->Location = System::Drawing::Point(66, 10);
+			this->searchfield->Name = L"searchfield";
+			this->searchfield->Size = System::Drawing::Size(260, 20);
+			this->searchfield->TabIndex = 11;
+			this->searchfield->TextChanged += gcnew System::EventHandler(this, &Form1::searchfield_changed);
 			// 
 			// label3
 			// 
@@ -323,13 +329,24 @@ namespace MP3Tool {
 			this->label3->TabIndex = 12;
 			this->label3->Text = L"Search: ";
 			// 
+			// bt_clear
+			// 
+			this->bt_clear->Location = System::Drawing::Point(333, 142);
+			this->bt_clear->Name = L"bt_clear";
+			this->bt_clear->Size = System::Drawing::Size(75, 23);
+			this->bt_clear->TabIndex = 13;
+			this->bt_clear->Text = L"Clear List";
+			this->bt_clear->UseVisualStyleBackColor = true;
+			this->bt_clear->Click += gcnew System::EventHandler(this, &Form1::bt_clar_clicked);
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(766, 260);
+			this->Controls->Add(this->bt_clear);
 			this->Controls->Add(this->label3);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->searchfield);
 			this->Controls->Add(this->bt_polulate);
 			this->Controls->Add(this->bt_delete);
 			this->Controls->Add(this->statusStrip1);
@@ -377,23 +394,34 @@ namespace MP3Tool {
 				 openFileDialog1->FilterIndex =	1; 
 				 openFileDialog1->RestoreDirectory = true;
 				 openFileDialog1->Multiselect = true;
+				 int zaehler = 0;
 				 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK )
 				 {
 					 System::Collections::IEnumerator^ a_enumerator = openFileDialog1->FileNames->GetEnumerator();
-					 int zaehler = 0;
+					 
 					 while ( a_enumerator->MoveNext())
 					 {
-						 myListBox->Items->Add( a_enumerator->Current);
+						 // myListBox->Items->Add( a_enumerator->Current);
+						 System::String^  temp_String = (System::String^) a_enumerator->Current;
+						 myMP3Controller->addMP3(netstr2cppstr(temp_String).c_str());
+						 zaehler++;
 					 }
+					
 					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
 				 }
+
+				 toolStripStatusLabel1->Text = "Soviel Text wurde gelesen:" + zaehler;
 				 myListBox->SelectedIndex = -1;
-				 tb_Interpret->Text = "";
-				 tb_Title->Text = "";
-				 tb_Album->Text = "";
-				 tb_Track->Text = "";
-				 tb_Year->Text = "";
-				 tb_Genre->Text = "";
+
+				myMP3Controller->print();
+
+
+
+				myListBox->Items->Add(gcnew System::String(myMP3Controller->trackList->getFirst()->getTitle()));
+				while(myMP3Controller->trackList->hasNext())
+				{
+					myListBox->Items->Add(gcnew System::String(myMP3Controller->trackList->getNext()->getTitle()));
+				}
 			 }
 
 	private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -410,6 +438,7 @@ namespace MP3Tool {
 				 std::string path = netstr2cppstr( currentItem);
 				 const char * textFromMyTextBox = path.c_str();	
 				 myMP3Connector = new MP3Connector();
+				 myMP3Controller = new MP3Controller();
 
 				 if( myMP3Connector->getFile( textFromMyTextBox))
 
@@ -463,11 +492,28 @@ namespace MP3Tool {
 			 }
 	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 			 }
-	private: System::Void searchfield_changed(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void searchfield_changed(System::Object^  sender, System::EventArgs^  e) 
+			 {
+				myMP3Controller->search(netstr2cppstr(searchfield->Text).c_str());
+				toolStripStatusLabel1->Text = searchfield->Text;
+				 //myMP3Controller->addMP3();
 			 }
-private: System::Void bt_populate_clicked(System::Object^  sender, System::EventArgs^  e) {
-		 }
-private: System::Void bt_delete_clicked(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void bt_populate_clicked(System::Object^  sender, System::EventArgs^  e) 
+			 {
+				 myListBox->Items->Add(gcnew System::String("Bla "+myListBox->Items->Count));
+				// myMP3Controller->addMP3(netstr2cppstr(gcnew System::String("BlaBlub")).c_str());
+			 }
+	private: System::Void bt_delete_clicked(System::Object^  sender, System::EventArgs^  e) 
+			 {
+				 if(myListBox->SelectedIndex>=0)
+				 {
+					myListBox->Items->RemoveAt(myListBox->SelectedIndex);
+				 }
+
+			 }
+private: System::Void bt_clar_clicked(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 myListBox->Items->Clear();
 		 }
 }; // eo Form1 class
 } // eo namespace MP3Tool
