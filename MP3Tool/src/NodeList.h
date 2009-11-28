@@ -29,7 +29,12 @@ public:
 	MP3Data * find( const char * p_title);
 	/// \brief Removes a node from the list by identifying it via the title.
 	void remove( const char * p_title);
-
+	/// \brief Returns the Root-Node
+	MP3Data * getFirst();
+	/// returns the next Node
+	MP3Data * getNext();
+	/// if there is a next Item in the List
+	bool NodeList::hasNext();
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
 	// #include <ostream> where function call takes place.
@@ -39,6 +44,8 @@ private:
 
 	/// \brief Base node to build a linked list.
 	Node * root;
+	/// \brief current Node for the iterator;
+	Node * currentNode; 
 
 };
 
