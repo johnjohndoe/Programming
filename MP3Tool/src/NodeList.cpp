@@ -12,6 +12,7 @@ NodeList::NodeList( void)
 
 NodeList::~NodeList( void)
 {
+	delete root;
 }
 void NodeList::insert( MP3Data * p_data)
 {
