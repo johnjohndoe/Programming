@@ -35,4 +35,5 @@ int Helper::compareCaseSensitive( const char * lhs, const char * rhs)
 			else return GREATER;
 		}
 	}
+	return false;
 }
