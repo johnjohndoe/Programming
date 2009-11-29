@@ -399,7 +399,7 @@ namespace MP3Tool
 				 if( myMP3Controller)
 				 {
 					 // @TODO Better us isEmpty() instead of hasNext() here.
-					 if( myMP3Controller->trackList->hasNext())
+					 if( !myMP3Controller->trackList->isEmpty())
 					 {
 						 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getFirst()->getTitle()));
 						 while( myMP3Controller->trackList->hasNext())
