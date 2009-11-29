@@ -8,58 +8,64 @@ WordNodeList::WordNodeList( void)
 	root = new WordNode();
 	root->next = root;
 	root->prev = root;
-	root->data = NULL;
+	root->wordData = NULL;
 	lastNode =  root;
 	currentNode = root;
 }
-
 WordNodeList::~WordNodeList( void)
 {
+	delete currentNode;
+	delete lastNode;
 	delete root;
 }
-void WordNodeList::insert( const char * p_word, MP3Data * p_mp3data)
+void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 {
-	// Skipp aready inserted Words
-	WordNode * t_wordNode = find(p_word);
-
-	if(t_wordNode != NULL)
+	WordNode * found = contains( p_word);
+	if( found)
 	{
-		t_wordNode->mp3DataList->insert(p_mp3data);
-
+		// Extend the list of associates of the existing word node.
+		found->wordData->associates->insert( p_associate);
 	}
 	else
 	{
-
+		// Otherwise insert new word node.
 		WordNode * node = root->next;
-		while( node != root && Helper::compareCaseSensitive( node->data, p_word) == Helper::SMALLER)
+		while( node != root && Helper::compareCaseSensitive( node->wordData->word, p_word) == Helper::SMALLER)
 			node = node->next;
-		WordNode * newNode = new WordNode();
-		newNode->mp3DataList->insert(p_mp3data);
-		newNode->data = p_word;
-		newNode->mp3Data = p_mp3data;
+		WordNode * newNode = new WordNode( p_word, p_associate);
 		lastNode = newNode;
 		node->prev->next = newNode;
 		newNode->prev = node->prev;
 		newNode->next = node;
 		node->prev = newNode;
-
 	}
 }
-WordNode * WordNodeList::find( const char * p_word)
+WordNode * WordNodeList::contains( const char * p_word)
 {
 	WordNode * node = root->next;
-	while( node != root && !(Helper::compareCaseSensitive( node->data, p_word) == Helper::EQUAL))
-		node = node->next;	// Set to next node. Last would be back to root.
+	while( node != root && !( Helper::compareCaseSensitive( node->wordData->word, p_word) == Helper::EQUAL))
+		node = node->next;	// Set to next node. Last would point back to root.
 	// Not found.
 	if( node == root)
 		return NULL;
-	// Return the object found.
+	// Return the word node.
 	return node;
+}
+NodeList * WordNodeList::find( const char * p_word)
+{
+	WordNode * node = root->next;
+	while( node != root && !( Helper::compareCaseSensitive( node->wordData->word, p_word) == Helper::EQUAL))
+		node = node->next;	// Set to next node. Last would point back to root.
+	// Not found.
+	if( node == root)
+		return NULL;
+	// Return the list of associated MP3Data objects.
+	return node->wordData->associates;
 }
 void WordNodeList::remove( const char * p_word)
 {
 	WordNode * node = root->next;
-	while( node != root && !(Helper::compareCaseSensitive( node->data, p_word) == Helper::EQUAL))
+	while( node != root && !( Helper::compareCaseSensitive( node->wordData->word, p_word) == Helper::EQUAL))
 		node = node->next;
 	// Not found.
 	if( node == root)
@@ -69,47 +75,19 @@ void WordNodeList::remove( const char * p_word)
 	node->next->prev = node->prev;
 	delete node;
 }
-
 void WordNodeList::print( std::ostream & os)
 {
 	unsigned int count = 1;
 	WordNode * node = root->next;
-	while( node->data != NULL)
+	while( node->wordData)
 	{
-		os << count << ": " << node->data << "\n";
+		os << count << ": " << node->wordData->word << "\n";
 		node = node->next;
 		count++;
 	}
 	os << std::endl;
 }
-
-MP3Data * WordNodeList::getFirst()
-{
-	currentNode = root->next;
-	return currentNode->mp3Data;
-}
-
-MP3Data * WordNodeList::getNext()
-{
-	if(currentNode->next->next != NULL)
-	{
-		currentNode = currentNode->next;
-		return currentNode->mp3Data;
-	}
-	else
-	{
-		return NULL;
-	}
-}
-
 bool WordNodeList::hasNext()
 {
-	if(currentNode->next->data == NULL)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+	return ( !currentNode->next->wordData->word) ? true : false;
 }

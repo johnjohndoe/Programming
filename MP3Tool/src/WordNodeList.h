@@ -5,8 +5,8 @@
 
 #include <ostream>	// Only needed for print method.
 #include <iostream>	// Only needed for print method.
-#include "WordNode.h"
 #include "MP3Data.h"
+#include "WordNode.h"
 
 
 /**
@@ -24,15 +24,11 @@ public:
 	/// \brief Destructor.
 	~WordNodeList( void);
 	/// \brief Adds a node in respect to the lexical order of the string.
-	void insert( const char * p_word, MP3Data * p_mp3Data);
-	/// \brief Returns the word or NULL.
-	WordNode * find( const char * p_word);
+	void insert( const char * p_word, MP3Data * p_associate);
+	/// \brief Return the list of associated MP3Data objects or NULL.
+	NodeList * find( const char * p_word);
 	/// \brief Removes a node from the list.
 	void remove( const char * p_word);
-	/// \brief Returns the first node.
-	MP3Data * getFirst();
-	/// \brief Return the following node.
-	MP3Data * getNext();
 	/// \brief Checks if next node is available.
 	bool hasNext();
 
@@ -45,11 +41,14 @@ private:
 
 	/// \brief Base node to build a linked list.
 	WordNode * root;
-	/// \brief current Node for the iterator;
-	WordNode * currentNode; 
-	// The Last Node in the Linked List
+	/// \brief The current node for the iterator.
+	WordNode * currentNode;
+	// @TODO Remove later if unused
+	/// \brief The last node in the linked list.
 	WordNode * lastNode;
 
+	/// \brief Returns a word node if it already exists.
+	WordNode * contains( const char * p_word);
 };
 
 #endif;
