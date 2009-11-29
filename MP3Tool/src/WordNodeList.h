@@ -26,7 +26,7 @@ public:
 	/// \brief Adds a node in respect to the lexical order of the string.
 	void insert( const char * p_word, MP3Data * p_mp3Data);
 	/// \brief Returns the word or NULL.
-	MP3Data * find( const char * p_word);
+	WordNode * find( const char * p_word);
 	/// \brief Removes a node from the list.
 	void remove( const char * p_word);
 

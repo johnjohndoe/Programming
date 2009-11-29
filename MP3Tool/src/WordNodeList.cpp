@@ -19,19 +19,33 @@ WordNodeList::~WordNodeList( void)
 }
 void WordNodeList::insert( const char * p_word, MP3Data * p_mp3data)
 {
-	WordNode * node = root->next;
-	while( node != root && Helper::compareCaseSensitive( node->data, p_word) == Helper::SMALLER)
-		node = node->next;
-	WordNode * newNode = new WordNode();
-	newNode->data = p_word;
-	newNode->mp3Data = p_mp3data;
-	lastNode = newNode;
-	node->prev->next = newNode;
-	newNode->prev = node->prev;
-	newNode->next = node;
-	node->prev = newNode;
+	// Skipp aready inserted Words
+	WordNode * t_wordNode = find(p_word);
+
+	if(t_wordNode != NULL)
+	{
+		t_wordNode->mp3DataList->insert(p_mp3data);
+
+	}
+	else
+	{
+
+		WordNode * node = root->next;
+		while( node != root && Helper::compareCaseSensitive( node->data, p_word) == Helper::SMALLER)
+			node = node->next;
+		WordNode * newNode = new WordNode();
+		newNode->mp3DataList->insert(p_mp3data);
+		newNode->data = p_word;
+		newNode->mp3Data = p_mp3data;
+		lastNode = newNode;
+		node->prev->next = newNode;
+		newNode->prev = node->prev;
+		newNode->next = node;
+		node->prev = newNode;
+
+	}
 }
-MP3Data * WordNodeList::find( const char * p_word)
+WordNode * WordNodeList::find( const char * p_word)
 {
 	WordNode * node = root->next;
 	while( node != root && !(Helper::compareCaseSensitive( node->data, p_word) == Helper::EQUAL))
@@ -40,7 +54,7 @@ MP3Data * WordNodeList::find( const char * p_word)
 	if( node == root)
 		return NULL;
 	// Return the object found.
-	return node->mp3Data;
+	return node;
 }
 void WordNodeList::remove( const char * p_word)
 {
