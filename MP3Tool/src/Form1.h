@@ -553,8 +553,7 @@ namespace MP3Tool
 			 {
 				 loadFullTracklist();
 			 }
-
-
-	}; // eo Form1 class
-} // eo namespace MP3Tool
+			 } // eo Form1 class
+	}; // eo namespace MP3Tool
+}
 #endif
