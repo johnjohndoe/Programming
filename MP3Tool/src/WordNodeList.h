@@ -30,9 +30,9 @@ public:
 	/// \brief Removes a node from the list.
 	void remove( const char * p_word);
 	/// \brief Returns the first node.
-	MP3Data * getFirst();
+	NodeList * getFirst();
 	/// \brief Return the following node.
-	MP3Data * getNext();
+	NodeList * getNext();
 	/// \brief Checks if next node is available.
 	bool hasNext();
 

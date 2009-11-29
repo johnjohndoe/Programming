@@ -36,7 +36,6 @@ void WordNodeList::insert( const char * p_word, MP3Data * p_mp3data)
 		WordNode * newNode = new WordNode();
 		newNode->mp3DataList->insert(p_mp3data);
 		newNode->data = p_word;
-		newNode->mp3Data = p_mp3data;
 		lastNode = newNode;
 		node->prev->next = newNode;
 		newNode->prev = node->prev;
@@ -83,18 +82,18 @@ void WordNodeList::print( std::ostream & os)
 	os << std::endl;
 }
 
-MP3Data * WordNodeList::getFirst()
+NodeList * WordNodeList::getFirst()
 {
-	currentNode = root->next;
-	return currentNode->mp3Data;
+ 	currentNode = root->next;
+	return currentNode->mp3DataList;
 }
 
-MP3Data * WordNodeList::getNext()
+NodeList * WordNodeList::getNext()
 {
 	if(currentNode->next->next != NULL)
 	{
 		currentNode = currentNode->next;
-		return currentNode->mp3Data;
+		return currentNode->mp3DataList;
 	}
 	else
 	{
