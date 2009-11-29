@@ -6,6 +6,7 @@
 #include <ostream>	// Only needed for print method.
 #include <iostream>	// Only needed for print method.
 #include "WordNode.h"
+#include "MP3Data.h"
 
 
 /**
@@ -23,11 +24,18 @@ public:
 	/// \brief Destructor.
 	~WordNodeList( void);
 	/// \brief Adds a node in respect to the lexical order of the string.
-	void insert( const char * p_word);
+	void insert( const char * p_word, MP3Data * p_mp3Data);
 	/// \brief Returns the word or NULL.
-	const char * find( const char * p_word);
+	MP3Data * find( const char * p_word);
 	/// \brief Removes a node from the list.
 	void remove( const char * p_word);
+
+	MP3Data * getFirst();
+	
+	MP3Data * getNext();
+
+	bool hasNext();
+
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
@@ -38,6 +46,10 @@ private:
 
 	/// \brief Base node to build a linked list.
 	WordNode * root;
+	/// \brief current Node for the iterator;
+	WordNode * currentNode; 
+	// The Last Node in the Linked List
+	WordNode * lastNode;
 
 };
 

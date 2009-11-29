@@ -6,7 +6,10 @@
 WordNode::WordNode( void)
 : data( NULL), next( NULL), prev( NULL)
 {
+
 }
+
 WordNode::~WordNode( void)
 {
+
 }
