@@ -11,16 +11,48 @@
 #include "Form1.h"
 #include "MP3Data.h"
 //#include "MP3DataVector.h"
+#include "GenericList.h"
 #include "Node.h"
 #include "NodeList.h"
 #include "Helper.h"
+#include "ArrayVector.h"
+#include "WordNodeList.h"
 #include <ostream>
+#include <vector>
 
 using namespace MP3Tool;
 
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
 {
+
+	// Debugging ArryVector
+	ArrayVector * myArrayVector = new ArrayVector();
+	myArrayVector->addItem(new std::string("BlabLBub"));
+	myArrayVector->addItem(new std::string("Borebs"));
+	myArrayVector->addItem(new std::string("Akex"));
+	myArrayVector->addItem(new std::string("cccccc"));
+	myArrayVector->getItem(0);
+	myArrayVector->resize(20);
+	myArrayVector->print( std::ofstream("..\\data\\array.txt"));
+
+		// -------------------------------------------- DEBUGGING TOKENIZER
+	const char * str = "das ist  nur u ein test ";
+	std::vector<std::string> tokens;
+	Helper::tokenize( std::string( str), tokens);
+	
+	//GenericList<WordNode> * wnl = new GenericList<WordNode>;
+
+	WordNodeList * wl = new WordNodeList();
+	for( unsigned int i=0; i < tokens.size(); ++i)
+	{
+		const char * tmp = tokens.at(  i).c_str();
+		// wl->insert( tmp);
+	}
+	wl->print( std::ofstream("..\\data\\words.txt"));
+
+
+	// -------------------------------------------- END OF DEBUGGING TOKENIZER
 
 	// -------------------------------------------- DEBUGGING NODE LIST
 
@@ -37,7 +69,7 @@ int main(array<System::String ^> ^args)
 	nl->insert( data3);
 	nl->insert( data5);
 
-	nl->print( std::ofstream("..\\data\\nodes.txt"));
+	//nl->print( std::ofstream("..\\data\\nodes.txt"));
 
 	const char * alpha = "anton";
 	MP3Data * result = nl->find( alpha);
