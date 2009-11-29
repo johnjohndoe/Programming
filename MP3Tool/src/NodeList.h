@@ -33,6 +33,10 @@ public:
 	MP3Data * getFirst();
 	/// returns the next Node
 	MP3Data * getNext();
+	/// returns the last inserted Item
+	MP3Data * getLast();
+	// Returns the MP3Data at a certain position
+	MP3Data * at(int i);
 	/// if there is a next Item in the List
 	bool NodeList::hasNext();
 	// Print method offers to print to output stream, f.e. a file
@@ -46,6 +50,8 @@ private:
 	Node * root;
 	/// \brief current Node for the iterator;
 	Node * currentNode; 
+	// The Last Node in the Linked List
+	Node * lastNode;
 
 };
 

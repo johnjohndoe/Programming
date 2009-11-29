@@ -8,6 +8,7 @@ NodeList::NodeList( void)
 	root->next = root;
 	root->prev = root;
 	root->data = NULL;
+	lastNode =  root;
 	currentNode = root;
 }
 
@@ -47,6 +48,16 @@ bool NodeList::hasNext()
 	}
 }
 
+MP3Data * NodeList::at(int i)
+{
+	currentNode = root;
+	for (int j = 0; j <= i ; j++)
+	{
+		currentNode = currentNode->next;
+	}
+	return currentNode->data;
+}
+
 void NodeList::insert( MP3Data * p_data)
 {
 	Node * node = root->next;
@@ -55,7 +66,7 @@ void NodeList::insert( MP3Data * p_data)
 		node = node->next;
 	Node * newNode = new Node();
 	newNode->data = new MP3Data( * p_data);
-
+	lastNode = newNode;
 	node->prev->next = newNode;
 	newNode->prev = node->prev;
 	newNode->next = node;
@@ -95,7 +106,10 @@ void NodeList::remove( const char * p_title)
 	delete node;
 }
 
-
+MP3Data * NodeList::getLast()
+{
+	return lastNode->data;
+}
 
 
 void NodeList::print( std::ostream & os)
