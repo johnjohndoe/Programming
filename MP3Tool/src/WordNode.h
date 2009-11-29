@@ -3,7 +3,8 @@
 #define WORDNODE_H
 
 
-#include "NodeList.h"
+#include "MP3Data.h"
+#include "WordData.h"
 
 
 /**
@@ -13,23 +14,27 @@
 class WordNode
 {
 
+// WordNodeList can access members.
+friend class WordNodeList;
+
 public:
+
+	/// \brief Constructor
+	WordNode( const char * p_word, MP3Data * p_associate);
+	/// \brief Destructor.
+	~WordNode( void);
+
+private:
 
 	/// \brief Default constructor.
 	WordNode( void);
-	/// \brief Destructor.
-	~WordNode( void);
-	/// \brief Stores a single word.
-	const char * data;
-	/// \brief Stores a list of the associated MP3Data objects.
-	NodeList * mp3DataList;
+
+	/// \brief Stores a single word and a list of the associated MP3Data objects.
+	WordData * wordData;
 	/// \brief Pointer to the next node.
 	WordNode * next;
 	/// \brief Pointer to the previous node.
 	WordNode * prev;
-
-private:
-
 
 };
 

@@ -386,12 +386,30 @@ namespace MP3Tool
 
 		}
 #pragma endregion
-	private: 
-		std::string netstr2cppstr( System::String ^ managedString)
+	private: std::string netstr2cppstr( System::String ^ managedString)
 		{
 			std::string out = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer();
 			return out;
 		}
+			 // Updates the gui list with all elements from the track list.
+	private: System::Void loadFullTracklist()
+			 {
+				 searchfield->Text = "";
+				 myListBox->Items->Clear();
+				 if( myMP3Controller)
+				 {
+					 // @TODO Better us isEmpty() instead of hasNext() here.
+					 if( myMP3Controller->trackList->hasNext())
+					 {
+						 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getFirst()->getTitle()));
+						 while( myMP3Controller->trackList->hasNext())
+							 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getNext()->getTitle()));
+					 }
+				 }
+			 }
+
+
+
 
 	private: System::Void btLoadFiles_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
@@ -470,15 +488,33 @@ namespace MP3Tool
 			 // 
 	private: System::Void searchfield_changed( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 WordNode * t_wordNode = myMP3Controller->wordNodeList->find( netstr2cppstr( searchfield->Text).c_str());
-				 if ( t_wordNode != NULL)
-				 {
-					 myListBox->Items->Clear();
-					 myListBox->Items->Add( gcnew System::String( t_wordNode->mp3DataList->getFirst()->getFilename()));
+				 System::String ^ term = searchfield->Text;
+				 unsigned int termLength = term->Length;
 
+				 if( termLength > 0)
+				 {
+					 // Retrieve search term from gui element
+					 NodeList * found = myMP3Controller->wordNodeList->find( netstr2cppstr( term).c_str());
+					 if( found)
+					 {
+						 // One or more element(s) found
+						 myListBox->Items->Clear();
+						 myListBox->Items->Add( gcnew System::String( found->getFirst()->getTitle()));
+						 while( found->hasNext())
+							 myListBox->Items->Add( gcnew System::String( found->getNext()->getTitle()));
+					 }
+					 else
+					 {
+						 // No element found
+						 myListBox->Items->Clear();
+					 }
+				 }
+				 else
+				 {
+					 // Empty search term.
+					 loadFullTracklist();
 				 }
 			 }
-
 			 // Delete the selected Item
 	private: System::Void bt_delete_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
@@ -495,13 +531,10 @@ namespace MP3Tool
 
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 searchfield->Text = "";
-				 while(myMP3Controller->trackList->hasNext())
-				 {
-					 myListBox->Items->Add(gcnew System::String(myMP3Controller->trackList->getNext()->getFilename()));
-				 }
 
-			 } // eo Form1 class
-	}; // eo namespace MP3Tool
-}
+				 loadFullTracklist();
+			 
+			}
+	};  // eo Form1 class
+}// eo namespace MP3Tool
 #endif

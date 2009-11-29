@@ -3,14 +3,13 @@
 #include <stdlib.h>	// Needed for definition of NULL
 
 
-WordNode::WordNode( void)
-: data( NULL), next( NULL), prev( NULL)
+WordNode::WordNode( const char * p_word, MP3Data * p_associate)
 {
-	mp3DataList = new NodeList();
-
+	wordData = new WordData( p_word, p_associate);
 }
-
 WordNode::~WordNode( void)
 {
-	delete mp3DataList;
+	delete prev;
+	delete next;
+	delete wordData;
 }
