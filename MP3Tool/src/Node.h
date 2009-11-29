@@ -14,20 +14,24 @@
 class Node
 {
 
+// NodeList can access members.
+friend class NodeList;
+
 public:
 
 	/// \brief Default constructor.
 	Node( void);
 	/// \brief Destructor.
 	~Node( void);
+
+private:
+
 	/// \brief Stores the metadata object.
 	MP3Data * data;
 	/// \brief Pointer to the next node.
 	Node * next;
 	/// \brief Pointer to the previous node.
 	Node * prev;
-
-private:
 
 
 };

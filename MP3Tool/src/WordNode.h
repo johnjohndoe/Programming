@@ -2,8 +2,9 @@
 #if !defined ( WORDNODE_H )
 #define WORDNODE_H
 
-#include "MP3Data.h"
+
 #include "NodeList.h"
+
 
 /**
  * \class	WordNode
@@ -20,7 +21,7 @@ public:
 	~WordNode( void);
 	/// \brief Stores a single word.
 	const char * data;
-	MP3Data * mp3Data;
+	/// \brief Stores a list of the associated MP3Data objects.
 	NodeList * mp3DataList;
 	/// \brief Pointer to the next node.
 	WordNode * next;
