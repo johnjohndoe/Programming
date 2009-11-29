@@ -4,8 +4,8 @@
 
 
 WordNode::WordNode( void)
+: wordData( NULL), next( NULL), prev( NULL)
 {
-	WordNode( NULL, NULL);
 }
 WordNode::WordNode( const char * p_word, MP3Data * p_associate)
 {
