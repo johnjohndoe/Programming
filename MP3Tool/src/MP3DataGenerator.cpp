@@ -24,8 +24,9 @@ MP3Data * MP3DataGenerator::readMetadata( const char * pPath)
 {
 
 	myID3_Tag.Link( pPath);
-
 	MP3Data * myMP3Data = new MP3Data();
+
+
 
 	ID3_FieldID fieldId = ID3FN_TEXT;
 
@@ -101,6 +102,9 @@ MP3Data * MP3DataGenerator::readMetadata( const char * pPath)
 			}
 		}
 	}
+	myMP3Data->setFilepath(pPath);
+	std::string t_fileName = getFilename(pPath).c_str();
+	myMP3Data->setFilename(t_fileName.c_str());
 	return myMP3Data;
 }
 std::string MP3DataGenerator::getEncoding()
@@ -119,4 +123,13 @@ unsigned int MP3DataGenerator::removeBrackets( const char * text)
 	unsigned int i;
 	ss >> i;
 	return i;
+}
+
+std::string MP3DataGenerator::getFilename( const char * text)
+{
+	std::string t_path = text;
+	std::string::size_type lastPos = t_path.find_last_of( "\\");
+	std::string::size_type t_length = t_path.size();
+	std::string t_string = t_path.substr(lastPos+1, (t_length-lastPos));
+	return t_string;
 }

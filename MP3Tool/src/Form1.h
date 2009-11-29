@@ -37,7 +37,8 @@ namespace MP3Tool
 	private:
 		System::Windows::Forms::Button ^ bt_clearsearch;
 		MP3Controller * myMP3Controller;
-		IMP3DataGenerator * myMP3DataGenerator;
+	private: System::Windows::Forms::Button^  bt_clear;
+			 IMP3DataGenerator * myMP3DataGenerator;
 
 
 	public:
@@ -82,8 +83,8 @@ namespace MP3Tool
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 	private: System::Windows::Forms::Button^  bt_delete;
-	private: System::Windows::Forms::Button^  bt_polulate;
-	private: System::Windows::Forms::Button^  bt_clear;
+
+
 	private: System::Windows::Forms::TextBox^  searchfield;
 
 	private: System::Windows::Forms::Label^  label3;
@@ -125,11 +126,10 @@ namespace MP3Tool
 			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bt_delete = (gcnew System::Windows::Forms::Button());
-			this->bt_polulate = (gcnew System::Windows::Forms::Button());
 			this->searchfield = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->bt_clear = (gcnew System::Windows::Forms::Button());
 			this->bt_clearsearch = (gcnew System::Windows::Forms::Button());
+			this->bt_clear = (gcnew System::Windows::Forms::Button());
 			this->statusStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -213,6 +213,7 @@ namespace MP3Tool
 			// 
 			// tb_Interpret
 			// 
+			this->tb_Interpret->Enabled = false;
 			this->tb_Interpret->Location = System::Drawing::Point(528, 48);
 			this->tb_Interpret->Name = L"tb_Interpret";
 			this->tb_Interpret->Size = System::Drawing::Size(226, 20);
@@ -220,6 +221,7 @@ namespace MP3Tool
 			// 
 			// tb_Title
 			// 
+			this->tb_Title->Enabled = false;
 			this->tb_Title->Location = System::Drawing::Point(528, 75);
 			this->tb_Title->Name = L"tb_Title";
 			this->tb_Title->Size = System::Drawing::Size(226, 20);
@@ -227,6 +229,7 @@ namespace MP3Tool
 			// 
 			// tb_Album
 			// 
+			this->tb_Album->Enabled = false;
 			this->tb_Album->Location = System::Drawing::Point(528, 102);
 			this->tb_Album->Name = L"tb_Album";
 			this->tb_Album->Size = System::Drawing::Size(226, 20);
@@ -234,6 +237,7 @@ namespace MP3Tool
 			// 
 			// tb_Genre
 			// 
+			this->tb_Genre->Enabled = false;
 			this->tb_Genre->Location = System::Drawing::Point(528, 126);
 			this->tb_Genre->Name = L"tb_Genre";
 			this->tb_Genre->Size = System::Drawing::Size(226, 20);
@@ -241,6 +245,7 @@ namespace MP3Tool
 			// 
 			// tb_Track
 			// 
+			this->tb_Track->Enabled = false;
 			this->tb_Track->Location = System::Drawing::Point(528, 152);
 			this->tb_Track->Name = L"tb_Track";
 			this->tb_Track->Size = System::Drawing::Size(226, 20);
@@ -248,6 +253,7 @@ namespace MP3Tool
 			// 
 			// tb_Year
 			// 
+			this->tb_Year->Enabled = false;
 			this->tb_Year->Location = System::Drawing::Point(528, 179);
 			this->tb_Year->Name = L"tb_Year";
 			this->tb_Year->Size = System::Drawing::Size(226, 20);
@@ -305,16 +311,6 @@ namespace MP3Tool
 			this->bt_delete->UseVisualStyleBackColor = true;
 			this->bt_delete->Click += gcnew System::EventHandler(this, &Form1::bt_delete_clicked);
 			// 
-			// bt_polulate
-			// 
-			this->bt_polulate->Location = System::Drawing::Point(333, 171);
-			this->bt_polulate->Name = L"bt_polulate";
-			this->bt_polulate->Size = System::Drawing::Size(75, 23);
-			this->bt_polulate->TabIndex = 10;
-			this->bt_polulate->Text = L"Populate";
-			this->bt_polulate->UseVisualStyleBackColor = true;
-			this->bt_polulate->Click += gcnew System::EventHandler(this, &Form1::bt_populate_clicked);
-			// 
 			// searchfield
 			// 
 			this->searchfield->Location = System::Drawing::Point(66, 10);
@@ -332,16 +328,6 @@ namespace MP3Tool
 			this->label3->TabIndex = 12;
 			this->label3->Text = L"Search: ";
 			// 
-			// bt_clear
-			// 
-			this->bt_clear->Location = System::Drawing::Point(333, 142);
-			this->bt_clear->Name = L"bt_clear";
-			this->bt_clear->Size = System::Drawing::Size(75, 23);
-			this->bt_clear->TabIndex = 13;
-			this->bt_clear->Text = L"Clear List";
-			this->bt_clear->UseVisualStyleBackColor = true;
-			this->bt_clear->Click += gcnew System::EventHandler(this, &Form1::bt_clar_clicked);
-			// 
 			// bt_clearsearch
 			// 
 			this->bt_clearsearch->Location = System::Drawing::Point(256, 8);
@@ -352,6 +338,16 @@ namespace MP3Tool
 			this->bt_clearsearch->UseVisualStyleBackColor = true;
 			this->bt_clearsearch->Click += gcnew System::EventHandler(this, &Form1::bt_clearsearch_Click);
 			// 
+			// bt_clear
+			// 
+			this->bt_clear->Location = System::Drawing::Point(333, 171);
+			this->bt_clear->Name = L"bt_clear";
+			this->bt_clear->Size = System::Drawing::Size(75, 23);
+			this->bt_clear->TabIndex = 13;
+			this->bt_clear->Text = L"Clear List";
+			this->bt_clear->UseVisualStyleBackColor = true;
+			this->bt_clear->Click += gcnew System::EventHandler(this, &Form1::bt_clear_clicked);
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -361,7 +357,6 @@ namespace MP3Tool
 			this->Controls->Add(this->bt_clear);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->searchfield);
-			this->Controls->Add(this->bt_polulate);
 			this->Controls->Add(this->bt_delete);
 			this->Controls->Add(this->statusStrip1);
 			this->Controls->Add(this->label1);
@@ -383,7 +378,7 @@ namespace MP3Tool
 			this->Controls->Add(this->myListBox);
 			this->Name = L"Form1";
 			this->Text = L"MP3-Tag-Viewer";
-			this->Load += gcnew System::EventHandler( this, &Form1::Form1_Load);
+			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			this->statusStrip1->ResumeLayout(false);
 			this->statusStrip1->PerformLayout();
 			this->ResumeLayout(false);
@@ -404,7 +399,7 @@ namespace MP3Tool
 				 if( myMP3Controller)
 				 {
 					 // @TODO Better us isEmpty() instead of hasNext() here.
-					 if( myMP3Controller->trackList->hasNext())
+					 if( !myMP3Controller->trackList->isEmpty())
 					 {
 						 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getFirst()->getTitle()));
 						 while( myMP3Controller->trackList->hasNext())
@@ -428,22 +423,14 @@ namespace MP3Tool
 				 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 				 {
 					 System::Collections::IEnumerator^ a_enumerator = openFileDialog1->FileNames->GetEnumerator();
-
 					 while ( a_enumerator->MoveNext())
 					 {
 						 // Retrieve metadata and add them to the track list
 						 System::String^  temp_String = (System::String^) a_enumerator->Current;
-						 myMP3Controller->addMP3( netstr2cppstr( temp_String).c_str());
-
-						 // Isolate words and add them to the index
-						 std::vector<std::string> *tokenVec = new std::vector<std::string>;
-						 Helper::tokenize( ( myMP3Controller->trackList->getLast()->getTitle()), *tokenVec);
-						 std::vector<std::string>::iterator dIter( tokenVec->begin());
-						 for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
-						 {
-							 myMP3Controller->wordNodeList->insert( tokenVec->at( i).c_str(), myMP3Controller->trackList->getLast());
-						 }
+						 myMP3Controller->addMP3( netstr2cppstr(temp_String).c_str());
 					 }
+					 // create new IndexList 
+					 myMP3Controller->createIndex();
 					 // Print word list
 					 myMP3Controller->wordNodeList->print( std::ofstream("..\\data\\words.txt"));
 
@@ -454,10 +441,11 @@ namespace MP3Tool
 
 				 // Update gui list
 				 myListBox->Items->Clear();
-				 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getFirst()->getTitle()));
+
+				 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getFirst()->getFilename()));
 				 while( myMP3Controller->trackList->hasNext())
 				 {
-					 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getNext()->getTitle()));
+					 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getNext()->getFilename()));
 				 }
 			 }
 
@@ -527,14 +515,6 @@ namespace MP3Tool
 					 loadFullTracklist();
 				 }
 			 }
-
-			 // For Debugging
-	private: System::Void bt_populate_clicked( System::Object ^ sender, System::EventArgs ^ e) 
-			 {
-				 myListBox->Items->Add( gcnew System::String( "Bla "+myListBox->Items->Count));
-				 // myMP3Controller->addMP3( netstr2cppstr( gcnew System::String( "BlaBlub")).c_str());
-			 }
-
 			 // Delete the selected Item
 	private: System::Void bt_delete_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
@@ -544,16 +524,17 @@ namespace MP3Tool
 				 }
 			 }
 			 // Method for reseting the GUI
-	private: System::Void bt_clar_clicked( System::Object ^ sender, System::EventArgs ^ e) 
+	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
 				 myListBox->Items->Clear();
 			 }
 
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
+
 				 loadFullTracklist();
-			 }
-			 } // eo Form1 class
-	}; // eo namespace MP3Tool
-}
+			 
+			}
+	};  // eo Form1 class
+}// eo namespace MP3Tool
 #endif

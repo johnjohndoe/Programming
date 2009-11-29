@@ -30,7 +30,9 @@ public:
 	MP3Data* getFirst(void);
 	MP3Data* getNext(void);
 	bool hasNext(void);
+	void createIndex();
 	void print(void);
+	void clearLists();
 	
 
 

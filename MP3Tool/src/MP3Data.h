@@ -5,6 +5,7 @@
 
 #include <ostream>	// Only needed for print method.
 #include <iostream>	// Only needed for print method.
+#include <string>
 #include "Helper.h"
 
 
@@ -31,6 +32,8 @@ public:
 	void setYear( const char * p_year);
 	void setTracknumber( const char * p_tracknumber);
 	void setGenre( const char * p_genre);
+	void setFilepath (const char * p_filepath);
+	void setFilename (const char * p_filename);
 	void setAll( const char * p_value);
 
 	// Getter
@@ -41,6 +44,8 @@ public:
 	const char * getYear( void);
 	const char * getTracknumber( void);
 	const char * getGenre( void);
+	const char * getFilepath( void);
+	const char * getFilename( void);
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\mp3data.log"));
@@ -57,6 +62,8 @@ private:
 	const char * year;
 	const char * tracknumber;
 	const char * genre;
+	const char * filepath;
+	const char * filename;
 
 	/// \brief The smaller than operator implements a lexical comparison.
 	friend bool operator< ( const MP3Data & lhs, const MP3Data & rhs);

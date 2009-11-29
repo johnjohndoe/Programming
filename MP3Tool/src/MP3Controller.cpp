@@ -9,14 +9,10 @@ MP3Controller::MP3Controller(void)
 	wordNodeList = new WordNodeList();
 }
 
-
 void MP3Controller::addMP3(const char* fPath)
 {
-	
 	tempMP3Data = myGenerator->readMetadata(fPath);
 	trackList->insert(tempMP3Data);
-
-
 }
 
 void MP3Controller::print()
@@ -37,11 +33,45 @@ bool MP3Controller::hasNext(void)
 	return trackList->hasNext();
 }
 
+void MP3Controller::createIndex()
+{
+	this->wordNodeList = new WordNodeList();
+	std::vector<std::string> *tokenVec = new std::vector<std::string>;
+	Helper::tokenize( ( trackList->getFirst()->getTitle()), *tokenVec);
+	std::vector<std::string>::iterator dIter( tokenVec->begin());
+	for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
+	{
+		wordNodeList->insert( tokenVec->at( i).c_str(), trackList->getFirst());
+	}
+
+	
+	while(trackList->hasNext())
+	{
+		tokenVec = new std::vector<std::string>;
+		MP3Data * t_data = trackList->getNext();
+		Helper::tokenize( ( t_data->getTitle()), *tokenVec);
+		std::vector<std::string>::iterator dIter( tokenVec->begin());
+		for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
+		{
+			//MP3Data * t_date = 
+			wordNodeList->insert( tokenVec->at( i).c_str(), t_data);
+		}
+	}
+
+}
+
+void MP3Controller::clearLists()
+{
+	this->trackList = new NodeList();
+	this->wordNodeList = new WordNodeList();
+
+}
 const char* MP3Controller::search(const char* searchString)
 {
 	return searchString;
 
 }
+
 
 
 bool MP3Controller::deleteTrack(int position)
