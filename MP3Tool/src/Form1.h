@@ -2,13 +2,14 @@
 #if !defined ( FORM1_H )
 #define FORM1_H
 
-#include <map>
+#include <vector>
 #include <string>
 #include <iostream>
 #include "MP3Data.h"
 #include "MP3DataGenerator.h"
-#include "MP3Connector.h"
+//#include "MP3Connector.h"
 #include "MP3Controller.h"
+#include "Helper.h"
 #include "ID3_FrameID_LUT.h"
 
 
@@ -33,7 +34,7 @@ namespace MP3Tool {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	private:
-		MP3Connector * myMP3Connector;
+//		MP3Connector * myMP3Connector;
 		MP3Controller * myMP3Controller;
 		IMP3DataGenerator * myMP3DataGenerator;
 
@@ -401,21 +402,32 @@ namespace MP3Tool {
 					 
 					 while ( a_enumerator->MoveNext())
 					 {
-						 // myListBox->Items->Add( a_enumerator->Current);
 						 System::String^  temp_String = (System::String^) a_enumerator->Current;
 						 myMP3Controller->addMP3(netstr2cppstr(temp_String).c_str());
+						 std::vector<std::string> *tokenVec = new std::vector<std::string>;
+
+						 Helper::tokenize((myMP3Controller->trackList->getLast()->getTitle()), *tokenVec);
+
+						 std::vector<std::string>::iterator dIter(tokenVec->begin());
+
+						 for(int i = 0 ;  dIter != tokenVec->end();i++, dIter++)
+						 {
+
+							 myMP3Controller->wordNodeList->insert(tokenVec->at(i).c_str(), myMP3Controller->trackList->getLast());
+						 }
 						 zaehler++;
 					 }
+					myMP3Controller->wordNodeList->print(std::ofstream("..\\data\\words.txt"));
+
 					
 					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
+
 				 }
 
 				 toolStripStatusLabel1->Text = "Soviel Text wurde gelesen:" + zaehler;
 				 myListBox->SelectedIndex = -1;
 
 				myMP3Controller->print();
-
-
 
 				myListBox->Items->Add(gcnew System::String(myMP3Controller->trackList->getFirst()->getTitle()));
 				while(myMP3Controller->trackList->hasNext())
@@ -424,59 +436,27 @@ namespace MP3Tool {
 				}
 			 }
 
-	private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void myListBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+			 {
 				 int selection = myListBox->SelectedIndex;
 				 int max = myListBox->Items->Count;
 
 				 // Stop handler when selected item is invalid
-				 if( selection > max || selection < 0)
-				 return;
+				 if( selection > max || selection < 0)return;
+				 MP3Data* tmpMP3Date = myMP3Controller->trackList->at(selection);
 
 				 clearTextboxes();
+				 tb_Title->Text = gcnew System::String(tmpMP3Date->getTitle());
+				 tb_Genre->Text = gcnew System::String(tmpMP3Date->getGenre());
+				 tb_Interpret->Text = gcnew System::String(tmpMP3Date->getArtist());
+				 tb_Track->Text = gcnew System::String(tmpMP3Date->getTracknumber());
+				 tb_Year->Text = gcnew System::String(tmpMP3Date->getYear());
+				 tb_Album->Text = gcnew System::String(tmpMP3Date->getAlbum());
 
-				 String ^ currentItem = myListBox->SelectedItem->ToString();
-				 std::string path = netstr2cppstr( currentItem);
-				 const char * textFromMyTextBox = path.c_str();	
-				 myMP3Connector = new MP3Connector();
-				 myMP3Controller = new MP3Controller();
+				 // String ^ currentItem = myListBox->SelectedItem->ToString();
 
-				 if( myMP3Connector->getFile( textFromMyTextBox))
-
-				 {
-					 std::map<ID3_FrameID, std::string> * metadata = myMP3Connector->getMetadata();
-					 // If not null
-					 if( metadata)
-					 {
-						 std::map<ID3_FrameID, std::string>::iterator mdIter = metadata->begin();
-						 String ^ tempKey;
-						 String ^ tempValue;
-						 ID3_FrameID_LUT * myLUT = new ID3_FrameID_LUT();
-						 for ( mdIter; mdIter != metadata->end(); ++mdIter)
-						 {
-							 tempKey = gcnew String( myLUT->getRealname( mdIter->first));
-							 tempValue = gcnew String( (mdIter->second).c_str());
-
-							 if( mdIter->first == ID3FID_ALBUM)
-								 tb_Album->Text = tempValue;
-							 if( mdIter->first == ID3FID_LEADARTIST)
-								 tb_Interpret->Text = tempValue;
-							 if( mdIter->first == ID3FID_TRACKNUM)
-								 tb_Track->Text = tempValue;
-							 if( mdIter->first == ID3FID_CONTENTTYPE)
-								 tb_Genre->Text = tempValue;
-							 if( mdIter->first == ID3FID_YEAR)
-								 tb_Year->Text = tempValue;
-							 if( mdIter->first == ID3FID_TITLE)
-								 tb_Title->Text = tempValue;
-							 // Store the text encoding type for the current frame
-							 std::string encoding = myMP3Connector->getEncoding();
-							 String ^ encodingNetString = gcnew String( encoding.c_str());
-							 toolStripStatusLabel1->Text = encodingNetString;
-								 
-						 }
-					 }
-				 }
-			 } // eo fn
+				 
+			 }
 
 	private: System::Void clearTextboxes()
 			 {
