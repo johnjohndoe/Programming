@@ -38,7 +38,9 @@ public:
 	/// \brief Returns the MP3Data object at a certain position.
 	MP3Data * at( int i);
 	/// \brief Checks if there is a next item in the list.
-	bool NodeList::hasNext();
+	bool hasNext();
+	/// \returns True if the NodeList is empty
+	bool isEmpty();
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
@@ -53,6 +55,8 @@ private:
 	Node * currentNode; 
 	/// \brief The last node in the linked list.
 	Node * lastNode;
+	/// \brief Length of the LinkedList
+	unsigned int length;
 
 };
 
