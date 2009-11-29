@@ -434,8 +434,6 @@ namespace MP3Tool
 						 zaehler++;
 					 }
 					 myMP3Controller->wordNodeList->print(std::ofstream("..\\data\\words.txt"));
-
-
 					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
 
 				 }
@@ -531,6 +529,11 @@ namespace MP3Tool
 	private: System::Void bt_clearsearch_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
 				 searchfield->Text = "";
+				 while(myMP3Controller->trackList->hasNext())
+				 {
+					 myListBox->Items->Add(gcnew System::String(myMP3Controller->trackList->getNext()->getTitle()));
+				 }
+
 			 } // eo Form1 class
 	}; // eo namespace MP3Tool
 }
