@@ -8,7 +8,6 @@ NodeList::NodeList( void)
 	root->next = root;
 	root->prev = root;
 	root->data = NULL;
-	lastNode =  root;
 	currentNode = root;
 	length = 0;
 
@@ -16,6 +15,7 @@ NodeList::NodeList( void)
 
 NodeList::~NodeList( void)
 {
+	delete currentNode;
 	delete root;
 }
 
@@ -38,10 +38,10 @@ MP3Data* NodeList::getNext()
 	}
 }
 
-MP3Data * NodeList::at(int i)
+MP3Data * NodeList::at( unsigned int i)
 {
 	currentNode = root;
-	for (int j = 0; j <= i ; j++)
+	for ( unsigned int j = 0; j <= i ; j++)
 	{
 		currentNode = currentNode->next;
 	}
@@ -74,13 +74,16 @@ bool NodeList::isEmpty()
 
 void NodeList::insert( MP3Data * p_data)
 {
+	// Skip insert if node already exists.
+	MP3Data * found = find( p_data->getTitle());
+	if( found) return;
+
 	Node * node = root->next;
 	// !Important: Dereference the pointer before using the comparison operator.
 	while( node != root && *node->data < *p_data)
 		node = node->next;
 	Node * newNode = new Node();
 	newNode->data = new MP3Data( * p_data);
-	lastNode = newNode;
 	node->prev->next = newNode;
 	newNode->prev = node->prev;
 	newNode->next = node;
@@ -120,13 +123,6 @@ void NodeList::remove( const char * p_title)
 	delete node->data;
 	delete node;
 }
-
-MP3Data * NodeList::getLast()
-{
-	return lastNode->data;
-}
-
-
 void NodeList::print( std::ostream & os)
 {
 	unsigned int count = 1;

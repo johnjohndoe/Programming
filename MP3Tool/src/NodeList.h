@@ -33,10 +33,8 @@ public:
 	MP3Data * getFirst();
 	/// \brief Returns the next node.
 	MP3Data * getNext();
-	/// \brief Returns the last inserted item.
-	MP3Data * getLast();
 	/// \brief Returns the MP3Data object at a certain position.
-	MP3Data * at( int i);
+	MP3Data * at( unsigned int i);
 	/// \brief Checks if there is a next item in the list.
 	bool hasNext();
 	/// \returns True if the NodeList is empty
@@ -53,8 +51,6 @@ private:
 	Node * root;
 	/// \brief Current node for the iterator.
 	Node * currentNode; 
-	/// \brief The last node in the linked list.
-	Node * lastNode;
 	/// \brief Length of the LinkedList
 	unsigned int length;
 
