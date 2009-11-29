@@ -6,9 +6,9 @@
 WordNodeList::WordNodeList( void)
 {
 	root = new WordNode();
+	root->wordData = NULL;
 	root->next = root;
 	root->prev = root;
-	root->wordData = NULL;
 	lastNode =  root;
 	currentNode = root;
 }
