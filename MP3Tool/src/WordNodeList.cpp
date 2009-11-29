@@ -33,8 +33,6 @@ void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 		while( node != root && Helper::compareCaseSensitive( node->wordData->word, p_word) == Helper::SMALLER)
 			node = node->next;
 		WordNode * newNode = new WordNode( p_word, p_associate);
-		newNode->mp3DataList->insert(p_mp3data);
-		newNode->data = p_word;
 		lastNode = newNode;
 		node->prev->next = newNode;
 		newNode->prev = node->prev;
@@ -89,29 +87,6 @@ void WordNodeList::print( std::ostream & os)
 	}
 	os << std::endl;
 }
-<<<<<<< HEAD
-
-NodeList * WordNodeList::getFirst()
-{
- 	currentNode = root->next;
-	return currentNode->mp3DataList;
-}
-
-NodeList * WordNodeList::getNext()
-{
-	if(currentNode->next->next != NULL)
-	{
-		currentNode = currentNode->next;
-		return currentNode->mp3DataList;
-	}
-	else
-	{
-		return NULL;
-	}
-}
-
-=======
->>>>>>> df0899dc614964cace391f355741afa74f70bf29
 bool WordNodeList::hasNext()
 {
 	return ( !currentNode->next->wordData->word) ? true : false;
