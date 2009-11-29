@@ -29,13 +29,12 @@ public:
 	WordNode * find( const char * p_word);
 	/// \brief Removes a node from the list.
 	void remove( const char * p_word);
-
+	/// \brief Returns the first node.
 	MP3Data * getFirst();
-	
+	/// \brief Return the following node.
 	MP3Data * getNext();
-
+	/// \brief Checks if next node is available.
 	bool hasNext();
-
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
