@@ -19,15 +19,14 @@ friend class WordNodeList;
 
 public:
 
+	/// \brief Default constructor.
+	WordNode( void);
 	/// \brief Constructor
 	WordNode( const char * p_word, MP3Data * p_associate);
 	/// \brief Destructor.
 	~WordNode( void);
 
 private:
-
-	/// \brief Default constructor.
-	WordNode( void);
 
 	/// \brief Stores a single word and a list of the associated MP3Data objects.
 	WordData * wordData;
