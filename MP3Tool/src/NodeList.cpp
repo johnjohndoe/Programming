@@ -60,7 +60,7 @@ bool NodeList::hasNext()
 	}
 }
 
-void NodeList::isEmpty()
+bool NodeList::isEmpty()
 {
 	if (length == 0)
 	{
