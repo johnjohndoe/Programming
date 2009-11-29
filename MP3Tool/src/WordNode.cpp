@@ -6,10 +6,11 @@
 WordNode::WordNode( void)
 : data( NULL), next( NULL), prev( NULL)
 {
+	mp3DataList = new NodeList();
 
 }
 
 WordNode::~WordNode( void)
 {
-
+	delete mp3DataList;
 }

@@ -3,6 +3,7 @@
 #define WORDNODE_H
 
 #include "MP3Data.h"
+#include "NodeList.h"
 
 /**
  * \class	WordNode
@@ -20,6 +21,7 @@ public:
 	/// \brief Stores a single word.
 	const char * data;
 	MP3Data * mp3Data;
+	NodeList * mp3DataList;
 	/// \brief Pointer to the next node.
 	WordNode * next;
 	/// \brief Pointer to the previous node.
