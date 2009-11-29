@@ -6,6 +6,7 @@ MP3Controller::MP3Controller(void)
 	trackList = new NodeList();
 	tempMP3Data = new MP3Data();
 	myGenerator = new MP3DataGenerator();
+	wordNodeList = new WordNodeList();
 }
 
 

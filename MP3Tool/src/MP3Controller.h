@@ -3,9 +3,9 @@
 #define MP3CONTROLLER_H
 
 #include <string>
-#include "MP3List.h"
 #include "NodeList.h"
 #include "MP3Data.h"
+#include "WordNodeList.h"
 #include "MP3DataGenerator.h"
 
 
@@ -13,10 +13,11 @@ class MP3Controller
 {
 public:
 	MP3Controller(void);
-
-	MP3List * myList;
 	NodeList * trackList;
+	WordNodeList * wordNodeList;
+
 	MP3Data * tempMP3Data;
+
 	MP3DataGenerator * myGenerator;
 
 	void addMP3(const char* fPath);
