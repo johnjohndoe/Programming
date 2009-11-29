@@ -11,6 +11,8 @@ MP3Data::MP3Data( void)
 	this->year = NULL;
 	this->tracknumber = NULL;
 	this->genre = NULL;
+	this->filepath = NULL;
+	this->filename = NULL;
 }
 MP3Data::~MP3Data( void)
 {
@@ -23,6 +25,8 @@ const char * MP3Data::getAlbum()		{	return ( album) ? album : "<undefined>";				
 const char * MP3Data::getYear()			{	return ( year) ? year : "<undefined>";					}
 const char * MP3Data::getTracknumber()	{	return ( tracknumber) ? tracknumber : "<undefined>";	}
 const char * MP3Data::getGenre()		{	return ( genre) ? genre : "<undefined>";				}
+const char * MP3Data::getFilepath()		{	return ( filepath) ? filepath : "<undefined>";			}
+const char * MP3Data::getFilename()		{	return ( filename) ? filename : "<undefined>";			}
 
 void MP3Data::setIndex( int p_index)						{	this->index = p_index;				}
 void MP3Data::setTitle( const char * p_title)				{	this->title = p_title;				}
@@ -31,6 +35,14 @@ void MP3Data::setAlbum( const char * p_album)				{	this->album = p_album;				}
 void MP3Data::setYear( const char * p_year)					{	this->year = p_year;				}
 void MP3Data::setTracknumber( const char * p_tracknumber)	{	this->tracknumber = p_tracknumber;	}
 void MP3Data::setGenre( const char * p_genre)				{	this->genre = p_genre;				}
+void MP3Data::setFilepath( const char * p_filepath)			
+{	
+	this->filepath = (new std::string(p_filepath))->c_str();		
+}
+void MP3Data::setFilename( const char * p_filename)			
+{	
+	this->filename = (new std::string(p_filename))->c_str();		
+}
 void MP3Data::setAll( const char * p_value)
 {
 	this->title = p_value;
@@ -39,6 +51,9 @@ void MP3Data::setAll( const char * p_value)
 	this->year = p_value;
 	this->tracknumber = p_value;
 	this->genre = p_value;
+	this->filepath = p_value;
+	this->filename = p_value;
+
 }
 
 void MP3Data::print( std::ostream & os)
@@ -49,5 +64,7 @@ void MP3Data::print( std::ostream & os)
 	os << "Album: " << getAlbum() << "\n";
 	os << "Year: " << getYear() << "\n";
 	os << "Track number: " << getTracknumber() << "\n";
-	os << "Genre: " << getGenre() << std::endl;
+	os << "Genre: " << getGenre() << "\n";
+	os << "Filename: " << getFilename() << "\n";
+	os << "Filepath: " << getFilepath() << std::endl;
 }
