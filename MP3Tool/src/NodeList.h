@@ -39,6 +39,8 @@ public:
 	bool hasNext();
 	/// \returns True if the NodeList is empty
 	bool isEmpty();
+	/// \brief All elements of the bypassed node list become integrated into this node list.
+	void merge( NodeList * p_nodeList);
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));

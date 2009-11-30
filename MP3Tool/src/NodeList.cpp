@@ -13,15 +13,15 @@ NodeList::NodeList( void)
 }
 NodeList::~NodeList( void)
 {
-	delete currentNode;
+//	if( currentNode) delete currentNode;
 	delete root;
 }
-MP3Data* NodeList::getFirst()
+MP3Data * NodeList::getFirst()
 {
 	currentNode = root->next;
 	return currentNode->data;
 }
-MP3Data* NodeList::getNext()
+MP3Data * NodeList::getNext()
 {
 	if( currentNode->next != NULL)
 	{
@@ -65,10 +65,12 @@ void NodeList::insert( MP3Data * p_mp3Data)
 
 	Node * node = root->next;
 	// !Important: Dereference the pointer before using the comparison operator.
-	while( node != root && *node->data < *p_mp3Data)
+	while( node != NULL && node != root && *node->data < *p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
 	newNode->data = new MP3Data( * p_mp3Data);
+
+	if( node == NULL) return;
 	node->prev->next = newNode;
 	newNode->prev = node->prev;
 	newNode->next = node;
@@ -82,10 +84,10 @@ MP3Data * NodeList::findByFilePath( const char * p_filePath)
 	MP3Data * interest = new MP3Data();
 	interest->setFilepath( p_filePath);
 	// !Important: Dereference the pointer before using the comparison operator.
-	while( node != root && *node->data != *interest)
+	while( node != NULL && node != root && *node->data != *interest)
 		node = node->next;	// Set to next node. Last would be back to root.
 	// Not found.
-	if( node == root)
+	if( node == NULL || node == root)
 		return NULL;
 	// Return the object found.
 	return node->data;
@@ -94,16 +96,23 @@ void NodeList::removeObj( MP3Data * p_mp3Data)
 {
 	Node * node = root->next;
 	// !Important: Dereference the pointer before using the comparison operator.
-	while( node != root && *node->data != *p_mp3Data)
+	while( node != NULL && node != root && *node->data != *p_mp3Data)
 		node = node->next;
 	// Not found.
-	if( node == root)
+	if( node == NULL || node == root)
 		return;
 	// Relink neighbors and remove the object found.
 	node->prev->next = node->next;
 	node->next->prev = node->prev;
 	delete node->data;
 	delete node;
+}
+void NodeList::merge( NodeList * p_nodeList)
+{
+	if( p_nodeList->length <= 0) return;
+	this->insert( p_nodeList->getFirst());
+	while( p_nodeList->hasNext())
+		this->insert( p_nodeList->getNext());
 }
 void NodeList::print( std::ostream & os)
 {

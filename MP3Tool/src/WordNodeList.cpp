@@ -14,8 +14,8 @@ WordNodeList::WordNodeList( void)
 }
 WordNodeList::~WordNodeList( void)
 {
-	delete currentNode;
-	delete lastNode;
+//	if( currentNode) delete currentNode;
+//	if( lastNode) delete lastNode;
 	delete root;
 }
 void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
