@@ -71,6 +71,7 @@ NodeList * MP3Controller::getSearchResult(const char* searchString)
 	if(searchString != NULL)
 	{
 		searchResult = wordNodeList->find(searchString);
+		searchResult = wordNodeList->searchForSubstring(searchString);
 	}
 	return searchResult;
 
