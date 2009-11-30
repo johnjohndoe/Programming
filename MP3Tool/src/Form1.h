@@ -552,6 +552,7 @@ namespace MP3Tool
 				 if( termLength > 0)
 				 {
 					 // Retrieve search term from gui element
+					 //NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
 					 NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
 					 if( found)
 					 {
