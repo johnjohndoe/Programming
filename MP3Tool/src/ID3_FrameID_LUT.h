@@ -2,8 +2,10 @@
 #if !defined ( ID3_FRAMEID_LUT_H )
 #define ID3_FRAMEID_LUT_H
 
+
 #include <map>
 #include "id3/tag.h"
+
 
 /**
  * \class	ID3_FrameID_LUT
