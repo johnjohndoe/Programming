@@ -31,6 +31,8 @@ public:
 	void remove( const char * p_word);
 	/// \brief Checks if next node is available.
 	bool hasNext();
+	/// \brief search-method for finding a substring in the Titel-Words; uses the Devide 
+	NodeList * searchForSubstring(const char * p_word);
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
@@ -46,6 +48,10 @@ private:
 	// @TODO Remove later if unused
 	/// \brief The last node in the linked list.
 	WordNode * lastNode;
+	/// \brief length of the LinkedList (containing Words)
+	unsigned int length;
+	/// \brief Search-Result with a unique List of found MP3Datas
+	NodeList * searchResult;
 
 	/// \brief Returns a word node if it already exists.
 	WordNode * contains( const char * p_word);
