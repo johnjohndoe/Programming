@@ -98,6 +98,7 @@ bool WordNodeList::hasNext()
 NodeList * WordNodeList::searchForSubstring(const char * p_word)
 {
 	searchResult = new NodeList();
+	std::string * inputString = new std::string(p_word);
 	currentNode = root->next;
 	size_t findPos = -1;
 	int count = 0;
@@ -117,9 +118,9 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 			while(currentNode->next->wordData != NULL)
 			{
 				std::string * aktSearchString = new std::string(currentNode->wordData->word);
-				findPos = aktSearchString->find(p_word);
+				findPos = aktSearchString->find(inputString);
 
-				count++;
+				
 				if(findPos == 0) // SuchString soll nur am Anfang sein
 				{
 					searchResult->insert(currentNode->wordData->associates->getFirst());
@@ -130,13 +131,88 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 					}
 					findPos = -1;
 				}
+				count++; // Debugg
 				currentNode = currentNode->next;
+			}
+
+		}
+		else
+		{
+			int UpperBound = length;
+			int LowerBound = 0;
+			int currentIndex = 0;
+			int diff = 0;
+
+			diff = int((UpperBound - LowerBound)/2-.5);
+			if(currentIndex == 0) // Wenn der Suchsprung 0 ist
+			{
+				break;
+			}
+			else
+			{
+				// Wenn der Suchsprung grösser als 0 ist. 
+				// Diff ist die Grösse des Sprunges
+				// currentIndex ist die Untere Grenze  + der Größe des Sprunges
+				currentIndex = diff + LowerBound;
+				for (int g = 0; g < diff; g++) // Springe um die Menge der Srpünge an die richtige Node
+				{
+					currentNode = currentNode->next;
+				}
+				std::string * aktSearchString = new std::string(currentNode->wordData->word);
+				findPos = aktSearchString->find(inputString);
+				if(findPos == 0) // SuchString soll nur am Anfang sein
+				{
+					// Sachen die er machen muss wenn er Gefunden hat.
+
+				}
+				else
+				{
+					if(aktSearchString<inputString)
+					{
+						// suchstring ist groesser - > ergo halbiere den Sprung
+						LowerBound = currentIndex;
+
+					} 
+					else // gibt nur noch nen kleiner. Bei gleich würde die Regel für findPos = 0 gelten
+					{
+						
+						UpperBound = currentIndex; // Um wieviel Schritte muss gewechselt werden?
+
+					}
+
+				}
+				
+				
+			}
+
+
+
+
+
+			if(length%2=0)
+			{
+				aktSearchJump = length / 2;
+				for(int i = 0; i < length/2 ; i++)
+				{
+					currentNode = currentNode->next;
+					
+				}
+				std::string * aktSearchString = new std::string(currentNode->wordData->word);
+				findPos = aktSearchString->find(p_word);
+				if(findPos == 0) // SuchString soll nur am Anfang sein
+				{
+					// searchResult Füge das Ergebniss der Aktuellen Suche dem Ergebniss hinzu
+					findPos = aktSearchString->find(currentNode->prev->wordData->word); // Wenn der VOrgänger auch ein Ergebniss hat
+					while()
+				}
+
 			}
 
 		}
 		
 	}
-	return searchResult;
+	if(searchResult->isEmpty())return NULL;
+	else return searchResult;
 	// sporinge zur Mitte des Suchergebnisses (immer auf untere ganze Zahl runden)
 	// Runden unter C: int erg = int(a+0.5);
 
