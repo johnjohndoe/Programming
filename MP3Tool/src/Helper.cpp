@@ -1,10 +1,13 @@
 #include "StdAfx.h"
-#include "Helper.h"
+#include <iostream>
+#include <exception>
 #include <stdlib.h>	// Needed for definition of NULL
+#include "Helper.h"
 
 
 unsigned int Helper::length( const char * c)
 {
+	if( c == NULL) return 0;
 	unsigned int i = 0;
 	while ( c[i] != NULL)
 		i++;
@@ -17,6 +20,13 @@ int Helper::compareCaseSensitive( const char * lhs, const char * rhs)
 {
 	unsigned int lengthLhs = Helper::length( lhs);
 	unsigned int lengthRhs = Helper::length( rhs);
+
+	if( lengthLhs == 0 || lengthRhs == 0)
+	{	
+		throw "Error: Helper::length(), Character object has length zero.";
+		exit( -1);
+	}
+
 	unsigned int min = ( lengthLhs > lengthRhs) ? lengthLhs : lengthRhs;
 
 	for( unsigned int i=0; i < min; ++i)

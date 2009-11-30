@@ -292,7 +292,7 @@ namespace MP3Tool
 			// 
 			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 			this->toolStripStatusLabel1->Size = System::Drawing::Size(118, 17);
-			this->toolStripStatusLabel1->Text = L"toolStripStatusLabel1";
+			this->toolStripStatusLabel1->Text = L"Selected file: ";
 			// 
 			// bt_delete
 			// 
@@ -397,12 +397,12 @@ namespace MP3Tool
 				 openFileDialog1->Multiselect = true;
 				 if ( openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 				 {
-					 System::Collections::IEnumerator^ a_enumerator = openFileDialog1->FileNames->GetEnumerator();
-					 while ( a_enumerator->MoveNext())
+					 System::Collections::IEnumerator ^ fileEnumerator = openFileDialog1->FileNames->GetEnumerator();
+					 while ( fileEnumerator->MoveNext())
 					 {
 						 // Retrieve metadata and add them to the track list
-						 System::String^  temp_String = ( System::String ^) a_enumerator->Current;
-						 myMP3Controller->addMP3( netstr2cppstr(temp_String).c_str());
+						 System::String ^ filePath = ( System::String ^) fileEnumerator->Current;
+						 myMP3Controller->addMP3( netstr2cppstr( filePath).c_str());
 					 }
 					 // Create new index
 					 myMP3Controller->createIndex();
@@ -415,7 +415,7 @@ namespace MP3Tool
 					 // Update gui list
 					 updateListBox( myMP3Controller->trackList);
 				 }
-				 // Reset selection
+				 // Reset selection if file opener is canceled
 				 myListBox->SelectedIndex = -1;
 			 }
 
@@ -446,6 +446,7 @@ namespace MP3Tool
 					 tb_Track->Text = gcnew System::String( selectedMP3Data->getTracknumber());
 					 tb_Year->Text = gcnew System::String( selectedMP3Data->getYear());
 					 tb_Album->Text = gcnew System::String( selectedMP3Data->getAlbum());
+					 toolStripStatusLabel1->Text += gcnew System::String( selectedMP3Data->getFilepath());
 				 }
 				 else
 				 {
@@ -456,12 +457,13 @@ namespace MP3Tool
 			 // Empties the text boxes showing metadata information
 	private: System::Void clearTextboxes()
 			 {
-				 tb_Title->Text = "<no information>";
-				 tb_Interpret->Text = "<no information>";
-				 tb_Album->Text = "<no information>";
-				 tb_Genre->Text = "<no information>";
-				 tb_Track->Text = "<no information>";
-				 tb_Year->Text = "<no information>";
+				 tb_Title->Text = "<nothing selected>";
+				 tb_Interpret->Text = "<nothing selected>";
+				 tb_Album->Text = "<nothing selected>";
+				 tb_Genre->Text = "<nothing selected>";
+				 tb_Track->Text = "<nothing selected>";
+				 tb_Year->Text = "<nothing selected>";
+				 toolStripStatusLabel1->Text = "Selected file: ";
 			 }
 			 // Initiate a new index search
 	private: System::Void searchfield_changed( System::Object ^ sender, System::EventArgs ^ e) 
@@ -484,7 +486,7 @@ namespace MP3Tool
 					 // Get the current search result
 					 NodeList * searchResult = myMP3Controller->getSearchResult();
 					 // No search result -> identify item in tracklist
-					 if ( searchResult->isEmpty())
+					 if ( searchResult == NULL || searchResult->isEmpty())
 					 {
 						 
 						 myMP3Controller->trackList->removeObj( myMP3Controller->trackList->at( selection));					 
@@ -525,12 +527,14 @@ namespace MP3Tool
 			 // Resets the search term
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
+				 // @TODO Crashes when track list is empty and clear search field is pressed.
+
 				 // Reset gui elements
 				 searchfield->Text = "";
 				 clearTextboxes();
 				 // Reset search result
 				 myMP3Controller->searchResult = NULL;
-				 // Load current tracklsit
+				 // Load current track list
 				 NodeList * tracklist = myMP3Controller->trackList;
 				 if( !tracklist->isEmpty())
 					 updateListBox( tracklist);
@@ -564,6 +568,7 @@ namespace MP3Tool
 					 {
 						 // No element found
 						 myListBox->Items->Clear();
+						 clearTextboxes();
 					 }
 				 }
 				 else

@@ -24,19 +24,17 @@ public:
 	/// \brief Destructor.
 	~NodeList( void);
 	/// \brief Adds a node in respect to the lexical order of the title string.
-	void insert( MP3Data * p_data);
+	void insert( MP3Data * p_mp3Data);
 	/// \brief Returns the MP3Data object or NULL.
-	MP3Data * find( const char * p_title);
-	/// \brief Removes a node from the list by identifying it via the title.
-	void remove( const char * p_title);
+	MP3Data * findByFilePath( const char * p_filePath);
 	/// \brief Removes a node from the list by it's index.
-	void removeObj(MP3Data * delMp3Data);
+	void removeObj( MP3Data * p_mp3Data);
 	/// \brief Returns the root node.
 	MP3Data * getFirst();
 	/// \brief Returns the next node.
 	MP3Data * getNext();
 	/// \brief Returns the MP3Data object at a certain position.
-	MP3Data * at( unsigned int i);
+	MP3Data * at( unsigned int pos);
 	/// \brief Checks if there is a next item in the list.
 	bool hasNext();
 	/// \returns True if the NodeList is empty

@@ -18,7 +18,7 @@ class Helper
 public:
 
 	/// \brief Holds a human readable expression for the result of the lexical comparison.
-	enum LexicalOrder { SMALLER, EQUAL, GREATER};
+	enum LexicalOrder { NULLNULL, SMALLER, EQUAL, GREATER};
 	/// \brief Returns the number of elements stored in the referenced character array.
 	static unsigned int length( const char * c);
 	/// \brief Returns the lexical order of the elements in regards to the first parameter.
