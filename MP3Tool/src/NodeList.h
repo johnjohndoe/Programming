@@ -29,6 +29,8 @@ public:
 	MP3Data * find( const char * p_title);
 	/// \brief Removes a node from the list by identifying it via the title.
 	void remove( const char * p_title);
+	/// \brief Removes a node from the list by it's index.
+	void removeObj(MP3Data * delMp3Data);
 	/// \brief Returns the root node.
 	MP3Data * getFirst();
 	/// \brief Returns the next node.

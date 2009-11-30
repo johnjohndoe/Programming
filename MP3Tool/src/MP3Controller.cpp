@@ -7,6 +7,7 @@ MP3Controller::MP3Controller(void)
 	tempMP3Data = new MP3Data();
 	myGenerator = new MP3DataGenerator();
 	wordNodeList = new WordNodeList();
+	searchResult = NULL;
 }
 
 void MP3Controller::addMP3(const char* fPath)
@@ -53,7 +54,6 @@ void MP3Controller::createIndex()
 		std::vector<std::string>::iterator dIter( tokenVec->begin());
 		for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
 		{
-			//MP3Data * t_date = 
 			wordNodeList->insert( tokenVec->at( i).c_str(), t_data);
 		}
 	}
@@ -66,23 +66,21 @@ void MP3Controller::clearLists()
 	this->wordNodeList = new WordNodeList();
 
 }
-const char* MP3Controller::search(const char* searchString)
+NodeList * MP3Controller::getSearchResult(const char* searchString)
 {
-	return searchString;
+	if(searchString != NULL)
+	{
+		searchResult = wordNodeList->find(searchString);
+	}
+	return searchResult;
 
 }
-
-
-
-bool MP3Controller::deleteTrack(int position)
-{
-//	int ID = myIndex->deleteItem(position);
-//	void myTrackList->deleteItem(trackID);
-	return true;
-
-}
-
-
 MP3Controller::~MP3Controller(void)
 {
+	delete searchResult;
+	delete wordNodeList;
+	delete myGenerator;
+	delete tempMP3Data;
+	delete trackList;
 }
+

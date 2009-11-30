@@ -53,6 +53,7 @@ WordNode * WordNodeList::contains( const char * p_word)
 }
 NodeList * WordNodeList::find( const char * p_word)
 {
+	if( !p_word) return NULL;
 	WordNode * node = root->next;
 	while( node != root && !( Helper::compareCaseSensitive( node->wordData->word, p_word) == Helper::EQUAL))
 		node = node->next;	// Set to next node. Last would point back to root.

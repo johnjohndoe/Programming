@@ -107,6 +107,7 @@ MP3Data * NodeList::find( const char * p_title)
 }
 void NodeList::remove( const char * p_title)
 {
+
 	Node * node = root->next;
 	// Wrap title in a temporary object to compare it.
 	MP3Data * odd = new MP3Data();
@@ -123,6 +124,25 @@ void NodeList::remove( const char * p_title)
 	delete node->data;
 	delete node;
 }
+
+void NodeList::removeObj(MP3Data * delMp3Data)
+{
+	
+	Node * node = root->next;
+	// !Important: Dereference the pointer before using the comparison operator.
+	while( node != root && *node->data != *delMp3Data)
+		node = node->next;
+	// Not found.
+	if( node == root)
+		return;
+	// Relink neighbors and remove the object found.
+	node->prev->next = node->next;
+	node->next->prev = node->prev;
+	delete node->data;
+	delete node;
+}
+
+
 void NodeList::print( std::ostream & os)
 {
 	unsigned int count = 1;

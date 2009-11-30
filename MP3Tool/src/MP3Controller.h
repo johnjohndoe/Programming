@@ -14,28 +14,20 @@ class MP3Controller
 public:
 	MP3Controller(void);
 	NodeList * trackList;
+	NodeList * searchResult;
 	WordNodeList * wordNodeList;
-
 	MP3Data * tempMP3Data;
-
 	MP3DataGenerator * myGenerator;
 
 	void addMP3(const char* fPath);
-
 	void removeMP3(int index);
-	bool deleteTrack(int position); 
-
-	const char* search(const char* searchString); 
-	
+	NodeList * getSearchResult(const char* searchString = NULL); 
 	MP3Data* getFirst(void);
 	MP3Data* getNext(void);
 	bool hasNext(void);
 	void createIndex();
 	void print(void);
 	void clearLists();
-	
-
-
 
 
 	~MP3Controller(void);

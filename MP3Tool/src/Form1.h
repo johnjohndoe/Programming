@@ -10,6 +10,7 @@
 #include "MP3Controller.h"
 #include "Helper.h"
 #include "WordNode.h"
+#include "WordNode.h"
 #include "ID3_FrameID_LUT.h"
 
 
@@ -36,9 +37,9 @@ namespace MP3Tool
 	{
 	private:
 		System::Windows::Forms::Button ^ bt_clearsearch;
+		System::Windows::Forms::Button^  bt_clear;
 		MP3Controller * myMP3Controller;
-	private: System::Windows::Forms::Button^  bt_clear;
-			 IMP3DataGenerator * myMP3DataGenerator;
+		IMP3DataGenerator * myMP3DataGenerator;
 
 
 	public:
@@ -391,25 +392,6 @@ namespace MP3Tool
 			std::string out = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer();
 			return out;
 		}
-			 // Updates the gui list with all elements from the track list.
-	private: System::Void loadFullTracklist()
-			 {
-				 searchfield->Text = "";
-				 myListBox->Items->Clear();
-				 if( myMP3Controller)
-				 {
-					 // @TODO Better us isEmpty() instead of hasNext() here.
-					 if( !myMP3Controller->trackList->isEmpty())
-					 {
-						 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getFirst()->getTitle()));
-						 while( myMP3Controller->trackList->hasNext())
-							 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getNext()->getTitle()));
-					 }
-				 }
-			 }
-
-
-
 
 	private: System::Void btLoadFiles_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
@@ -436,17 +418,11 @@ namespace MP3Tool
 
 					 // Update file count status
 					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
+
+					 // Update gui list
+					 updateListBox(myMP3Controller->trackList);
 				 }
 				 myListBox->SelectedIndex = -1;
-
-				 // Update gui list
-				 myListBox->Items->Clear();
-
-				 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getFirst()->getFilename()));
-				 while( myMP3Controller->trackList->hasNext())
-				 {
-					 myListBox->Items->Add( gcnew System::String( myMP3Controller->trackList->getNext()->getFilename()));
-				 }
 			 }
 
 	private: System::Void myListBox_SelectedIndexChanged( System::Object ^  sender, System::EventArgs ^ e) 
@@ -488,20 +464,86 @@ namespace MP3Tool
 			 // 
 	private: System::Void searchfield_changed( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
+				 processSearch();
+			 }
+			 // Delete the selected Item
+	private: System::Void bt_delete_clicked( System::Object ^ sender, System::EventArgs ^ e) 
+			 {
+				 int selection = myListBox->SelectedIndex;
+				 int max = myListBox->Items->Count;
+
+				 // Stop handler when selected item is invalid
+				 if( selection > max || selection < 0)return;
+
+				 if( selection>=0)
+				 {
+					 myListBox->Items->RemoveAt(selection);
+					 NodeList * searchResult = myMP3Controller->getSearchResult();
+					 if (searchResult == NULL)
+					 {
+						myMP3Controller->trackList->removeObj(myMP3Controller->trackList->at( selection));					 
+						myMP3Controller->createIndex();
+					 }
+					 else
+					 {
+						myMP3Controller->trackList->removeObj(searchResult->at(selection));
+						myMP3Controller->createIndex();
+						processSearch();
+						if( searchResult = myMP3Controller->getSearchResult())
+							updateListBox( searchResult);
+						else
+						{
+							System::String ^ term = searchfield->Text;
+							unsigned int termLength = term->Length;
+							if( termLength == 0)
+								updateListBox( myMP3Controller->trackList);
+						}
+					 }
+					 clearTextboxes();
+				 }
+				
+			 }
+			 // Method for reseting the GUI
+	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
+			 {
+				 myListBox->Items->Clear();
+				 clearTextboxes();
+				 myMP3Controller->clearLists();
+
+			 }
+
+	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
+			 {
+				 searchfield->Text = "";
+				 clearTextboxes();
+				 NodeList * tracklist = myMP3Controller->trackList;
+				 if( !tracklist->isEmpty())
+					updateListBox( tracklist);
+			 }
+
+	 private: System::Void updateListBox(NodeList * t_nodelist)
+			  {
+				  myListBox->Items->Clear();
+				  myListBox->Items->Add( gcnew System::String(t_nodelist->getFirst()->getFilename()));
+				  while( t_nodelist->hasNext())
+				  {
+					  myListBox->Items->Add( gcnew System::String( t_nodelist->getNext()->getFilename()));
+				  }
+			  }
+	private: System::Void processSearch()
+			 {
 				 System::String ^ term = searchfield->Text;
 				 unsigned int termLength = term->Length;
 
 				 if( termLength > 0)
 				 {
 					 // Retrieve search term from gui element
-					 NodeList * found = myMP3Controller->wordNodeList->find( netstr2cppstr( term).c_str());
+					 NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
 					 if( found)
 					 {
 						 // One or more element(s) found
 						 myListBox->Items->Clear();
-						 myListBox->Items->Add( gcnew System::String( found->getFirst()->getTitle()));
-						 while( found->hasNext())
-							 myListBox->Items->Add( gcnew System::String( found->getNext()->getTitle()));
+						 updateListBox(found);
 					 }
 					 else
 					 {
@@ -512,29 +554,10 @@ namespace MP3Tool
 				 else
 				 {
 					 // Empty search term.
-					 loadFullTracklist();
+					 searchfield->Text = "";
+					 updateListBox(myMP3Controller->trackList);
 				 }
 			 }
-			 // Delete the selected Item
-	private: System::Void bt_delete_clicked( System::Object ^ sender, System::EventArgs ^ e) 
-			 {
-				 if( myListBox->SelectedIndex>=0)
-				 {
-					 myListBox->Items->RemoveAt( myListBox->SelectedIndex);
-				 }
-			 }
-			 // Method for reseting the GUI
-	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
-			 {
-				 myListBox->Items->Clear();
-			 }
-
-	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
-			 {
-
-				 loadFullTracklist();
-			 
-			}
-	};  // eo Form1 class
+			 };  // eo Form1 class
 }// eo namespace MP3Tool
 #endif
