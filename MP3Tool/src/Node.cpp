@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include <iostream>
 #include "Node.h"
 
 
@@ -8,7 +9,7 @@ Node::Node( void)
 }
 Node::~Node( void)
 {
-	//delete prev;
-	//delete next;
-	//delete data;
+	delete prev;
+	delete next;
+	delete data;
 }
