@@ -2,11 +2,13 @@
 #include "MP3DataGenerator.h"
 #include "ID3_FrameID_LUT.h"
 #include "MP3Data.h"
+#include "Helper.h"
 #include <sstream>
 
 
 MP3DataGenerator::MP3DataGenerator( void)
 {
+	myID3_Tag = NULL;
 	encoding = "Text encoding: ";
 	interestingID3_FrameIDs = new std::set<ID3_FrameID>();
 	interestingID3_FrameIDs->insert( ID3FID_LEADARTIST);	// Artist
@@ -20,12 +22,13 @@ MP3DataGenerator::~MP3DataGenerator( void)
 {
 	delete interestingID3_FrameIDs;
 }
-MP3Data * MP3DataGenerator::readMetadata( const char * pPath)
+MP3Data * MP3DataGenerator::readMetadata( const char * p_filePath)
 {
 
-	myID3_Tag.Link( pPath);
+	myID3_Tag = new ID3_Tag();
+	myID3_Tag->Link( p_filePath);
 	MP3Data * myMP3Data = new MP3Data();
-
+	myMP3Data->setAll( "<undefinded>");
 
 
 	ID3_FieldID fieldId = ID3FN_TEXT;
@@ -33,7 +36,7 @@ MP3Data * MP3DataGenerator::readMetadata( const char * pPath)
 	std::set<ID3_FieldID> * myFields = new std::set<ID3_FieldID>();
 	myFields->insert( ID3FN_TEXT);
 
-	ID3_Tag::Iterator * tagIter = myID3_Tag.CreateIterator();
+	ID3_Tag::Iterator * tagIter = myID3_Tag->CreateIterator();
 	ID3_Frame * myFrame = NULL;
 	while( NULL != ( myFrame = tagIter->GetNext()))
 	{			
@@ -56,7 +59,7 @@ MP3Data * MP3DataGenerator::readMetadata( const char * pPath)
 						std::string genre = myField->GetRawText();
 						// ID3V1 genre has is an int surrounded by round brackets; ID3V2 genre is text
 						unsigned int genreIntegerAlias = removeBrackets( genre.c_str());
-						if( genreIntegerAlias < ID3_NR_OF_V1_GENRES)
+						if( genreIntegerAlias < ID3_NR_OF_V1_GENRES && genre[0] == '(')
 							myMP3Data->setGenre( ID3_v1_genre_description[ genreIntegerAlias]);
 						else 
 							myMP3Data->setGenre( genre.c_str());
@@ -102,18 +105,18 @@ MP3Data * MP3DataGenerator::readMetadata( const char * pPath)
 			}
 		}
 	}
-	myMP3Data->setFilepath(pPath);
-	std::string t_fileName = getFilename(pPath).c_str();
-	myMP3Data->setFilename(t_fileName.c_str());
+	myMP3Data->setFilepath( p_filePath);
+	std::string t_fileName = getFilename( p_filePath).c_str();
+	myMP3Data->setFilename( t_fileName.c_str());
 	return myMP3Data;
 }
 std::string MP3DataGenerator::getEncoding()
 {
 	return encoding.substr( 0, encoding.length()-2);
 }
-unsigned int MP3DataGenerator::removeBrackets( const char * text)
+unsigned int MP3DataGenerator::removeBrackets( const char * p_text)
 {
-	std::string s = text;
+	std::string s = p_text;
 	if( s[0] == '(')
 		s = s.substr(1);
 	if( s[s.length()-1] == ')')
@@ -124,12 +127,11 @@ unsigned int MP3DataGenerator::removeBrackets( const char * text)
 	ss >> i;
 	return i;
 }
-
-std::string MP3DataGenerator::getFilename( const char * text)
+std::string MP3DataGenerator::getFilename( const char * p_filePath)
 {
-	std::string t_path = text;
+	std::string t_path = p_filePath;
 	std::string::size_type lastPos = t_path.find_last_of( "\\");
 	std::string::size_type t_length = t_path.size();
-	std::string t_string = t_path.substr(lastPos+1, (t_length-lastPos));
+	std::string t_string = t_path.substr( lastPos+1, ( t_length-lastPos));
 	return t_string;
 }

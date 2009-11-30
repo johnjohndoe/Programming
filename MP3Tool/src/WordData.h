@@ -14,7 +14,7 @@
 class WordData
 {
 
-// WordNode can access members.
+// WordNode and WordNodeList can access members.
 friend class WordNode;
 friend class WordNodeList;
 

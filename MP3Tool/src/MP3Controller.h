@@ -4,33 +4,44 @@
 
 #include <string>
 #include "NodeList.h"
-#include "MP3Data.h"
 #include "WordNodeList.h"
 #include "MP3DataGenerator.h"
 
 
 class MP3Controller
 {
+
+// Form1 can access members.
+//friend class Form1;
+
 public:
-	MP3Controller(void);
-	NodeList * trackList;
-	NodeList * searchResult;
-	WordNodeList * wordNodeList;
-	MP3Data * tempMP3Data;
-	MP3DataGenerator * myGenerator;
 
-	void addMP3(const char* fPath);
-	void removeMP3(int index);
-	NodeList * getSearchResult(const char* searchString = NULL); 
-	MP3Data* getFirst(void);
-	MP3Data* getNext(void);
-	bool hasNext(void);
+	/// \brief	Default constructor.
+	MP3Controller( void);
+	/// \brief	Destructor.
+	~MP3Controller( void);
+
+	/// \brief Adds a MP3Data object to the track list.
+	void addMP3( const char * p_filePath);
+	/// \brief Returns the last search result.
+	NodeList * getSearchResult( const char * searchString = NULL); 
+	/// \brief Builds an index of all words contained in the title field of all track list elements.
 	void createIndex();
-	void print(void);
+	/// \brief Removes all elements from the track list and the index.
 	void clearLists();
+	/// \brief Print method offers to print to output stream, f.e. a file
+	void print( void);
 
+//private:
 
-	~MP3Controller(void);
+	/// \brief Stores all MP3Data objects.
+	NodeList * trackList;
+	/// \brief Stores a temporary subset of the track list.
+	NodeList * searchResult;
+	/// \brief Stores the index of all title words.
+	WordNodeList * wordNodeList;
+	/// \brief Local representation of the MP3DataGenerator.
+	MP3DataGenerator * myGenerator;
 
 };
 #endif;

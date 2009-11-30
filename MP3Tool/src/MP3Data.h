@@ -75,7 +75,7 @@ private:
 };
 
 
-// Comparision operators implementation.
+// Comparison operators implementation.
 
 inline bool operator< ( const MP3Data & lhs, const MP3Data & rhs)
 {
@@ -88,7 +88,7 @@ inline bool operator> ( const MP3Data & lhs, const MP3Data & rhs)
 }
 inline bool operator== ( const MP3Data & lhs, const MP3Data & rhs)
 {
-	if( Helper::compareCaseSensitive( lhs.title, rhs.title) == Helper::EQUAL) return true;
+	if( Helper::compareCaseSensitive( lhs.filepath, rhs.filepath) == Helper::EQUAL) return true;
 	else return false;
 }
 inline bool operator!= ( const MP3Data & lhs, const MP3Data & rhs)
