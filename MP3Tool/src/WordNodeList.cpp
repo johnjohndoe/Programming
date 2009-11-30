@@ -11,6 +11,8 @@ WordNodeList::WordNodeList( void)
 	root->prev = root;
 	lastNode =  root;
 	currentNode = root;
+	length = 0;
+	searchResult = NULL;
 }
 WordNodeList::~WordNodeList( void)
 {
@@ -38,6 +40,7 @@ void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 		newNode->prev = node->prev;
 		newNode->next = node;
 		node->prev = newNode;
+		length++;
 	}
 }
 WordNode * WordNodeList::contains( const char * p_word)
@@ -91,4 +94,69 @@ void WordNodeList::print( std::ostream & os)
 bool WordNodeList::hasNext()
 {
 	return ( !currentNode->next->wordData->word) ? true : false;
+}
+NodeList * WordNodeList::searchForSubstring(const char * p_word)
+{
+	searchResult = new NodeList();
+	currentNode = root->next;
+	size_t findPos = -1;
+	int count = 0;
+	int aktSearchPosition = 0;
+	int lastSearchJump = 0;
+	int aktSearchJump = 0;
+	// Wenn Die WordListe Keinen Eintrag enthält dann kann auch nix gesucht werden.
+	if (length<=0)
+	{
+		return NULL;
+	} 
+	else
+	{
+		// Darunter mach D&C keinen Sinn
+		if(length<10)
+		{
+			while(currentNode->next->wordData != NULL)
+			{
+				std::string * aktSearchString = new std::string(currentNode->wordData->word);
+				findPos = aktSearchString->find(p_word);
+
+				count++;
+				if(findPos == 0) // SuchString soll nur am Anfang sein
+				{
+					searchResult->insert(currentNode->wordData->associates->getFirst());
+					while(currentNode->wordData->associates->hasNext())
+					{
+						searchResult->insert(currentNode->wordData->associates->getNext());
+
+					}
+					findPos = -1;
+				}
+				currentNode = currentNode->next;
+			}
+
+		}
+		
+	}
+	return searchResult;
+	// sporinge zur Mitte des Suchergebnisses (immer auf untere ganze Zahl runden)
+	// Runden unter C: int erg = int(a+0.5);
+
+
+	// Schau ob das akt Element den Suchstring enthält. Wenn ja dann füge es dem
+	// Suchergebniss hinzu und gehe nach prevNode und nach nextNode solange wie der Titel 
+	// auch das  ergebniss enthält
+
+
+	// Wenn nein dann schau ob der Suchstring kleiner oder Grösser als das aktuelle Objekt ist
+
+	// Wenn grösser dann halbiere den aktuellen String und springe nach "unten"
+
+	// wenn kleiner die Hälfte des letzten Suchsprunges auf den letzten Sprungwert draufaddieren
+
+
+	// Return die Suchergebnisse
+
+
+ 
+#
+
 }
