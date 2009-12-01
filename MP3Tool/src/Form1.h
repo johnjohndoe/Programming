@@ -543,14 +543,14 @@ namespace MP3Tool
 	private: System::Void updateListBox( NodeList * t_nodelist)
 			 {
 				 myListBox->Items->Clear();
-				 myListBox->Items->Add( gcnew System::String( t_nodelist->getFirst()->getFilename()));
+				 myListBox->Items->Add( gcnew System::String( t_nodelist->getFirst()->getTitle()));
 				 while( t_nodelist->hasNext())
-					 myListBox->Items->Add( gcnew System::String( t_nodelist->getNext()->getFilename()));
+					 myListBox->Items->Add( gcnew System::String( t_nodelist->getNext()->getTitle()));
 			 }
 			 // Processes a new search
 	private: System::Void processSearch( void)
 			 {
-				 System::String ^ term = searchfield->Text;
+				 System::String ^ term = searchfield->Text->ToLower();
 				 unsigned int termLength = term->Length;
 
 				 if( termLength > 0)
@@ -558,11 +558,11 @@ namespace MP3Tool
 					 // Retrieve search term from gui element
 					 //NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
 					 NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
-					 if( found)
+					 if( found && found->getFirst() != NULL)
 					 {
 						 // One or more element(s) found
 						 myListBox->Items->Clear();
-						 updateListBox(found);
+						updateListBox(found);
 					 }
 					 else
 					 {
@@ -575,6 +575,7 @@ namespace MP3Tool
 				 {
 					 // Empty search term.
 					 searchfield->Text = "";
+					 myMP3Controller->searchResult = NULL;
 					 updateListBox( myMP3Controller->trackList);
 				 }
 			 }
