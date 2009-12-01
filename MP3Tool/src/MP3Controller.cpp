@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include <iostream>
+#include <ostream>
 #include <exception>
 #include "MP3Data.h"
 #include "MP3Controller.h"
@@ -67,6 +68,7 @@ NodeList * MP3Controller::getSearchResult( const char * searchString)
 		//searchResult = wordNodeList->find(searchString);
 		searchResult = wordNodeList->searchForSubstring(searchString);
 	}
+	if(searchResult) searchResult->print(std::ofstream("..\\data\\searchresult.log"));
 	return searchResult;
 }
 void MP3Controller::print()
