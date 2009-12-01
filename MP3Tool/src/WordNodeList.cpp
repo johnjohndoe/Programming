@@ -1,4 +1,6 @@
 #include "StdAfx.h"
+#include <iostream>
+#include <ostream>
 #include "WordNodeList.h"
 #include "Helper.h"
 
@@ -22,7 +24,10 @@ WordNodeList::~WordNodeList( void)
 }
 void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 {
-	WordNode * found = contains( p_word);
+	std::string * t_word = new std::string(p_word);
+	Helper::toLowerCase( *t_word);
+	
+	WordNode * found = contains( t_word->c_str());
 	if( found)
 	{
 		// Extend the list of associates of the existing word node.
@@ -32,9 +37,9 @@ void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 	{
 		// Otherwise insert new word node.
 		WordNode * node = root->next;
-		while( node != root && Helper::compareCaseSensitive( node->wordData->word, p_word) == Helper::SMALLER)
+		while( node != root && Helper::compareCaseSensitive( node->wordData->word, t_word->c_str()) == Helper::SMALLER)
 			node = node->next;
-		WordNode * newNode = new WordNode( p_word, p_associate);
+		WordNode * newNode = new WordNode( t_word->c_str(), p_associate);
 		lastNode = newNode;
 		node->prev->next = newNode;
 		newNode->prev = node->prev;
@@ -80,7 +85,8 @@ void WordNodeList::remove( const char * p_word)
 	delete node;
 }
 void WordNodeList::print( std::ostream & os)
-{
+{ 
+	if(this->root->wordData == NULL) return;
 	unsigned int count = 1;
 	WordNode * node = root->next;
 	while( node->wordData)
@@ -98,141 +104,101 @@ bool WordNodeList::hasNext()
 NodeList * WordNodeList::searchForSubstring(const char * p_word)
 {
 	searchResult = new NodeList();
+	
+	//searchResult = NULL;
 	std::string * inputString = new std::string(p_word);
-	currentNode = root->next;
-	size_t findPos = -1;
-	int count = 0;
-	int aktSearchPosition = 0;
-	int lastSearchJump = 0;
-	int aktSearchJump = 0;
-	// Wenn Die WordListe Keinen Eintrag enthält dann kann auch nix gesucht werden.
+	currentNode = root;
+	size_t foundAtPosition = -1;
+
 	if (length<=0)
 	{
 		return NULL;
 	} 
 	else
 	{
-		// Darunter mach D&C keinen Sinn
-		if(length<10)
+		if(length<2)
 		{
 			while(currentNode->next->wordData != NULL)
 			{
 				std::string * aktSearchString = new std::string(currentNode->wordData->word);
-				findPos = aktSearchString->find(inputString);
-
-				
-				if(findPos == 0) // SuchString soll nur am Anfang sein
+				foundAtPosition = aktSearchString->find(inputString->c_str());
+				if(foundAtPosition == 0) 
 				{
-					searchResult->insert(currentNode->wordData->associates->getFirst());
-					while(currentNode->wordData->associates->hasNext())
-					{
-						searchResult->insert(currentNode->wordData->associates->getNext());
-
-					}
-					findPos = -1;
+					searchResult->merge(currentNode->wordData->associates);
+					foundAtPosition = -1;
 				}
-				count++; // Debugg
 				currentNode = currentNode->next;
 			}
-
 		}
 		else
 		{
 			int UpperBound = length;
-			int LowerBound = 0;
-			int currentIndex = 0;
-			int diff = 0;
-
-			diff = int((UpperBound - LowerBound)/2-.5);
-			if(currentIndex == 0) // Wenn der Suchsprung 0 ist
+			int LowerBound = -1;
+			int diff = (int)((UpperBound - LowerBound)/2);
+			bool up = true;
+			while(diff != 0)
 			{
-				break;
-			}
-			else
-			{
-				// Wenn der Suchsprung grösser als 0 ist. 
-				// Diff ist die Grösse des Sprunges
-				// currentIndex ist die Untere Grenze  + der Größe des Sprunges
-				currentIndex = diff + LowerBound;
-				for (int g = 0; g < diff; g++) // Springe um die Menge der Srpünge an die richtige Node
+				for (int g = 0; g < diff; g++)
 				{
-					currentNode = currentNode->next;
+					if(up)currentNode = currentNode->next; 
+					else currentNode = currentNode->prev;
 				}
-				std::string * aktSearchString = new std::string(currentNode->wordData->word);
-				findPos = aktSearchString->find(inputString);
-				if(findPos == 0) // SuchString soll nur am Anfang sein
-				{
-					// Sachen die er machen muss wenn er Gefunden hat.
+				if(currentNode->wordData == NULL) break;
+				std::string * wordInCurrentNode = new std::string(currentNode->wordData->word);
+				foundAtPosition = wordInCurrentNode->find(inputString->c_str()); 
 
+				if(foundAtPosition == 0) //Found the search-string at position 0 in the current node-word
+				{
+					searchResult = currentNode->wordData->associates;
+					WordNode * runner = currentNode->next;
+					while(runner->wordData != NULL)
+					{
+						wordInCurrentNode = new std::string(runner->wordData->word);
+						int foundAtNextPosition = wordInCurrentNode->find(inputString->c_str());
+						if(foundAtNextPosition == 0)
+						{
+							searchResult->merge(runner->wordData->associates);
+							runner = runner->next;
+							foundAtNextPosition = -1;
+						}
+						else
+						{
+							break;
+						}
+					}
+					runner = currentNode->prev; // reset startNode
+					while(runner->wordData != NULL)
+					{
+						wordInCurrentNode = new std::string(runner->wordData->word);
+						int foundAtPrevPosition = wordInCurrentNode->find(inputString->c_str());
+						if(foundAtPrevPosition == 0)
+						{
+							searchResult->merge(runner->wordData->associates);
+							runner = runner->prev;
+							foundAtPrevPosition = -1;
+						}
+						else
+						{
+							break;
+						}
+					}
 				}
 				else
-				{
-					if(aktSearchString<inputString)
+				{ 
+					if(Helper::compareCaseSensitive(wordInCurrentNode->c_str(), inputString->c_str()) == Helper::SMALLER)
 					{
-						// suchstring ist groesser - > ergo halbiere den Sprung
-						LowerBound = currentIndex;
-
+						LowerBound = LowerBound + diff;
+						up=true;
 					} 
-					else // gibt nur noch nen kleiner. Bei gleich würde die Regel für findPos = 0 gelten
+					else 
 					{
-						
-						UpperBound = currentIndex; // Um wieviel Schritte muss gewechselt werden?
-
+						UpperBound = UpperBound - diff;
+						up=false;
 					}
-
+					diff = (int)((UpperBound - LowerBound)/2);
 				}
-				
-				
 			}
-
-
-
-
-
-			if(length%2=0)
-			{
-				aktSearchJump = length / 2;
-				for(int i = 0; i < length/2 ; i++)
-				{
-					currentNode = currentNode->next;
-					
-				}
-				std::string * aktSearchString = new std::string(currentNode->wordData->word);
-				findPos = aktSearchString->find(p_word);
-				if(findPos == 0) // SuchString soll nur am Anfang sein
-				{
-					// searchResult Füge das Ergebniss der Aktuellen Suche dem Ergebniss hinzu
-					findPos = aktSearchString->find(currentNode->prev->wordData->word); // Wenn der VOrgänger auch ein Ergebniss hat
-					while()
-				}
-
-			}
-
 		}
-		
 	}
-	if(searchResult->isEmpty())return NULL;
-	else return searchResult;
-	// sporinge zur Mitte des Suchergebnisses (immer auf untere ganze Zahl runden)
-	// Runden unter C: int erg = int(a+0.5);
-
-
-	// Schau ob das akt Element den Suchstring enthält. Wenn ja dann füge es dem
-	// Suchergebniss hinzu und gehe nach prevNode und nach nextNode solange wie der Titel 
-	// auch das  ergebniss enthält
-
-
-	// Wenn nein dann schau ob der Suchstring kleiner oder Grösser als das aktuelle Objekt ist
-
-	// Wenn grösser dann halbiere den aktuellen String und springe nach "unten"
-
-	// wenn kleiner die Hälfte des letzten Suchsprunges auf den letzten Sprungwert draufaddieren
-
-
-	// Return die Suchergebnisse
-
-
- 
-#
-
+	return searchResult;
 }
