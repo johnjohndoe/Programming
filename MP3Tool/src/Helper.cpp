@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include <iostream>
 #include <exception>
+#include <cctype>
 #include <stdlib.h>	// Needed for definition of NULL
 #include "Helper.h"
 
@@ -62,6 +63,14 @@ void Helper::tokenize( const std::string & str, std::vector<std::string> & token
 		lastPos = str.find_first_not_of( delimiters, pos);
 		// Find next "non-delimiter"
 		pos = str.find_first_of( delimiters, lastPos);
+	}
+}
+void Helper::toLowerCase(std::string &str)
+{
+	const int length = str.length();
+	for(int i=0; i < length; ++i)
+	{
+		str[i] = std::tolower(str[i]);
 	}
 }
 

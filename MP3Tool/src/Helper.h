@@ -25,6 +25,8 @@ public:
 	static int compareCaseSensitive( const char * lhs, const char * rhs);
 	/// \brief Splits a string into separate words and stores them in the supplied container.
 	static void tokenize( const std::string & str, std::vector<std::string> & tokens, const std::string & delimiters = " ");
+	/// \brief Convert a string to lower case
+	static void toLowerCase(std::string &str);
 
 private:
 
