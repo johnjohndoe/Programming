@@ -65,10 +65,8 @@ NodeList * MP3Controller::getSearchResult( const char * searchString)
 {
 	if( searchString != NULL)
 	{
-		//searchResult = wordNodeList->find(searchString);
 		searchResult = wordNodeList->searchForSubstring(searchString);
 	}
-	if(searchResult) searchResult->print(std::ofstream("..\\data\\searchresult.log"));
 	return searchResult;
 }
 void MP3Controller::print()
