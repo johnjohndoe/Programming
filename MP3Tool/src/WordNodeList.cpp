@@ -116,15 +116,15 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 	} 
 	else
 	{
-		if(length<2)
+		if(true)
 		{
 			while(currentNode->next->wordData != NULL)
 			{
-				std::string * aktSearchString = new std::string(currentNode->wordData->word);
+				std::string * aktSearchString = new std::string(currentNode->next->wordData->word);
 				foundAtPosition = aktSearchString->find(inputString->c_str());
 				if(foundAtPosition == 0) 
 				{
-					searchResult->merge(currentNode->wordData->associates);
+					searchResult->merge(currentNode->next->wordData->associates);
 					foundAtPosition = -1;
 				}
 				currentNode = currentNode->next;
@@ -201,4 +201,18 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 		}
 	}
 	return searchResult;
+}
+void  WordNodeList::printExtensive( std::ostream & os)
+{
+	currentNode = root->next; // Auf 1 setzen)
+	//currentNode->wordData->word;
+	while (currentNode->wordData)
+	{
+		
+		os << "Name der Node: " << currentNode->wordData->word << "\n";
+		currentNode->wordData->associates->print(os);
+		currentNode = currentNode->next;
+
+	}
+
 }

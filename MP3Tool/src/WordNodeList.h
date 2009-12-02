@@ -37,7 +37,9 @@ public:
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
 	// #include <ostream> where function call takes place.
-	void print( std::ostream & os = std::cout);
+	void printExtensive( std::ostream & os = std::cout);
+	/// \brief for debuggin: Printing the whole NodeList
+	void print(std::ostream & os = std::cout);
 
 private:
 
@@ -52,6 +54,8 @@ private:
 	unsigned int length;
 	/// \brief Search-Result with a unique List of found MP3Datas
 	NodeList * searchResult;
+	
+
 
 	/// \brief Returns a word node if it already exists.
 	WordNode * contains( const char * p_word);
