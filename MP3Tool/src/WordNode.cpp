@@ -15,7 +15,6 @@ WordNode::WordNode( const char * p_word, MP3Data * p_associate)
 }
 WordNode::~WordNode( void)
 {
-	delete prev;
-	delete next;
-	delete wordData;
+	// WordNodeList deletes next and prev.
+	if( wordData != NULL) delete wordData;
 }
