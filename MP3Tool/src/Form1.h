@@ -265,7 +265,7 @@ namespace MP3Tool
 			// lb_count
 			// 
 			this->lb_count->AutoSize = true;
-			this->lb_count->Location = System::Drawing::Point(452, 210);
+			this->lb_count->Location = System::Drawing::Point(625, 211);
 			this->lb_count->Name = L"lb_count";
 			this->lb_count->Size = System::Drawing::Size(0, 13);
 			this->lb_count->TabIndex = 4;
@@ -291,7 +291,7 @@ namespace MP3Tool
 			// toolStripStatusLabel1
 			// 
 			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(118, 17);
+			this->toolStripStatusLabel1->Size = System::Drawing::Size(76, 17);
 			this->toolStripStatusLabel1->Text = L"Selected file: ";
 			// 
 			// bt_delete
@@ -407,7 +407,7 @@ namespace MP3Tool
 					 // Create new index
 					 myMP3Controller->createIndex();
 					 // Print word list
-					 myMP3Controller->wordNodeList->print( std::ofstream("..\\data\\words.txt"));
+					 myMP3Controller->wordNodeList->printExtensive( std::ofstream("..\\data\\words.txt"));
 
 					 // Update file count status
 					 lb_count->Text = openFileDialog1->FileNames->Length.ToString();
@@ -536,16 +536,20 @@ namespace MP3Tool
 				 myMP3Controller->searchResult = NULL;
 				 // Load current track list
 				 NodeList * tracklist = myMP3Controller->trackList;
-				 if( !tracklist->isEmpty())
+				 if( tracklist != NULL )
 					 updateListBox( tracklist);
 			 }
 			 // Updates the gui list
 	private: System::Void updateListBox( NodeList * t_nodelist)
 			 {
 				 myListBox->Items->Clear();
-				 myListBox->Items->Add( gcnew System::String( t_nodelist->getFirst()->getTitle()));
-				 while( t_nodelist->hasNext())
-					 myListBox->Items->Add( gcnew System::String( t_nodelist->getNext()->getTitle()));
+				 if(!t_nodelist->isEmpty())
+				 {
+					 myListBox->Items->Add( gcnew System::String( t_nodelist->getFirst()->getTitle()));
+					 while( t_nodelist->hasNext())
+						 myListBox->Items->Add( gcnew System::String( t_nodelist->getNext()->getTitle()));
+				 }
+
 			 }
 			 // Processes a new search
 	private: System::Void processSearch( void)
