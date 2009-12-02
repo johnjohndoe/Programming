@@ -131,6 +131,7 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 	} 
 	else
 	{
+		// Iterative search using a index -
 		if( true)
 		{
 			while(currentNode->next->wordData != NULL)
@@ -145,6 +146,7 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 				currentNode = currentNode->next;
 			}
 		}
+		// Binary search - not fully functional beta-version and therefor skipped by the "if(true)"-call
 		else
 		{
 			int UpperBound = length;
@@ -216,18 +218,4 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 		}
 	}
 	return searchResult;
-}
-void  WordNodeList::printExtensive( std::ostream & os)
-{
-	currentNode = root->next; // Auf 1 setzen)
-	//currentNode->wordData->word;
-	while (currentNode->wordData)
-	{
-		
-		os << "Name der Node: " << currentNode->wordData->word << "\n";
-		currentNode->wordData->associates->print(os);
-		currentNode = currentNode->next;
-
-	}
-
 }

@@ -38,12 +38,9 @@ public:
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
 	// #include <ostream> where function call takes place.
 	void printExtensive( std::ostream & os = std::cout);
-<<<<<<< HEAD
 	/// \brief for debuggin: Printing the whole NodeList
 	void print(std::ostream & os = std::cout);
-=======
-	void print( std::ostream & os = std::cout);
->>>>>>> dc82a27798aa277b36ef58bf70f03f87630384fe
+
 
 private:
 
