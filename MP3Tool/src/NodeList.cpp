@@ -13,8 +13,19 @@ NodeList::NodeList( void)
 }
 NodeList::~NodeList( void)
 {
-//	if( currentNode) delete currentNode;
-	delete root;
+	Node * node = root;
+	while( node != NULL)
+	{
+		Node * tmpNode = NULL;
+		if( node != root)
+		{
+			MP3Data * data = node->data;
+			delete data;	
+			tmpNode = node->next;
+		}
+		delete node;
+		node = tmpNode;
+	}
 }
 MP3Data * NodeList::getFirst()
 {
@@ -104,6 +115,7 @@ void NodeList::removeObj( MP3Data * p_mp3Data)
 	// Relink neighbors and remove the object found.
 	node->prev->next = node->next;
 	node->next->prev = node->prev;
+	length--;
 	delete node->data;
 	delete node;
 }
@@ -114,13 +126,18 @@ void NodeList::merge( NodeList * p_nodeList)
 	while( p_nodeList->hasNext())
 		this->insert( p_nodeList->getNext());
 }
+unsigned int NodeList::getLength( void)
+{
+	return length;
+}
 void NodeList::print( std::ostream & os)
 {
+	if( this->root->data == NULL) return;
 	unsigned int count = 1;
 	Node * node = root->next;
-	while( node->data != NULL)
+	while( node->data)
 	{
-		os << count << ": " << node->data->getFilepath() << " | " << node->data->getTitle() << "\n";
+		os << count << ": " << node->data->getTitle() << " | " << node->data->getFilepath() << "\n";
 		node = node->next;
 		count++;
 	}

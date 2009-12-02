@@ -32,14 +32,18 @@ public:
 	/// \brief Checks if next node is available.
 	bool hasNext();
 	/// \brief search-method for finding a substring in the Titel-Words; uses the Devide 
-	NodeList * searchForSubstring(const char * p_word);
+	NodeList * searchForSubstring( const char * p_word);
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));
 	// #include <ostream> where function call takes place.
 	void printExtensive( std::ostream & os = std::cout);
+<<<<<<< HEAD
 	/// \brief for debuggin: Printing the whole NodeList
 	void print(std::ostream & os = std::cout);
+=======
+	void print( std::ostream & os = std::cout);
+>>>>>>> dc82a27798aa277b36ef58bf70f03f87630384fe
 
 private:
 

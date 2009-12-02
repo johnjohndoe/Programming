@@ -41,6 +41,8 @@ public:
 	bool isEmpty();
 	/// \brief All elements of the bypassed node list become integrated into this node list.
 	void merge( NodeList * p_nodeList);
+	/// \brief Returns the current length.
+	unsigned int getLength( void);
 
 	// Print method offers to print to output stream, f.e. a file
 	// Example: print( std::ofstream("..\\data\\nodelist.log"));

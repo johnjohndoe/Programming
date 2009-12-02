@@ -1,6 +1,4 @@
 #include "StdAfx.h"
-#include <iostream>
-#include <ostream>
 #include "WordNodeList.h"
 #include "Helper.h"
 
@@ -18,9 +16,15 @@ WordNodeList::WordNodeList( void)
 }
 WordNodeList::~WordNodeList( void)
 {
-//	if( currentNode) delete currentNode;
-//	if( lastNode) delete lastNode;
-	delete root;
+	WordNode * node = root;
+	while( node != NULL)
+	{
+		WordNode * tmpNode = NULL;
+		if( node != root)
+			tmpNode = node->next;
+		delete node;
+		node = tmpNode;
+	}
 }
 void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 {
@@ -86,7 +90,7 @@ void WordNodeList::remove( const char * p_word)
 }
 void WordNodeList::print( std::ostream & os)
 { 
-	if(this->root->wordData == NULL) return;
+	if( this->root->wordData == NULL) return;
 	unsigned int count = 1;
 	WordNode * node = root->next;
 	while( node->wordData)
@@ -96,6 +100,17 @@ void WordNodeList::print( std::ostream & os)
 		count++;
 	}
 	os << std::endl;
+}
+void  WordNodeList::printExtensive( std::ostream & os)
+{
+	currentNode = root->next; // Set to 1
+	while( currentNode->wordData)
+	{
+		os << "Node name: " << currentNode->wordData->word << "\n";
+		currentNode->wordData->associates->print(os);
+		currentNode = currentNode->next;
+	}
+
 }
 bool WordNodeList::hasNext()
 {
@@ -116,7 +131,7 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 	} 
 	else
 	{
-		if(true)
+		if( true)
 		{
 			while(currentNode->next->wordData != NULL)
 			{

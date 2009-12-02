@@ -9,7 +9,5 @@ Node::Node( void)
 }
 Node::~Node( void)
 {
-	delete prev;
-	delete next;
-	delete data;
+	// NodeList deletes members.
 }
