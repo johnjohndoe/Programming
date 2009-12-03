@@ -15,10 +15,10 @@ MP3Controller::MP3Controller( void)
 }
 MP3Controller::~MP3Controller( void)
 {
-	/*if( searchResult != NULL)*/ //delete searchResult;
-	/*if( wordNodeList != NULL)*/ delete wordNodeList;
-	/*if( myGenerator != NULL)*/ delete myGenerator;
-	/*if( trackList != NULL)*/ delete trackList;
+	if( searchResult != NULL) delete searchResult;
+	if( wordNodeList != NULL) delete wordNodeList;
+	if( myGenerator != NULL) delete myGenerator;
+	if( trackList != NULL) delete trackList;
 }
 void MP3Controller::addMP3( const char * p_filePath)
 {
@@ -31,7 +31,7 @@ void MP3Controller::addMP3( const char * p_filePath)
 		exit( -1);
 	}
 }
-void MP3Controller::createIndex()
+void MP3Controller::createIndex( void)
 {
 	// Index all words of the first element in the track list
 	this->wordNodeList = new WordNodeList();
@@ -56,18 +56,34 @@ void MP3Controller::createIndex()
 		}
 	}
 }
-void MP3Controller::clearLists()
+void MP3Controller::clearLists( void)
 {
 	if( wordNodeList != NULL) delete wordNodeList;
 	if( trackList != NULL) delete trackList;
 	this->trackList = new NodeList();
 	this->wordNodeList = new WordNodeList();
 }
+void MP3Controller::resetIndex( void)
+{
+	if( wordNodeList != NULL) delete wordNodeList;
+	this->wordNodeList = new WordNodeList();
+}
+void MP3Controller::resetTracklist( void)
+{
+	if( trackList != NULL) delete trackList;
+	this->trackList = new NodeList();
+}
+void MP3Controller::resetSearchResult( void)
+{
+	if( searchResult != NULL) delete searchResult;
+	this->searchResult = new NodeList();
+}
 NodeList * MP3Controller::getSearchResult( const char * searchString)
 {
 	if( searchString != NULL)
 	{
-		searchResult = wordNodeList->searchForSubstring( searchString);
+		resetSearchResult();
+		wordNodeList->searchForSubstring( searchResult, searchString);
 	}
 	return searchResult;
 }

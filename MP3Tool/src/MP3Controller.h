@@ -29,7 +29,13 @@ public:
 	void createIndex();
 	/// \brief Removes all elements from the track list and the index.
 	void clearLists();
-	/// \brief Print method offers to print to output stream, f.e. a file
+	/// \brief Removes all indexed words.
+	void resetIndex( void);
+	/// \brief Removes all elements from the track list.
+	void resetTracklist( void);
+	/// \brief Removes all elements from the search result.
+	void resetSearchResult( void);
+	/// \brief Print method offers to print to output stream, f.e. a file.
 	void print( void);
 
 //private:

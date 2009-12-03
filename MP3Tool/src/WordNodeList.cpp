@@ -12,7 +12,6 @@ WordNodeList::WordNodeList( void)
 	lastNode =  root;
 	currentNode = root;
 	length = 0;
-	searchResult = NULL;
 }
 WordNodeList::~WordNodeList( void)
 {
@@ -116,65 +115,62 @@ bool WordNodeList::hasNext()
 {
 	return ( !currentNode->next->wordData->word) ? true : false;
 }
-NodeList * WordNodeList::searchForSubstring(const char * p_word)
+void WordNodeList::searchForSubstring(  NodeList * p_searchResult, const char * p_word)
 {
-	searchResult = new NodeList();
-	
-	//searchResult = NULL;
-	std::string * inputString = new std::string(p_word);
+	std::string * inputString = new std::string( p_word);
 	currentNode = root;
 	size_t foundAtPosition = -1;
 
-	if (length<=0)
+	if ( length <= 0)
 	{
-		return NULL;
+		return;
 	} 
 	else
 	{
-		// Iterative search using a index -
+		// Iterative search using the word index.
 		if( true)
 		{
-			while(currentNode->next->wordData != NULL)
+			while( currentNode->next->wordData != NULL)
 			{
-				std::string * aktSearchString = new std::string(currentNode->next->wordData->word);
-				foundAtPosition = aktSearchString->find(inputString->c_str());
-				if(foundAtPosition == 0) 
+				std::string * aktSearchString = new std::string( currentNode->next->wordData->word);
+				foundAtPosition = aktSearchString->find( inputString->c_str());
+				if( foundAtPosition == 0) 
 				{
-					searchResult->merge(currentNode->next->wordData->associates);
+					p_searchResult->merge( currentNode->next->wordData->associates);
 					foundAtPosition = -1;
 				}
 				currentNode = currentNode->next;
 			}
 		}
-		// Binary search - not fully functional beta-version and therefor skipped by the "if(true)"-call
+		// Binary search - not fully functional beta-version and therefore skipped by "if( true)"
 		else
 		{
 			int UpperBound = length;
 			int LowerBound = -1;
-			int diff = (int)((UpperBound - LowerBound)/2);
+			int diff = (int)( ( UpperBound - LowerBound) / 2);
 			bool up = true;
-			while(diff != 0)
+			while( diff != 0)
 			{
-				for (int g = 0; g < diff; g++)
+				for ( int g = 0; g < diff; g++)
 				{
-					if(up)currentNode = currentNode->next; 
+					if( up) currentNode = currentNode->next; 
 					else currentNode = currentNode->prev;
 				}
-				if(currentNode->wordData == NULL) break;
-				std::string * wordInCurrentNode = new std::string(currentNode->wordData->word);
-				foundAtPosition = wordInCurrentNode->find(inputString->c_str()); 
+				if( currentNode->wordData == NULL) break;
+				std::string * wordInCurrentNode = new std::string( currentNode->wordData->word);
+				foundAtPosition = wordInCurrentNode->find( inputString->c_str()); 
 
-				if(foundAtPosition == 0) //Found the search-string at position 0 in the current node-word
+				if( foundAtPosition == 0) //Found the search-string at position 0 in the current node-word
 				{
-					searchResult = currentNode->wordData->associates;
+					p_searchResult = currentNode->wordData->associates;
 					WordNode * runner = currentNode->next;
-					while(runner->wordData != NULL)
+					while( runner->wordData != NULL)
 					{
-						wordInCurrentNode = new std::string(runner->wordData->word);
-						int foundAtNextPosition = wordInCurrentNode->find(inputString->c_str());
-						if(foundAtNextPosition == 0)
+						wordInCurrentNode = new std::string( runner->wordData->word);
+						int foundAtNextPosition = wordInCurrentNode->find( inputString->c_str());
+						if( foundAtNextPosition == 0)
 						{
-							searchResult->merge(runner->wordData->associates);
+							p_searchResult->merge( runner->wordData->associates);
 							runner = runner->next;
 							foundAtNextPosition = -1;
 						}
@@ -184,13 +180,13 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 						}
 					}
 					runner = currentNode->prev; // reset startNode
-					while(runner->wordData != NULL)
+					while( runner->wordData != NULL)
 					{
-						wordInCurrentNode = new std::string(runner->wordData->word);
-						int foundAtPrevPosition = wordInCurrentNode->find(inputString->c_str());
-						if(foundAtPrevPosition == 0)
+						wordInCurrentNode = new std::string( runner->wordData->word);
+						int foundAtPrevPosition = wordInCurrentNode->find( inputString->c_str());
+						if( foundAtPrevPosition == 0)
 						{
-							searchResult->merge(runner->wordData->associates);
+							p_searchResult->merge( runner->wordData->associates);
 							runner = runner->prev;
 							foundAtPrevPosition = -1;
 						}
@@ -202,7 +198,7 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 				}
 				else
 				{ 
-					if(Helper::compareCaseSensitive(wordInCurrentNode->c_str(), inputString->c_str()) == Helper::SMALLER)
+					if( Helper::compareCaseSensitive( wordInCurrentNode->c_str(), inputString->c_str()) == Helper::SMALLER)
 					{
 						LowerBound = LowerBound + diff;
 						up=true;
@@ -212,10 +208,9 @@ NodeList * WordNodeList::searchForSubstring(const char * p_word)
 						UpperBound = UpperBound - diff;
 						up=false;
 					}
-					diff = (int)((UpperBound - LowerBound)/2);
+					diff = (int)( ( UpperBound - LowerBound) / 2);
 				}
 			}
 		}
 	}
-	return searchResult;
 }
