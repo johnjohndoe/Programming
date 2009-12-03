@@ -406,15 +406,16 @@ namespace MP3Tool
 					 }
 					 // Create new index
 					 myMP3Controller->createIndex();
-					 // Print word list
-					 //myMP3Controller->wordNodeList->printExtensive( std::ofstream("..\\data\\words.txt"));
-
 
 					 // Update file count
-					 lb_count->Text =  gcnew System::String( "" + myMP3Controller->trackList->getLength());
+					 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
 
 					 // Update gui list
-					 updateListBox( myMP3Controller->trackList);
+					 updateListBox( myMP3Controller->getTrackList());
+
+					 // Reset search
+					 searchfield->Text = "";
+					 myMP3Controller->resetSearchResult();
 				 }
 				 // Reset selection if file opener is canceled
 				 myListBox->SelectedIndex = -1;
@@ -432,11 +433,11 @@ namespace MP3Tool
 				 NodeList * searchResult = myMP3Controller->getSearchResult();
 				 MP3Data * selectedMP3Data = NULL;
 				 // Identify in search result
-				 if( searchResult)
+				 if( searchResult && !searchResult->isEmpty())
 					 selectedMP3Data = searchResult->at( selection);
 				 // Identify in track list
 				 else
-					 selectedMP3Data = myMP3Controller->trackList->at( selection);
+					 selectedMP3Data = myMP3Controller->getTrackList()->at( selection);					 
 
 				 clearTextboxes();
 				 if( selectedMP3Data)
@@ -451,8 +452,8 @@ namespace MP3Tool
 				 }
 				 else
 				 {
-					 // Error: no MP3Data object.
-					 tb_Title->Text = gcnew System::String( "Error: retrieving obj. See myListBox_SelectedIndexChanged");
+					 // Error: No MP3Data object.
+					 tb_Title->Text = gcnew System::String( "Error retrieving MP3Data object.");
 				 }
 			 }
 			 // Empties the text boxes showing metadata information
@@ -478,7 +479,7 @@ namespace MP3Tool
 				 int max = myListBox->Items->Count;
 
 				 // Stop handler when selected item is invalid
-				 if( selection > max || selection < 0)return;
+				 if( selection > max || selection < 0) return;
 
 				 if( selection >= 0)
 				 {
@@ -487,17 +488,17 @@ namespace MP3Tool
 					 // Get the current search result
 					 NodeList * searchResult = myMP3Controller->getSearchResult();
 					 // No search result -> identify item in tracklist
-					 if ( searchResult == NULL || searchResult->isEmpty())
+					 if( searchResult == NULL || searchResult->isEmpty())
 					 {
 						 
-						 myMP3Controller->trackList->removeObj( myMP3Controller->trackList->at( selection));					 
+						 myMP3Controller->getTrackList()->removeObj( myMP3Controller->getTrackList()->at( selection));					 
 						 myMP3Controller->createIndex();
 					 }
 					 // Search result available -> identify item in last search result
 					 else
 					 {
 						 // Remove from track list after identifying in search result
-						 myMP3Controller->trackList->removeObj( searchResult->at( selection));
+						 myMP3Controller->getTrackList()->removeObj( searchResult->at( selection));
 						 // Update index
 						 myMP3Controller->createIndex();
 						 // Update search result
@@ -511,11 +512,11 @@ namespace MP3Tool
 							 System::String ^ term = searchfield->Text;
 							 unsigned int termLength = term->Length;
 							 if( termLength == 0)
-								 updateListBox( myMP3Controller->trackList);
+								 updateListBox( myMP3Controller->getTrackList());
 						 }
 					 }
 					 // Update file count
-					 lb_count->Text =  gcnew System::String( "" + myMP3Controller->trackList->getLength());
+					 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
 					 // Reset selection
 					 clearTextboxes();
 				 }
@@ -523,23 +524,23 @@ namespace MP3Tool
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 myMP3Controller->clearLists();
+				 myMP3Controller->resetIndexList();
+				 myMP3Controller->resetTracklist();
 				 myListBox->Items->Clear();
 				 clearTextboxes();				
 				 // Update file count
-				 lb_count->Text =  gcnew System::String( "" + myMP3Controller->trackList->getLength());
+				 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
 			 }
 			 // Resets the search term
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 // @TODO Crashes when track list is empty and clear search field is pressed.
 				 // Reset search result
-				 myMP3Controller->searchResult = NULL;
+				 myMP3Controller->resetSearchResult();
 				 // Reset gui elements
 				 searchfield->Text = "";
 				 clearTextboxes();
 				 // Load current track list
-				 NodeList * tracklist = myMP3Controller->trackList;
+				 NodeList * tracklist = myMP3Controller->getTrackList();
 				 if( tracklist != NULL || !tracklist->isEmpty())
 					 updateListBox( tracklist);
 			 }
@@ -563,13 +564,12 @@ namespace MP3Tool
 				 if( termLength > 0)
 				 {
 					 // Retrieve search term from gui element
-					 //NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
 					 NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
 					 if( found && found->getFirst() != NULL)
 					 {
 						 // One or more element(s) found
 						 myListBox->Items->Clear();
-						updateListBox(found);
+						 updateListBox( found);
 					 }
 					 else
 					 {
@@ -582,8 +582,8 @@ namespace MP3Tool
 				 {
 					 // Empty search term.
 					 searchfield->Text = "";
-					 myMP3Controller->searchResult = NULL;
-					 updateListBox( myMP3Controller->trackList);
+					 myMP3Controller->resetSearchResult();
+					 updateListBox( myMP3Controller->getTrackList());
 				 }
 			 }
 	private: System::Void label1_Click( System::Object ^ sender, System::EventArgs ^ e)

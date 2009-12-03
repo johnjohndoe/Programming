@@ -8,17 +8,17 @@
 
 MP3Controller::MP3Controller( void)
 {
-	trackList = new NodeList();
 	myGenerator = new MP3DataGenerator();
-	wordNodeList = new WordNodeList();
+	trackList = new NodeList();
+	indexList = new WordNodeList();
 	searchResult = NULL;
 }
 MP3Controller::~MP3Controller( void)
 {
 	if( searchResult != NULL) delete searchResult;
-	if( wordNodeList != NULL) delete wordNodeList;
-	if( myGenerator != NULL) delete myGenerator;
+	if( indexList != NULL) delete indexList;
 	if( trackList != NULL) delete trackList;
+	if( myGenerator != NULL) delete myGenerator;
 }
 void MP3Controller::addMP3( const char * p_filePath)
 {
@@ -34,13 +34,13 @@ void MP3Controller::addMP3( const char * p_filePath)
 void MP3Controller::createIndex( void)
 {
 	// Index all words of the first element in the track list
-	this->wordNodeList = new WordNodeList();
+	this->indexList = new WordNodeList();
 	std::vector<std::string> * tokenVec = new std::vector<std::string>;
 	Helper::tokenize( ( trackList->getFirst()->getTitle()), *tokenVec);
 	std::vector<std::string>::iterator dIter( tokenVec->begin());
 	for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
 	{
-		wordNodeList->insert( tokenVec->at( i).c_str(), trackList->getFirst());
+		indexList->insert( tokenVec->at( i).c_str(), trackList->getFirst());
 	}
 
 	// Index all words of the following elements in the track list
@@ -52,21 +52,21 @@ void MP3Controller::createIndex( void)
 		std::vector<std::string>::iterator dIter( tokenVec->begin());
 		for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
 		{
-			wordNodeList->insert( tokenVec->at( i).c_str(), t_data);
+			indexList->insert( tokenVec->at( i).c_str(), t_data);
 		}
 	}
 }
 void MP3Controller::clearLists( void)
 {
-	if( wordNodeList != NULL) delete wordNodeList;
+	if( indexList != NULL) delete indexList;
 	if( trackList != NULL) delete trackList;
 	this->trackList = new NodeList();
-	this->wordNodeList = new WordNodeList();
+	this->indexList = new WordNodeList();
 }
-void MP3Controller::resetIndex( void)
+void MP3Controller::resetIndexList( void)
 {
-	if( wordNodeList != NULL) delete wordNodeList;
-	this->wordNodeList = new WordNodeList();
+	if( indexList != NULL) delete indexList;
+	this->indexList = new WordNodeList();
 }
 void MP3Controller::resetTracklist( void)
 {
@@ -83,9 +83,13 @@ NodeList * MP3Controller::getSearchResult( const char * searchString)
 	if( searchString != NULL)
 	{
 		resetSearchResult();
-		wordNodeList->searchForSubstring( searchResult, searchString);
+		indexList->searchForSubstring( searchResult, searchString);
 	}
 	return searchResult;
+}
+NodeList * MP3Controller::getTrackList( void)
+{
+	return trackList;
 }
 void MP3Controller::print()
 {

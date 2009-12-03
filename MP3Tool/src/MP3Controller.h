@@ -25,12 +25,14 @@ public:
 	void addMP3( const char * p_filePath);
 	/// \brief Returns the last search result.
 	NodeList * getSearchResult( const char * searchString = NULL); 
+	/// \brief Returns the track list.
+	NodeList * getTrackList( void);
 	/// \brief Builds an index of all words contained in the title field of all track list elements.
 	void createIndex();
 	/// \brief Removes all elements from the track list and the index.
 	void clearLists();
 	/// \brief Removes all indexed words.
-	void resetIndex( void);
+	void resetIndexList( void);
 	/// \brief Removes all elements from the track list.
 	void resetTracklist( void);
 	/// \brief Removes all elements from the search result.
@@ -38,16 +40,16 @@ public:
 	/// \brief Print method offers to print to output stream, f.e. a file.
 	void print( void);
 
-//private:
+private:
 
-	/// \brief Stores all MP3Data objects.
-	NodeList * trackList;
-	/// \brief Stores a temporary subset of the track list.
-	NodeList * searchResult;
-	/// \brief Stores the index of all title words.
-	WordNodeList * wordNodeList;
 	/// \brief Local representation of the MP3DataGenerator.
 	MP3DataGenerator * myGenerator;
+	/// \brief Stores a temporary subset of the track list.
+	NodeList * searchResult;
+	/// \brief Stores all MP3Data objects.
+	NodeList * trackList;
+	/// \brief Stores the index of all title words.
+	WordNodeList * indexList;
 
 };
 #endif;
