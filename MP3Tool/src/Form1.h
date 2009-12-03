@@ -408,7 +408,14 @@ namespace MP3Tool
 					 myMP3Controller->createIndex();
 
 					 // Update file count
-					 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
+					 unsigned int numTracks = myMP3Controller->getTrackList()->getLength();
+					 lb_count->Text =  gcnew System::String( "" + numTracks);
+
+					 // Update status message
+					 if( numTracks > 1)
+						 toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " tracks.";
+					 else
+						 toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " track.";
 
 					 // Update gui list
 					 updateListBox( myMP3Controller->getTrackList());
@@ -453,7 +460,7 @@ namespace MP3Tool
 				 else
 				 {
 					 // Error: No MP3Data object.
-					 tb_Title->Text = gcnew System::String( "Error retrieving MP3Data object.");
+					 toolStripStatusLabel1->Text = "Error retrieving MP3Data object.";
 				 }
 			 }
 			 // Empties the text boxes showing metadata information
@@ -479,7 +486,14 @@ namespace MP3Tool
 				 int max = myListBox->Items->Count;
 
 				 // Stop handler when selected item is invalid
-				 if( selection > max || selection < 0) return;
+				 if( selection > max || selection < 0)
+				 {
+					 if( myMP3Controller->getTrackList()->isEmpty())
+						 toolStripStatusLabel1->Text = "No tracks loaded.";
+					 else
+						 toolStripStatusLabel1->Text = "No track selected.";
+					 return;
+				 }
 
 				 if( selection >= 0)
 				 {
@@ -519,17 +533,26 @@ namespace MP3Tool
 					 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
 					 // Reset selection
 					 clearTextboxes();
+					 toolStripStatusLabel1->Text = "Successfully removed track.";
 				 }
+				 else
+					 toolStripStatusLabel1->Text = "No track selected to delete.";
 			 }
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
+				 if( myMP3Controller->getTrackList()->isEmpty())
+				 {
+					 toolStripStatusLabel1->Text = "No tracks loaded.";
+					 return;
+				 }
 				 myMP3Controller->resetIndexList();
 				 myMP3Controller->resetTracklist();
 				 myListBox->Items->Clear();
 				 clearTextboxes();				
 				 // Update file count
 				 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
+				 toolStripStatusLabel1->Text = "Successfully removed all tracks.";
 			 }
 			 // Resets the search term
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
@@ -541,8 +564,14 @@ namespace MP3Tool
 				 clearTextboxes();
 				 // Load current track list
 				 NodeList * tracklist = myMP3Controller->getTrackList();
-				 if( tracklist != NULL || !tracklist->isEmpty())
+				 if( tracklist != NULL && !tracklist->isEmpty())
+				 {
 					 updateListBox( tracklist);
+					 toolStripStatusLabel1->Text = "Successfully cleared search.";
+				 }
+				 else
+					 toolStripStatusLabel1->Text = "Successfully cleared search. No tracks loaded.";
+				 
 			 }
 			 // Updates the gui list
 	private: System::Void updateListBox( NodeList * t_nodelist)
@@ -570,12 +599,14 @@ namespace MP3Tool
 						 // One or more element(s) found
 						 myListBox->Items->Clear();
 						 updateListBox( found);
+						 toolStripStatusLabel1->Text = found->getLength() + " track found.";
 					 }
 					 else
 					 {
 						 // No element found
 						 myListBox->Items->Clear();
 						 clearTextboxes();
+						 toolStripStatusLabel1->Text = "No tracks found.";
 					 }
 				 }
 				 else
