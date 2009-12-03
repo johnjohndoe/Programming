@@ -37,7 +37,7 @@ public:
 	MP3Data * at( unsigned int pos);
 	/// \brief Checks if there is a next item in the list.
 	bool hasNext();
-	/// \returns True if the NodeList is empty
+	/// \brief Returns true if the node list is empty.
 	bool isEmpty();
 	/// \brief All elements of the bypassed node list become integrated into this node list.
 	void merge( NodeList * p_nodeList);
@@ -55,7 +55,7 @@ private:
 	Node * root;
 	/// \brief Current node for the iterator.
 	Node * currentNode; 
-	/// \brief Length of the LinkedList
+	/// \brief Length of the linked list.
 	unsigned int length;
 
 };
