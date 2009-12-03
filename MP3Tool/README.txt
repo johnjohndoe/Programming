@@ -1,5 +1,5 @@
 --- 
-+ October/November 2009
++ October/November/December 2009
 
 --- Background:
 * International media and computer science, Master's program, Programming course
@@ -17,7 +17,7 @@
 
 
 --- Libraries:
-* The application uses the OpenSource id3lib framework.
+* The application uses the OpenSource id3lib framework version 3.8.3.
 * http://id3lib.sourceforge.net/
 
 
