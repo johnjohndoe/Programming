@@ -25,7 +25,7 @@ namespace MP3Tool
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for Form1
+	/// \brief Holds the gui elements and event handlers.
 	///
 	/// WARNING: If you change the name of this class, you will need to change the
 	///          'Resource File Name' property for the managed resource compiler tool

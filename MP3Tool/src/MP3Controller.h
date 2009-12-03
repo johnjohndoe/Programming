@@ -2,17 +2,19 @@
 #if !defined ( MP3CONTROLLER_H )
 #define MP3CONTROLLER_H
 
+
 #include <string>
 #include "NodeList.h"
 #include "WordNodeList.h"
 #include "MP3DataGenerator.h"
 
 
+/**
+ * \class	MP3Controller
+ * \brief	Manages the track list, index and search result. 
+**/
 class MP3Controller
 {
-
-// Form1 can access members.
-//friend class Form1;
 
 public:
 

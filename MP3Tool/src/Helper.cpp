@@ -16,7 +16,6 @@ unsigned int Helper::length( const char * c)
 }
 // Note: Do not forget to dereference the objects before you hand them 
 // over to the function. Otherwise the pointer addresses are compared.
-// @TODO: Compare case insensitive
 int Helper::compareCaseSensitive( const char * lhs, const char * rhs)
 {
 	unsigned int lengthLhs = Helper::length( lhs);
