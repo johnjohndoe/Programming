@@ -25,7 +25,6 @@ public:
 	~MP3Data( void);
 
 	// Setter
-	void setIndex( int p_index);
 	void setTitle( const char * p_title);
 	void setArtist( const char * p_artist);
 	void setAlbum( const char * p_album);
@@ -37,7 +36,6 @@ public:
 	void setAll( const char * p_value);
 
 	// Getter
-	int getIndex( void);
 	const char * getTitle( void);
 	const char * getArtist( void);
 	const char * getAlbum( void);
@@ -54,16 +52,14 @@ public:
 
 private:
 	
-	/// \brief Stores the index position of the object in a sorted list.
-	int index;
-	const char * title;
-	const char * artist;
-	const char * album;
-	const char * year;
-	const char * tracknumber;
-	const char * genre;
-	const char * filepath;
-	const char * filename;
+	char * title;
+	char * artist;
+	char * album;
+	char * year;
+	char * tracknumber;
+	char * genre;
+	char * filepath;
+	char * filename;
 
 	/// \brief The smaller than operator implements a lexical comparison.
 	friend bool operator< ( const MP3Data & lhs, const MP3Data & rhs);
