@@ -104,7 +104,7 @@ MP3Data * MP3DataGenerator::readMetadata( const char * p_filePath)
 	}
 	// Retrieve file path and file name.
 	myMP3Data->setFilepath( p_filePath);
-	myMP3Data->setFilename( getFilename( p_filePath));
+	myMP3Data->setFilename( getFilename( p_filePath).c_str());
 	return myMP3Data;
 }
 std::string MP3DataGenerator::getEncoding()
@@ -124,10 +124,11 @@ unsigned int MP3DataGenerator::removeBrackets( const char * p_text)
 	ss >> i;
 	return i;
 }
-const char * MP3DataGenerator::getFilename( const char * p_filePath)
+std::string MP3DataGenerator::getFilename( const char * p_filePath)
 {
 	std::string path = p_filePath;
 	std::string::size_type lastPos = path.find_last_of( "\\");
 	std::string::size_type length = path.size();
-	return path.substr( lastPos + 1, ( length - lastPos)).c_str();
+	std::string t_string = path.substr( lastPos + 1, ( length - lastPos));
+	return t_string;
 }

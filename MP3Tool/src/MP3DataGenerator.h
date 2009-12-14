@@ -39,7 +39,7 @@ private:
 	/// \brief Removes the round brackets surrounding the text (array index).
 	unsigned int removeBrackets( const char * p_text);
 	/// \brief Extracts the filename from a path.
-	const char * getFilename( const char * p_filePath);
+	std::string getFilename( const char * p_filePath);
 
 
 };
