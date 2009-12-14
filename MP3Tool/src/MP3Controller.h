@@ -24,7 +24,7 @@ public:
 	~MP3Controller( void);
 
 	/// \brief Adds a MP3Data object to the track list.
-	void addMP3( const char * p_filePath);
+	MP3Data * addMP3( const char * p_filePath);
 	/// \brief Returns the last search result.
 	NodeList * getSearchResult( const char * searchString = NULL); 
 	/// \brief Returns the track list.

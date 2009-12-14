@@ -23,8 +23,8 @@ public:
 	NodeList( void);
 	/// \brief Destructor.
 	~NodeList( void);
-	/// \brief Adds a node in respect to the lexical order of the title string.
-	void insert( MP3Data * p_mp3Data);
+	/// \brief Adds a node in respect to the lexical order of the title string. Returns the Index
+	int insert( MP3Data * p_mp3Data);
 	/// \brief Returns the MP3Data object or NULL.
 	MP3Data * findByFilePath( const char * p_filePath);
 	/// \brief Removes a node from the list by it's index.

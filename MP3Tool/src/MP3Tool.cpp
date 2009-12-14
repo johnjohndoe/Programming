@@ -7,7 +7,7 @@
 **/
 
 #include "stdafx.h"
-#include "Form1.h"
+#include "MP3ToolGUI.h"
 
 
 using namespace MP3Tool;
@@ -20,7 +20,7 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault( false); 
 
 	// Create the main window and run it
-	Application::Run( gcnew Form1());
+	Application::Run( gcnew MP3ToolGUI());
 
 
 	return 0;

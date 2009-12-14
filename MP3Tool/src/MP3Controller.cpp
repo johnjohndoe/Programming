@@ -20,7 +20,7 @@ MP3Controller::~MP3Controller( void)
 	if( trackList != NULL) delete trackList;
 	if( myGenerator != NULL) delete myGenerator;
 }
-void MP3Controller::addMP3( const char * p_filePath)
+MP3Data * MP3Controller::addMP3( const char * p_filePath)
 {
 	MP3Data * tempMP3Data = myGenerator->readMetadata( p_filePath);
 	if( tempMP3Data)
@@ -30,6 +30,7 @@ void MP3Controller::addMP3( const char * p_filePath)
 		throw "Error: MP3Controller::addMP3(), MP3DataGenerator could not build metadata object.";
 		exit( -1);
 	}
+	return tempMP3Data;
 }
 void MP3Controller::createIndex( void)
 {

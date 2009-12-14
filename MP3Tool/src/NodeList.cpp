@@ -68,7 +68,7 @@ bool NodeList::isEmpty()
 {
 	return ( length == 0) ? true : false;
 }
-void NodeList::insert( MP3Data * p_mp3Data)
+int NodeList::insert( MP3Data * p_mp3Data)
 {
 	// Skip insert if node already exists.
 	MP3Data * found = findByFilePath( p_mp3Data->getFilepath());
