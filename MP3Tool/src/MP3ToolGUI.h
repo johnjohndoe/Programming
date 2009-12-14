@@ -1,6 +1,6 @@
 #pragma once
-#if !defined ( FORM1_H )
-#define FORM1_H
+#if !defined ( MP3TOOLGUI_H )
+#define MP3TOOLGUI_H
 
 
 #include <vector>
