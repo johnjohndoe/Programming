@@ -32,16 +32,14 @@ private:
 	ID3_Tag * myID3_Tag;
 	/// \brief Stores the text encoding type of the frames read in.
 	std::string encoding;
-	/// \brief Stores the filename for splitting;
-	std::string t_path;	
 	/// \brief Returns the text encoding type.
 	std::string getEncoding();
 	/// \brief Container stores frame ids of the metadata of interest.
 	std::set<ID3_FrameID> * interestingID3_FrameIDs;
 	/// \brief Removes the round brackets surrounding the text (array index).
 	unsigned int removeBrackets( const char * p_text);
-	/// \brief Extract the filename from a path
-	std::string getFilename( const char * p_filePath);
+	/// \brief Extracts the filename from a path.
+	const char * getFilename( const char * p_filePath);
 
 
 };

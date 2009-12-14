@@ -3,24 +3,23 @@
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// German (Germany) resources
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon placed first or with lowest ID value becomes application icon
-
-LANGUAGE 7, 1
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
 #pragma code_page(1252)
-1           ICON         "app.ico"
+#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -28,36 +27,75 @@ LANGUAGE 7, 1
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE  
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
     "\0"
 END
 
-2 TEXTINCLUDE  
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE  
+3 TEXTINCLUDE 
 BEGIN
     "\0"
 END
 
 #endif    // APSTUDIO_INVOKED
 
-/////////////////////////////////////////////////////////////////////////////
 
-
-
-#ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
-// Generated from the TEXTINCLUDE 3 resource.
+// Icon
 //
 
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "app.ico"
 
 /////////////////////////////////////////////////////////////////////////////
-#endif    // not APSTUDIO_INVOKED
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x0L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "Comments", "MP3-Tag-Viewer 2009 for Windows, Reads metadata from MP3 files using the id3lib framework."
+            VALUE "CompanyName", "Alexander Kramer & Tobias Preuss"
+            VALUE "FileDescription", "MP3-Tag-Viewer 2009.12.03"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "MP3-Tag-Viewer"
+            VALUE "LegalCopyright", "Copyright (C) 2009"
+            VALUE "OriginalFilename", "MP3-Tag-Viewer.exe"
+            VALUE "ProductName", "MP3-Tag-Viewer 2009"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+
+#endif    // German (Germany) resources
+/////////////////////////////////////////////////////////////////////////////
+
 
