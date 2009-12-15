@@ -34,7 +34,7 @@ void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 	if( found)
 	{
 		// Extend the list of associates of the existing word node.
-		found->wordData->associates->insert( p_associate);
+		found->wordData->associates->insertByFilePath( p_associate);
 	}
 	else
 	{
