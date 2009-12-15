@@ -2,46 +2,41 @@
 #include "TrackManager.h"
 
 
-
-TrackManager::TrackManager(void)
+TrackManager::TrackManager( void)
 {
-	myController = new MP3Controller();
-	
+	myController = new MP3Controller();	
 }
-
-int TrackManager::addTrack( const string pFileName, CTrackInfo &pTrackData )
+TrackManager::~TrackManager( void)
 {
-	int index =  myController.addMP3(pFileName.c_str());
-	// Wie bekommen wir nach einer Einfüge-Operation sowohl den index des letzten Eintrages UND den letzten Eintrag?
-	// Wir können uns als return den Index-Wert geben und dann ein myController.TrackList.at(int) das objekt zurpück geben lassen
-
-	pTrackData = myController.getItemFromTrackList(index);
-	return index;
-
-	
+	delete myController;
 }
-
-bool TrackManager::removeTrack( int pIndex )
+int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 {
-	myController.trackList->removeObj(pIndex);
-
-	return true;
+	MP3Data * currentMP3Data = myController->addMP3( pFileName.c_str());
+	int id = currentMP3Data->getId();
+	if( id != INVALID_INDEX)
+	{
+		pTrackData.mIndex = currentMP3Data->getId();
+		pTrackData.mAlbum = currentMP3Data->getAlbum();
+		pTrackData.mInterpret = currentMP3Data->getArtist();
+		pTrackData.mTitle = currentMP3Data->getTitle();
+	}
+	return id;
 }
-
-int TrackManager::trackGetNext( TSearchID pID, CTrackInfo &pNextTrack )
+bool TrackManager::removeTrack( int pIndex)
 {
-
-return 0;
+	myController->getTrackList()->removeObjById( pIndex);
+	return false;
 }
-
-bool TrackManager::trackSearchStart( const string &pTitleBeginn, TSearchID &pID )
+int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID)
 {
-
-	return true;
+	return false;
 }
-
-void TrackManager::trackSearchStop( TSearchID pID )
+bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 {
-
+	return false;
+}
+void TrackManager::trackSearchStop( TSearchID pID)
+{
 
 }
