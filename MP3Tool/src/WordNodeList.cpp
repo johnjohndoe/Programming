@@ -89,7 +89,11 @@ void WordNodeList::remove( const char * p_word)
 }
 void WordNodeList::print( std::ostream & os)
 { 
-	if( this->root->wordData == NULL) return;
+	if( this->root->next == NULL) 
+	{
+		os << std::endl;
+		return;
+	}
 	unsigned int count = 1;
 	WordNode * node = root->next;
 	while( node->wordData)
@@ -102,13 +106,19 @@ void WordNodeList::print( std::ostream & os)
 }
 void  WordNodeList::printExtensive( std::ostream & os)
 {
-	currentNode = root->next; // Set to 1
+	currentNode = root->next;
+	if( currentNode == NULL)
+	{
+		os << std::endl;
+		return;
+	}
 	while( currentNode->wordData)
 	{
 		os << "Node name: " << currentNode->wordData->word << "\n";
-		currentNode->wordData->associates->print(os);
+		currentNode->wordData->associates->print( os);
 		currentNode = currentNode->next;
 	}
+	os << std::endl;
 
 }
 bool WordNodeList::hasNext()

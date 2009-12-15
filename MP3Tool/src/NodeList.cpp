@@ -33,6 +33,10 @@ MP3Data * NodeList::getFirst()
 	currentNode = root->next;
 	return currentNode->data;
 }
+void NodeList::begin()
+{
+	currentNode = root;
+}
 MP3Data * NodeList::getNext()
 {
 	if( currentNode->next != NULL)
@@ -80,8 +84,8 @@ void NodeList::insertByFilePath( MP3Data * p_mp3Data)
 	while( node != NULL && node != root && *node->data < *p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
+	p_mp3Data->setId( ++nodeId);
 	newNode->data = new MP3Data( *p_mp3Data);
-	newNode->data->setId( ++nodeId);
 
 	if( node == NULL) return;
 	node->prev->next = newNode;
@@ -101,8 +105,8 @@ void NodeList::insertById( MP3Data * p_mp3Data)
 	while( node != NULL && node != root && *node->data < *p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
+	p_mp3Data->setId( nodeId);
 	newNode->data = new MP3Data( *p_mp3Data);
-	newNode->data->setId( ++nodeId);
 
 	if( node == NULL) return;
 	node->prev->next = newNode;
@@ -153,20 +157,21 @@ void NodeList::removeObjByFilePath( MP3Data * p_mp3Data)
 	delete node->data;
 	delete node;
 }
-void NodeList::removeObjById( int p_id)
+bool NodeList::removeObjById( int p_id)
 {
 	Node * node = root->next;
 	while( node != NULL && node != root && node->data->getId() != p_id)
 		node = node->next;
 	// Not found.
 	if( node == NULL || node == root)
-		return;
+		return false;
 	// Relink neighbors and remove the object found.
 	node->prev->next = node->next;
 	node->next->prev = node->prev;
 	length--;
 	delete node->data;
 	delete node;
+	return true;
 }
 void NodeList::merge( NodeList * p_nodeList)
 {
@@ -181,7 +186,11 @@ unsigned int NodeList::getLength( void)
 }
 void NodeList::print( std::ostream & os)
 {
-	if( this->root->data == NULL) return;
+	if( this->root->next == NULL)
+	{	
+		os << std::endl;
+		return;
+	}
 	unsigned int count = 1;
 	Node * node = root->next;
 	while( node->data)

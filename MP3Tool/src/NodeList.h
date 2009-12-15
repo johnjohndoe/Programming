@@ -34,9 +34,11 @@ public:
 	/// \brief Removes a node from the list. The node is identified by its file path.
 	void removeObjByFilePath( MP3Data * p_mp3Data);
 	/// \brief Removes a node from the list. The node is identified by its id.
-	void removeObjById( int p_id);
+	bool removeObjById( int p_id);
 	/// \brief Returns the root node.
 	MP3Data * getFirst();
+	/// \brief Sets the Pointer to the first Node
+	void begin();
 	/// \brief Returns the next node.
 	MP3Data * getNext();
 	/// \brief Returns the MP3Data object at a certain position.
