@@ -25,6 +25,7 @@ public:
 	~MP3Data( void);
 
 	// Setter
+	void setId( int p_Id);
 	void setTitle( const char * p_title);
 	void setArtist( const char * p_artist);
 	void setAlbum( const char * p_album);
@@ -36,6 +37,7 @@ public:
 	void setAll( const char * p_value);
 
 	// Getter
+	int getId( void);
 	const char * getTitle( void);
 	const char * getArtist( void);
 	const char * getAlbum( void);
@@ -52,6 +54,7 @@ public:
 
 private:
 	
+	int id;
 	char * title;
 	char * artist;
 	char * album;

@@ -23,12 +23,18 @@ public:
 	NodeList( void);
 	/// \brief Destructor.
 	~NodeList( void);
-	/// \brief Adds a node in respect to the lexical order of the title string. Returns the Index
-	int insert( MP3Data * p_mp3Data);
+	/// \brief Adds a node in respect to the lexical order of the title string. Existing nodes are identified by their file paths.
+	void insertByFilePath( MP3Data * p_mp3Data);
+	/// \brief Adds a node in respect to the lexical order of the title string. Existing nodes are identified by their id.
+	void insertById( MP3Data * p_mp3Data);
 	/// \brief Returns the MP3Data object or NULL.
 	MP3Data * findByFilePath( const char * p_filePath);
-	/// \brief Removes a node from the list by it's index.
-	void removeObj( MP3Data * p_mp3Data);
+	/// \brief Returns the MP3Data object or NULL.
+	MP3Data * findById( int p_id);
+	/// \brief Removes a node from the list. The node is identified by its file path.
+	void removeObjByFilePath( MP3Data * p_mp3Data);
+	/// \brief Removes a node from the list. The node is identified by its id.
+	void removeObjById( int p_id);
 	/// \brief Returns the root node.
 	MP3Data * getFirst();
 	/// \brief Returns the next node.
@@ -57,6 +63,8 @@ private:
 	Node * currentNode; 
 	/// \brief Length of the linked list.
 	unsigned int length;
+	/// \brief Unique identifier for a node.
+	unsigned int nodeId;
 
 };
 

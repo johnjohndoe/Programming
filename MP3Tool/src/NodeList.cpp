@@ -10,6 +10,7 @@ NodeList::NodeList( void)
 	root->data = NULL;
 	currentNode = root;
 	length = 0;
+	nodeId = 0; // Incremented by insert operations. No decrement for uniqueness.
 }
 NodeList::~NodeList( void)
 {
@@ -68,7 +69,7 @@ bool NodeList::isEmpty()
 {
 	return ( length == 0) ? true : false;
 }
-int NodeList::insert( MP3Data * p_mp3Data)
+void NodeList::insertByFilePath( MP3Data * p_mp3Data)
 {
 	// Skip insert if node already exists.
 	MP3Data * found = findByFilePath( p_mp3Data->getFilepath());
@@ -79,7 +80,29 @@ int NodeList::insert( MP3Data * p_mp3Data)
 	while( node != NULL && node != root && *node->data < *p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
-	newNode->data = new MP3Data( * p_mp3Data);
+	newNode->data = new MP3Data( *p_mp3Data);
+	newNode->data->setId( ++nodeId);
+
+	if( node == NULL) return;
+	node->prev->next = newNode;
+	newNode->prev = node->prev;
+	newNode->next = node;
+	node->prev = newNode;
+	length++;
+}
+void NodeList::insertById( MP3Data * p_mp3Data)
+{
+	// Skip insert if node already exists.
+	MP3Data * found = findById( p_mp3Data->getId());
+	if( found) return;
+
+	Node * node = root->next;
+	// !Important: Dereference the pointer before using the comparison operator.
+	while( node != NULL && node != root && *node->data < *p_mp3Data)
+		node = node->next;
+	Node * newNode = new Node();
+	newNode->data = new MP3Data( *p_mp3Data);
+	newNode->data->setId( ++nodeId);
 
 	if( node == NULL) return;
 	node->prev->next = newNode;
@@ -103,7 +126,18 @@ MP3Data * NodeList::findByFilePath( const char * p_filePath)
 	// Return the object found.
 	return node->data;
 }
-void NodeList::removeObj( MP3Data * p_mp3Data)
+MP3Data * NodeList::findById( int p_id)
+{
+	Node * node = root->next;
+	while( node != NULL && node != root && node->data->getId() != p_id)
+		node = node->next;	// Set to next node. Last would be back to root.
+	// Not found.
+	if( node == NULL || node == root)
+		return NULL;
+	// Return the object found.
+	return node->data;
+}
+void NodeList::removeObjByFilePath( MP3Data * p_mp3Data)
 {
 	Node * node = root->next;
 	// !Important: Dereference the pointer before using the comparison operator.
@@ -119,12 +153,27 @@ void NodeList::removeObj( MP3Data * p_mp3Data)
 	delete node->data;
 	delete node;
 }
+void NodeList::removeObjById( int p_id)
+{
+	Node * node = root->next;
+	while( node != NULL && node != root && node->data->getId() != p_id)
+		node = node->next;
+	// Not found.
+	if( node == NULL || node == root)
+		return;
+	// Relink neighbors and remove the object found.
+	node->prev->next = node->next;
+	node->next->prev = node->prev;
+	length--;
+	delete node->data;
+	delete node;
+}
 void NodeList::merge( NodeList * p_nodeList)
 {
 	if( p_nodeList->length <= 0) return;
-	this->insert( p_nodeList->getFirst());
+	this->insertByFilePath( p_nodeList->getFirst());
 	while( p_nodeList->hasNext())
-		this->insert( p_nodeList->getNext());
+		this->insertByFilePath( p_nodeList->getNext());
 }
 unsigned int NodeList::getLength( void)
 {
@@ -137,7 +186,7 @@ void NodeList::print( std::ostream & os)
 	Node * node = root->next;
 	while( node->data)
 	{
-		os << count << ": " << node->data->getTitle() << " | " << node->data->getFilepath() << "\n";
+		os << count << " | id: " << node->data->getId() << " | " << node->data->getTitle() << " | " << node->data->getFilepath() << "\n";
 		node = node->next;
 		count++;
 	}

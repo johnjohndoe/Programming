@@ -4,6 +4,7 @@
 
 MP3Data::MP3Data( void)
 {
+	this->id = -1;
 	this->title = NULL;
 	this->artist = NULL;
 	this->album = NULL;
@@ -24,6 +25,7 @@ MP3Data::~MP3Data( void)
 	if( artist) delete[] artist;
 	if( title) delete[] title;
 }
+int MP3Data::getId()					{	return id;												}
 const char * MP3Data::getTitle()		{	return ( title) ? title : "<undefined>";				}
 const char * MP3Data::getArtist()		{	return ( artist) ? artist : "<undefined>";				}
 const char * MP3Data::getAlbum()		{	return ( album) ? album : "<undefined>";				}
@@ -34,6 +36,10 @@ const char * MP3Data::getFilepath()		{	return ( filepath) ? filepath : "<undefin
 const char * MP3Data::getFilename()		{	return ( filename) ? filename : "<undefined>";			}
 
 
+void MP3Data::setId( int p_Id)
+{
+	id = p_Id;
+}
 void MP3Data::setTitle( const char * p_title)				
 {
 	unsigned int numBytes = Helper::length( p_title);
