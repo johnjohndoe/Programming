@@ -42,7 +42,7 @@ public:
    // param: 
    // return: index, mit dem auf den Track zugegriffen werden kann
    //         INVALID_INDEX, wenn der Track bereits enthalten ist.
-   virtual int addTrack( const string pFileName, /*out*/ CTrackInfo &pTrackData) = 0;
+   virtual int addTrack( const string pFileName, /*out*/ CTrackInfo & pTrackData) = 0;
 
    // Entfernt einen Track mit dem gegebenen Index
    // return: false, wenn der Index nicht enthalten war
@@ -53,9 +53,9 @@ public:
    // passenden Tracks, und eine Such-ID.  Mit der Such-ID können anschließend per 
    // trackGetNext() die einzelnen gefundenen Track abgerufen werden. 
    // Mit trackSearchStop() wird die aktuelle Suche beendet.
-   virtual int trackSearchStart( const string &pTitleBeginn, /*out*/ TSearchID &pID) = 0;
-   virtual bool trackGetNext( TSearchID pID, /*out*/ CTrackInfo &pNextTrack) = 0;
+   virtual int trackSearchStart( const string & pTitleBeginn, /*out*/ TSearchID & pID) = 0;
+   virtual bool trackGetNext( TSearchID pID, /*out*/ CTrackInfo & pNextTrack) = 0;
    virtual void trackSearchStop( TSearchID pID) = 0;
 };
 
-#endif // ITrackManager_H
+#endif;
