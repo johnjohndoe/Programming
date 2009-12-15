@@ -26,7 +26,7 @@ public:
 	/// \brief Removes a track from the track list and response success or failure.
 	bool removeTrack( int pIndex);
 	/// \brief Initiates a new search and returns an identifier for the search process.
-	int trackSearchStart( const string & pTitleBeginn, TSearchID & pID);
+	TSearchID trackSearchStart( const string & pTitleBeginn, TSearchID & pID);
 	/// \brief Returns the next CTrackInfo object of the search process specified by its identifier.
 	bool trackGetNext( TSearchID pID, CTrackInfo & pNextTrack);
 	/// \brief Interrupts the search process specified by its identifier.
@@ -36,7 +36,6 @@ private:
 
 	/// \brief Local representation of the MP3Controller.
 	MP3Controller * myController;
-
 };
 
 #endif;

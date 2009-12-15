@@ -25,18 +25,72 @@ int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 }
 bool TrackManager::removeTrack( int pIndex)
 {
-	myController->getTrackList()->removeObjById( pIndex);
-	return false;
+	return myController->getTrackList()->removeObjById( pIndex);
 }
 int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID)
 {
-	return false;
+	if(pTitleBeginn == "")
+	{
+		myController->getTrackList()->begin();
+		return myController->getTrackList()->getLength();
+	}
+	else
+	{
+		myController->getSearchResult(pTitleBeginn.c_str());
+		return myController->getSearchResult()->getLength();
+	}
 }
+
+
+
 bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 {
-	return false;
+	MP3Data * t_Data = NULL;
+
+	if(pID == INVALID_SEARCH_ID) // Get whole track list
+	{
+		t_Data = myController->getTrackList()->getNext();
+		if(t_Data != NULL)	// returns current iterator-item
+		{
+			pNextTrack.mAlbum = t_Data->getAlbum();
+			pNextTrack.mInterpret = t_Data->getArtist();
+			pNextTrack.mTitle = t_Data->getTitle();
+			pNextTrack.mIndex = t_Data->getId();
+			return true;	// successfully retrieved item
+		}
+		else	// current iterator-item is NULL
+		{
+			return false;
+		}
+	}
+	else // get node list for the search-ID
+	{
+		NodeList * t_searchResult = myController->getSearchResult();
+		if(t_searchResult)
+		{
+			t_Data = t_searchResult->getNext();
+
+			if(t_Data != NULL) 
+			{
+				pNextTrack.mAlbum = t_Data->getAlbum();
+				pNextTrack.mInterpret = t_Data->getArtist();
+				pNextTrack.mTitle = t_Data->getTitle();
+				pNextTrack.mIndex = t_Data->getId();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 void TrackManager::trackSearchStop( TSearchID pID)
 {
+	
 
 }
