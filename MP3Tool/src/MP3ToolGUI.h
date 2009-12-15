@@ -12,7 +12,7 @@
 #include "Helper.h"
 #include "WordNode.h"
 #include "ID3_FrameID_LUT.h"
-#include "ITrackManager.h"
+#include "TrackManager.h"
 
 
 namespace MP3Tool 
@@ -41,6 +41,9 @@ namespace MP3Tool
 		System::Windows::Forms::Button ^ bt_clear;
 		MP3Controller * myMP3Controller;
 		IMP3DataGenerator * myMP3DataGenerator;
+		TrackManager * myTrackManager;
+		TSearchID mySearchID;
+		CTrackInfo * m_trackData;
 
 
 	public:
@@ -48,6 +51,9 @@ namespace MP3Tool
 		{
 			InitializeComponent();
 			myMP3Controller = new MP3Controller();
+			myTrackManager = new TrackManager();
+			mySearchID = INVALID_SEARCH_ID;
+			m_trackData = new CTrackInfo;
 		}
 
 	protected:
@@ -60,32 +66,21 @@ namespace MP3Tool
 		}
 
 	private: System::Windows::Forms::ListBox^  myListBox;
-
 	private: System::Windows::Forms::Button^  btLoadFiles;
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::Label^  lb_Interpret;
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Label^  lb_Album;
-
-	private: System::Windows::Forms::Label^  lb_Genre;
-	private: System::Windows::Forms::Label^  lb_Track;
-	private: System::Windows::Forms::Label^  lb_Year;
 	private: System::Windows::Forms::TextBox^  tb_Interpret;
 	private: System::Windows::Forms::TextBox^  tb_Title;
 	private: System::Windows::Forms::TextBox^  tb_Album;
-	private: System::Windows::Forms::TextBox^  tb_Genre;
-	private: System::Windows::Forms::TextBox^  tb_Track;
-	private: System::Windows::Forms::TextBox^  tb_Year;
 	private: System::Windows::Forms::Label^  lb_countText;
 	private: System::Windows::Forms::Label^  lb_count;
-	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 	private: System::Windows::Forms::Button^  bt_delete;
 	private: System::Windows::Forms::TextBox^  searchfield;
 	private: System::Windows::Forms::Label^  label3;
-
-
 	private:
 		/// <summary>
 		/// Required designer variable.
@@ -105,18 +100,11 @@ namespace MP3Tool
 			this->lb_Interpret = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->lb_Album = (gcnew System::Windows::Forms::Label());
-			this->lb_Genre = (gcnew System::Windows::Forms::Label());
-			this->lb_Track = (gcnew System::Windows::Forms::Label());
-			this->lb_Year = (gcnew System::Windows::Forms::Label());
 			this->tb_Interpret = (gcnew System::Windows::Forms::TextBox());
 			this->tb_Title = (gcnew System::Windows::Forms::TextBox());
 			this->tb_Album = (gcnew System::Windows::Forms::TextBox());
-			this->tb_Genre = (gcnew System::Windows::Forms::TextBox());
-			this->tb_Track = (gcnew System::Windows::Forms::TextBox());
-			this->tb_Year = (gcnew System::Windows::Forms::TextBox());
 			this->lb_countText = (gcnew System::Windows::Forms::Label());
 			this->lb_count = (gcnew System::Windows::Forms::Label());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->bt_delete = (gcnew System::Windows::Forms::Button());
@@ -131,17 +119,17 @@ namespace MP3Tool
 			// 
 			this->myListBox->FormattingEnabled = true;
 			this->myListBox->HorizontalScrollbar = true;
-			this->myListBox->Location = System::Drawing::Point(12, 51);
+			this->myListBox->Location = System::Drawing::Point(12, 38);
 			this->myListBox->Name = L"myListBox";
-			this->myListBox->Size = System::Drawing::Size(314, 173);
+			this->myListBox->Size = System::Drawing::Size(458, 277);
 			this->myListBox->TabIndex = 1;
 			this->myListBox->SelectedIndexChanged += gcnew System::EventHandler(this, &MP3ToolGUI::myListBox_SelectedIndexChanged);
 			// 
 			// btLoadFiles
 			// 
-			this->btLoadFiles->Location = System::Drawing::Point(455, 8);
+			this->btLoadFiles->Location = System::Drawing::Point(528, 8);
 			this->btLoadFiles->Name = L"btLoadFiles";
-			this->btLoadFiles->Size = System::Drawing::Size(299, 23);
+			this->btLoadFiles->Size = System::Drawing::Size(226, 23);
 			this->btLoadFiles->TabIndex = 3;
 			this->btLoadFiles->Text = L"Open MP3\'s";
 			this->btLoadFiles->UseVisualStyleBackColor = true;
@@ -154,7 +142,7 @@ namespace MP3Tool
 			// lb_Interpret
 			// 
 			this->lb_Interpret->AutoSize = true;
-			this->lb_Interpret->Location = System::Drawing::Point(476, 51);
+			this->lb_Interpret->Location = System::Drawing::Point(476, 44);
 			this->lb_Interpret->Name = L"lb_Interpret";
 			this->lb_Interpret->Size = System::Drawing::Size(46, 13);
 			this->lb_Interpret->TabIndex = 4;
@@ -163,7 +151,7 @@ namespace MP3Tool
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(476, 78);
+			this->label2->Location = System::Drawing::Point(476, 71);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(27, 13);
 			this->label2->TabIndex = 4;
@@ -172,43 +160,16 @@ namespace MP3Tool
 			// lb_Album
 			// 
 			this->lb_Album->AutoSize = true;
-			this->lb_Album->Location = System::Drawing::Point(476, 105);
+			this->lb_Album->Location = System::Drawing::Point(476, 98);
 			this->lb_Album->Name = L"lb_Album";
 			this->lb_Album->Size = System::Drawing::Size(36, 13);
 			this->lb_Album->TabIndex = 4;
 			this->lb_Album->Text = L"Album";
 			// 
-			// lb_Genre
-			// 
-			this->lb_Genre->AutoSize = true;
-			this->lb_Genre->Location = System::Drawing::Point(476, 128);
-			this->lb_Genre->Name = L"lb_Genre";
-			this->lb_Genre->Size = System::Drawing::Size(36, 13);
-			this->lb_Genre->TabIndex = 4;
-			this->lb_Genre->Text = L"Genre";
-			// 
-			// lb_Track
-			// 
-			this->lb_Track->AutoSize = true;
-			this->lb_Track->Location = System::Drawing::Point(476, 156);
-			this->lb_Track->Name = L"lb_Track";
-			this->lb_Track->Size = System::Drawing::Size(35, 13);
-			this->lb_Track->TabIndex = 4;
-			this->lb_Track->Text = L"Track";
-			// 
-			// lb_Year
-			// 
-			this->lb_Year->AutoSize = true;
-			this->lb_Year->Location = System::Drawing::Point(476, 182);
-			this->lb_Year->Name = L"lb_Year";
-			this->lb_Year->Size = System::Drawing::Size(29, 13);
-			this->lb_Year->TabIndex = 4;
-			this->lb_Year->Text = L"Year";
-			// 
 			// tb_Interpret
 			// 
 			this->tb_Interpret->Enabled = false;
-			this->tb_Interpret->Location = System::Drawing::Point(528, 48);
+			this->tb_Interpret->Location = System::Drawing::Point(528, 41);
 			this->tb_Interpret->Name = L"tb_Interpret";
 			this->tb_Interpret->Size = System::Drawing::Size(226, 20);
 			this->tb_Interpret->TabIndex = 5;
@@ -216,7 +177,7 @@ namespace MP3Tool
 			// tb_Title
 			// 
 			this->tb_Title->Enabled = false;
-			this->tb_Title->Location = System::Drawing::Point(528, 75);
+			this->tb_Title->Location = System::Drawing::Point(528, 68);
 			this->tb_Title->Name = L"tb_Title";
 			this->tb_Title->Size = System::Drawing::Size(226, 20);
 			this->tb_Title->TabIndex = 5;
@@ -224,39 +185,15 @@ namespace MP3Tool
 			// tb_Album
 			// 
 			this->tb_Album->Enabled = false;
-			this->tb_Album->Location = System::Drawing::Point(528, 102);
+			this->tb_Album->Location = System::Drawing::Point(528, 95);
 			this->tb_Album->Name = L"tb_Album";
 			this->tb_Album->Size = System::Drawing::Size(226, 20);
 			this->tb_Album->TabIndex = 5;
 			// 
-			// tb_Genre
-			// 
-			this->tb_Genre->Enabled = false;
-			this->tb_Genre->Location = System::Drawing::Point(528, 126);
-			this->tb_Genre->Name = L"tb_Genre";
-			this->tb_Genre->Size = System::Drawing::Size(226, 20);
-			this->tb_Genre->TabIndex = 5;
-			// 
-			// tb_Track
-			// 
-			this->tb_Track->Enabled = false;
-			this->tb_Track->Location = System::Drawing::Point(528, 152);
-			this->tb_Track->Name = L"tb_Track";
-			this->tb_Track->Size = System::Drawing::Size(226, 20);
-			this->tb_Track->TabIndex = 5;
-			// 
-			// tb_Year
-			// 
-			this->tb_Year->Enabled = false;
-			this->tb_Year->Location = System::Drawing::Point(528, 179);
-			this->tb_Year->Name = L"tb_Year";
-			this->tb_Year->Size = System::Drawing::Size(226, 20);
-			this->tb_Year->TabIndex = 5;
-			// 
 			// lb_countText
 			// 
 			this->lb_countText->AutoSize = true;
-			this->lb_countText->Location = System::Drawing::Point(525, 210);
+			this->lb_countText->Location = System::Drawing::Point(634, 300);
 			this->lb_countText->Name = L"lb_countText";
 			this->lb_countText->Size = System::Drawing::Size(97, 13);
 			this->lb_countText->TabIndex = 6;
@@ -265,25 +202,16 @@ namespace MP3Tool
 			// lb_count
 			// 
 			this->lb_count->AutoSize = true;
-			this->lb_count->Location = System::Drawing::Point(625, 210);
+			this->lb_count->Location = System::Drawing::Point(734, 300);
 			this->lb_count->Name = L"lb_count";
 			this->lb_count->Size = System::Drawing::Size(13, 13);
 			this->lb_count->TabIndex = 4;
 			this->lb_count->Text = L"0";
 			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(377, 13);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(59, 13);
-			this->label1->TabIndex = 7;
-			this->label1->Text = L"List of files:";
-			// 
 			// statusStrip1
 			// 
 			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->toolStripStatusLabel1});
-			this->statusStrip1->Location = System::Drawing::Point(0, 238);
+			this->statusStrip1->Location = System::Drawing::Point(0, 328);
 			this->statusStrip1->Name = L"statusStrip1";
 			this->statusStrip1->Size = System::Drawing::Size(766, 22);
 			this->statusStrip1->TabIndex = 8;
@@ -292,12 +220,12 @@ namespace MP3Tool
 			// toolStripStatusLabel1
 			// 
 			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(72, 17);
+			this->toolStripStatusLabel1->Size = System::Drawing::Size(76, 17);
 			this->toolStripStatusLabel1->Text = L"Selected file: ";
 			// 
 			// bt_delete
 			// 
-			this->bt_delete->Location = System::Drawing::Point(333, 200);
+			this->bt_delete->Location = System::Drawing::Point(479, 290);
 			this->bt_delete->Name = L"bt_delete";
 			this->bt_delete->Size = System::Drawing::Size(75, 23);
 			this->bt_delete->TabIndex = 9;
@@ -309,7 +237,7 @@ namespace MP3Tool
 			// 
 			this->searchfield->Location = System::Drawing::Point(66, 10);
 			this->searchfield->Name = L"searchfield";
-			this->searchfield->Size = System::Drawing::Size(184, 20);
+			this->searchfield->Size = System::Drawing::Size(323, 20);
 			this->searchfield->TabIndex = 11;
 			this->searchfield->TextChanged += gcnew System::EventHandler(this, &MP3ToolGUI::searchfield_changed);
 			// 
@@ -324,7 +252,7 @@ namespace MP3Tool
 			// 
 			// bt_clearsearch
 			// 
-			this->bt_clearsearch->Location = System::Drawing::Point(256, 8);
+			this->bt_clearsearch->Location = System::Drawing::Point(395, 8);
 			this->bt_clearsearch->Name = L"bt_clearsearch";
 			this->bt_clearsearch->Size = System::Drawing::Size(75, 23);
 			this->bt_clearsearch->TabIndex = 14;
@@ -334,7 +262,7 @@ namespace MP3Tool
 			// 
 			// bt_clear
 			// 
-			this->bt_clear->Location = System::Drawing::Point(333, 171);
+			this->bt_clear->Location = System::Drawing::Point(479, 261);
 			this->bt_clear->Name = L"bt_clear";
 			this->bt_clear->Size = System::Drawing::Size(75, 23);
 			this->bt_clear->TabIndex = 13;
@@ -346,25 +274,18 @@ namespace MP3Tool
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(766, 260);
+			this->ClientSize = System::Drawing::Size(766, 350);
 			this->Controls->Add(this->bt_clearsearch);
 			this->Controls->Add(this->bt_clear);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->searchfield);
 			this->Controls->Add(this->bt_delete);
 			this->Controls->Add(this->statusStrip1);
-			this->Controls->Add(this->label1);
 			this->Controls->Add(this->lb_count);
 			this->Controls->Add(this->lb_countText);
-			this->Controls->Add(this->tb_Year);
-			this->Controls->Add(this->tb_Track);
 			this->Controls->Add(this->tb_Album);
-			this->Controls->Add(this->tb_Genre);
 			this->Controls->Add(this->tb_Title);
 			this->Controls->Add(this->tb_Interpret);
-			this->Controls->Add(this->lb_Year);
-			this->Controls->Add(this->lb_Track);
-			this->Controls->Add(this->lb_Genre);
 			this->Controls->Add(this->lb_Album);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->lb_Interpret);
@@ -372,7 +293,6 @@ namespace MP3Tool
 			this->Controls->Add(this->myListBox);
 			this->Name = L"MP3ToolGUI";
 			this->Text = L"MP3-Tag-Viewer";
-			this->Load += gcnew System::EventHandler(this, &MP3ToolGUI::Form1_Load);
 			this->statusStrip1->ResumeLayout(false);
 			this->statusStrip1->PerformLayout();
 			this->ResumeLayout(false);
@@ -380,7 +300,7 @@ namespace MP3Tool
 
 		}
 #pragma endregion
-			 // Converts .Net string to std::string
+		// Converts .Net string to std::string
 	private: std::string netstr2cppstr( System::String ^ managedString)
 			 {
 				 std::string out = (const char *) System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( managedString).ToPointer();
@@ -403,7 +323,12 @@ namespace MP3Tool
 					 {
 						 // Retrieve metadata and add them to the track list
 						 System::String ^ filePath = ( System::String ^) fileEnumerator->Current;
-						 myMP3Controller->addMP3( netstr2cppstr( filePath).c_str());
+						 myMP3Controller->addMP3( netstr2cppstr( filePath).c_str()); // # to be deleted
+
+						 myTrackManager->addTrack(netstr2cppstr( filePath).c_str(), *m_trackData );
+						 tb_Interpret->Text = gcnew System::String(m_trackData->mAlbum.c_str());
+
+
 					 }
 					 // Create new index
 					 myMP3Controller->createIndex();
@@ -419,8 +344,7 @@ namespace MP3Tool
 						 toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " track.";
 
 					 // Update gui list
-					 updateListBox( myMP3Controller->getTrackList());
-
+					 updateListBox("", mySearchID);
 					 // Reset search
 					 searchfield->Text = "";
 					 myMP3Controller->resetSearchResult();
@@ -432,6 +356,8 @@ namespace MP3Tool
 				 }
 				 // Reset selection if file opener is canceled
 				 myListBox->SelectedIndex = -1;
+				 myMP3Controller->print();
+
 			 }
 
 	private: System::Void myListBox_SelectedIndexChanged( System::Object ^  sender, System::EventArgs ^ e) 
@@ -456,10 +382,7 @@ namespace MP3Tool
 				 if( selectedMP3Data)
 				 {
 					 tb_Title->Text = gcnew System::String( selectedMP3Data->getTitle());
-					 tb_Genre->Text = gcnew System::String( selectedMP3Data->getGenre());
 					 tb_Interpret->Text = gcnew System::String( selectedMP3Data->getArtist());
-					 tb_Track->Text = gcnew System::String( selectedMP3Data->getTracknumber());
-					 tb_Year->Text = gcnew System::String( selectedMP3Data->getYear());
 					 tb_Album->Text = gcnew System::String( selectedMP3Data->getAlbum());
 					 toolStripStatusLabel1->Text += gcnew System::String( selectedMP3Data->getFilepath());
 				 }
@@ -475,9 +398,6 @@ namespace MP3Tool
 				 tb_Title->Text = "<nothing selected>";
 				 tb_Interpret->Text = "<nothing selected>";
 				 tb_Album->Text = "<nothing selected>";
-				 tb_Genre->Text = "<nothing selected>";
-				 tb_Track->Text = "<nothing selected>";
-				 tb_Year->Text = "<nothing selected>";
 				 toolStripStatusLabel1->Text = "Selected file: ";
 			 }
 			 // Initiate a new index search
@@ -488,7 +408,11 @@ namespace MP3Tool
 			 // Delete the selected item
 	private: System::Void bt_delete_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 int selection = myListBox->SelectedIndex;
+				bool t_foo = false;
+				t_foo = myTrackManager->removeTrack(m_trackData->mIndex);
+
+				 bool t_2foo =false;
+				 /*int selection = myListBox->SelectedIndex;
 				 int max = myListBox->Items->Count;
 
 				 // Stop handler when selected item is invalid
@@ -506,33 +430,34 @@ namespace MP3Tool
 					 // Remove item from gui list
 					 myListBox->Items->RemoveAt( selection);
 					 // Get the current search result
-					 NodeList * searchResult = myMP3Controller->getSearchResult();
+					int searchResult = myMP3Controller->getSearchResult();
 					 // No search result -> identify item in tracklist
-					 if( searchResult == NULL || searchResult->isEmpty())
+					 if( searchResult == 0)
 					 {
-						 
-						 myMP3Controller->getTrackList()->removeObj( myMP3Controller->getTrackList()->at( selection));					 
+
+						 myMP3Controller->getTrackList()->removeObjByFilePath( myMP3Controller->getTrackList()->at( selection));					 
 						 myMP3Controller->createIndex();
 					 }
 					 // Search result available -> identify item in last search result
 					 else
 					 {
 						 // Remove from track list after identifying in search result
-						 myMP3Controller->getTrackList()->removeObj( searchResult->at( selection));
+						 //myMP3Controller->getTrackList()->removeObjByFilePath( searchResult->at( selection));
+						 myTrackManager->removeTrack(0);
 						 // Update index
 						 myMP3Controller->createIndex();
 						 // Update search result
 						 processSearch();
 						 // Update gui list if new search result is available
 						 if( searchResult = myMP3Controller->getSearchResult())
-							 updateListBox( searchResult);
+							 updateListBox( mySearchID);
 						 // Update gui list if new is empty considering the current search term as a filter
 						 else
 						 {
 							 System::String ^ term = searchfield->Text;
 							 unsigned int termLength = term->Length;
 							 if( termLength == 0)
-								 updateListBox( myMP3Controller->getTrackList());
+								 updateListBox(mySearchID);
 						 }
 					 }
 					 // Update file count
@@ -543,7 +468,8 @@ namespace MP3Tool
 				 }
 				 else
 					 toolStripStatusLabel1->Text = "No track selected to delete.";
-			 }
+					 */
+			 } 
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
@@ -557,11 +483,10 @@ namespace MP3Tool
 
 				 System::String ^ term = searchfield->Text->ToLower();
 				 unsigned int termLength = term->Length;
-				 NodeList * searchResult = myMP3Controller->getSearchResult();
-				 
+				 //NodeList * searchResult = myMP3Controller->getSearchResult();
 
 				 // Search term is set
-				 if( termLength > 0)
+				/* if( termLength > 0)
 				 {
 					 // No search result
 					 if( searchResult->isEmpty())
@@ -575,7 +500,7 @@ namespace MP3Tool
 						 for( unsigned int i = 0; i < searchResultLength; ++i)
 						 {
 							 MP3Data * current = searchResult->at( i);
-							 tracklist->removeObj( current);
+							 tracklist->removeObjByFilePath( current);
 						 }
 						 myMP3Controller->createIndex();
 						 searchfield->Text = "";
@@ -584,9 +509,10 @@ namespace MP3Tool
 							 toolStripStatusLabel1->Text = "Successfully removed " + searchResultLength + " tracks.";
 						 else
 							 toolStripStatusLabel1->Text = "Successfully removed " + searchResultLength + " track.";
-					 }
-				 }
+					 } */
+				 //}
 				 // No search term, show full track list
+				 /* 
 				 else
 				 {
 					 myMP3Controller->resetIndexList();
@@ -594,7 +520,7 @@ namespace MP3Tool
 					 myListBox->Items->Clear();
 					 clearTextboxes();
 					 toolStripStatusLabel1->Text = "Successfully removed all tracks.";
-				 }
+				 } */
 				 // Update file count
 				 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
 			 }
@@ -602,7 +528,9 @@ namespace MP3Tool
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
 				 // Reset search result
+				 
 				 myMP3Controller->resetSearchResult();
+				 mySearchID = 0;
 				 // Reset gui elements
 				 searchfield->Text = "";
 				 clearTextboxes();
@@ -610,22 +538,25 @@ namespace MP3Tool
 				 NodeList * tracklist = myMP3Controller->getTrackList();
 				 if( tracklist != NULL && !tracklist->isEmpty())
 				 {
-					 updateListBox( tracklist);
+					 updateListBox("", mySearchID);
 					 toolStripStatusLabel1->Text = "Successfully cleared search.";
 				 }
 				 else
 					 toolStripStatusLabel1->Text = "Successfully cleared search. No tracks loaded.";
-				 
+
 			 }
 			 // Updates the gui list
-	private: System::Void updateListBox( NodeList * t_nodelist)
+	private: System::Void updateListBox(const string & pTitleBegin, TSearchID searchID)
 			 {
 				 myListBox->Items->Clear();
-				 if( !t_nodelist->isEmpty())
+				 int t_SearchID = mySearchID;
+				 myTrackManager->trackSearchStart(pTitleBegin, t_SearchID);
+				 bool t_hasNext = true;
+				 while (true)
 				 {
-					myListBox->Items->Add( gcnew System::String( t_nodelist->getFirst()->getTitle()));
-					while( t_nodelist->hasNext())
-						myListBox->Items->Add( gcnew System::String( t_nodelist->getNext()->getTitle()));
+					 t_hasNext = myTrackManager->trackGetNext(searchID, *m_trackData);
+					 if(!t_hasNext) break;
+					 myListBox->Items->Add(gcnew System::String(m_trackData->mTitle.c_str()));
 				 }
 			 }
 			 // Processes a new search
@@ -637,16 +568,20 @@ namespace MP3Tool
 				 if( termLength > 0)
 				 {
 					 // Retrieve search term from gui element
-					 NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
-					 if( found && found->getFirst() != NULL)
+					 int t_SearchID = mySearchID;
+					 int searchCount = myTrackManager->trackSearchStart(netstr2cppstr(term).c_str(),  t_SearchID);
+					 mySearchID = t_SearchID;
+
+					 //NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
+					 if( searchCount > 0)
 					 {
 						 // One or more element(s) found
 						 myListBox->Items->Clear();
-						 updateListBox( found);
-						 if( found->getLength() > 1)
-							 toolStripStatusLabel1->Text = found->getLength() + " tracks found.";
+						 updateListBox("", mySearchID);
+						 if( searchCount> 1)
+							 toolStripStatusLabel1->Text = searchCount + " tracks found.";
 						 else
-							 toolStripStatusLabel1->Text = found->getLength() + " track found.";
+							 toolStripStatusLabel1->Text = searchCount + " track found.";
 					 }
 					 else
 					 {
@@ -664,14 +599,12 @@ namespace MP3Tool
 					 // Empty search term.
 					 searchfield->Text = "";
 					 myMP3Controller->resetSearchResult();
-					 updateListBox( myMP3Controller->getTrackList());
+					 updateListBox("",mySearchID);
 				 }
 			 }
 	private: System::Void Form1_Load( System::Object ^ sender, System::EventArgs ^ e)
 			 {
 			 }
-
-
 	};  // eo MP3ToolGUI class
 }// eo namespace MP3Tool
 
