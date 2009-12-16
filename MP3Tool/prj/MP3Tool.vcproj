@@ -267,6 +267,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\TrackManagerFactory.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\WordData.cpp"
 				>
 			</File>
@@ -340,6 +344,10 @@
 			</File>
 			<File
 				RelativePath="..\src\TrackManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TrackManagerFactory.h"
 				>
 			</File>
 			<File

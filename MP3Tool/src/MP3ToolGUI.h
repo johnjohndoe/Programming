@@ -12,7 +12,7 @@
 #include "Helper.h"
 #include "WordNode.h"
 #include "ID3_FrameID_LUT.h"
-#include "TrackManager.h"
+#include "TrackManagerFactory.h"
 
 
 namespace MP3Tool 
@@ -39,7 +39,7 @@ namespace MP3Tool
 	private:
 		System::Windows::Forms::Button ^ bt_clearsearch;
 		System::Windows::Forms::Button ^ bt_clear;
-		TrackManager * myTrackManager;
+		ITrackManager * myTrackManager;
 		TSearchID mySearchID;
 		CTrackInfo * m_trackData;
 
@@ -48,7 +48,7 @@ namespace MP3Tool
 		MP3ToolGUI( void)
 		{
 			InitializeComponent();
-			myTrackManager = new TrackManager();
+			myTrackManager = TrackManagerFactory::getTrackManager();
 			mySearchID = INVALID_SEARCH_ID;
 			m_trackData = new CTrackInfo;
 		}
@@ -322,8 +322,8 @@ namespace MP3Tool
 						 System::String ^ filePath = ( System::String ^) fileEnumerator->Current;
 						 //myMP3Controller->addMP3( netstr2cppstr( filePath).c_str()); // # to be deleted
 
-						 myTrackManager->addTrack(netstr2cppstr( filePath).c_str(), *m_trackData );
-						 tb_Interpret->Text = gcnew System::String(m_trackData->mAlbum.c_str());
+						 myTrackManager->addTrack( netstr2cppstr( filePath).c_str(), *m_trackData );
+						 tb_Interpret->Text = gcnew System::String( m_trackData->mAlbum.c_str());
 
 
 					 }
@@ -340,7 +340,7 @@ namespace MP3Tool
 						// toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " track.";
 
 					 // Update gui list
-					 updateListBox("", mySearchID);
+					 updateListBox( "", mySearchID);
 					 // Reset search
 					 searchfield->Text = "";
 				 }
@@ -401,15 +401,13 @@ namespace MP3Tool
 			 // Delete the selected item
 	private: System::Void bt_delete_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				bool t_foo = false;
-				t_foo = myTrackManager->removeTrack(m_trackData->mIndex);
-					
-				 bool t_2foo =false;
-				// Wenn In einer Suche gelöscht dann Neue Suche auslösen
-				 // Ansonsten alle Elemente neue anzeigen lassen
-				 updateListBox("", mySearchID);
+				 bool t_foo = false;
+				 t_foo = myTrackManager->removeTrack( m_trackData->mIndex);
 
-				
+				 bool t_2foo =false;
+				 // Wenn In einer Suche gelöscht dann Neue Suche auslösen
+				 // Ansonsten alle Elemente neue anzeigen lassen
+				 updateListBox( "", mySearchID);
 			 } 
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
@@ -424,30 +422,29 @@ namespace MP3Tool
 			 }
 			 // Resets the search term
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
-			 {
-				 
-				 myTrackManager->trackSearchStop(mySearchID);
+			 {				 
+				 myTrackManager->trackSearchStop( mySearchID);
 				 mySearchID = INVALID_SEARCH_ID;
 				 // Reset gui elements
 				 searchfield->Text = "";
 				 clearTextboxes();
 				 // Load current track list
-				 updateListBox("", mySearchID);
+				 updateListBox( "", mySearchID);
 
 			 }
 			 // Updates the gui list
-	private: System::Void updateListBox(const string & pTitleBegin, TSearchID searchID)
+	private: System::Void updateListBox( const string & pTitleBegin, TSearchID searchID)
 			 {
 				 myListBox->Items->Clear();
 				 int t_SearchID = mySearchID;
-				 myTrackManager->trackSearchStart(pTitleBegin, t_SearchID);
+				 myTrackManager->trackSearchStart( pTitleBegin, t_SearchID);
 				 mySearchID = t_SearchID;
 				 bool t_hasNext = true;
 				 while (true)
 				 {
-					 t_hasNext = myTrackManager->trackGetNext(searchID, *m_trackData);
-					 if(!t_hasNext) break;
-					 myListBox->Items->Add(gcnew System::String(m_trackData->mTitle.c_str()));
+					 t_hasNext = myTrackManager->trackGetNext( searchID, *m_trackData);
+					 if( !t_hasNext) break;
+					 myListBox->Items->Add( gcnew System::String( m_trackData->mTitle.c_str()));
 				 }
 			 }
 			 // Processes a new search
@@ -458,15 +455,15 @@ namespace MP3Tool
 				 int t_Search = mySearchID;
 				 if( termLength > 0)
 				 {
-					//term = netstr2cppstr(term).c_str();
+					 //term = netstr2cppstr( term).c_str();
 				 }
 				 else
 				 {
 					 t_Search = -1;
 					 term = "";
 				 } 
-				 myTrackManager->trackSearchStart(netstr2cppstr(term).c_str(), t_Search);
-				 updateListBox(netstr2cppstr(term).c_str(), t_Search);
+				 myTrackManager->trackSearchStart( netstr2cppstr(term).c_str(), t_Search);
+				 updateListBox( netstr2cppstr( term).c_str(), t_Search);
 				 mySearchID = t_Search;
 			 }
 
