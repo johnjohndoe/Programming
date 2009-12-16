@@ -21,11 +21,14 @@ int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 		pTrackData.mInterpret = currentMP3Data->getArtist();
 		pTrackData.mTitle = currentMP3Data->getTitle();
 	}
+	myController->createIndex();
 	return id;
 }
 bool TrackManager::removeTrack( int pIndex)
 {
-	return myController->getTrackList()->removeObjById( pIndex);
+	bool isRemoved = myController->getTrackList()->removeObjById( pIndex);
+	myController->createIndex();
+	return isRemoved;
 }
 int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID)
 {
@@ -37,6 +40,7 @@ int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID
 	else
 	{
 		myController->getSearchResult(pTitleBeginn.c_str());
+		pID = 2;
 		return myController->getSearchResult()->getLength();
 	}
 }

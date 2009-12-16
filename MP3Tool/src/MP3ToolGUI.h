@@ -39,8 +39,6 @@ namespace MP3Tool
 	private:
 		System::Windows::Forms::Button ^ bt_clearsearch;
 		System::Windows::Forms::Button ^ bt_clear;
-		MP3Controller * myMP3Controller;
-		IMP3DataGenerator * myMP3DataGenerator;
 		TrackManager * myTrackManager;
 		TSearchID mySearchID;
 		CTrackInfo * m_trackData;
@@ -50,7 +48,6 @@ namespace MP3Tool
 		MP3ToolGUI( void)
 		{
 			InitializeComponent();
-			myMP3Controller = new MP3Controller();
 			myTrackManager = new TrackManager();
 			mySearchID = INVALID_SEARCH_ID;
 			m_trackData = new CTrackInfo;
@@ -323,7 +320,7 @@ namespace MP3Tool
 					 {
 						 // Retrieve metadata and add them to the track list
 						 System::String ^ filePath = ( System::String ^) fileEnumerator->Current;
-						 myMP3Controller->addMP3( netstr2cppstr( filePath).c_str()); // # to be deleted
+						 //myMP3Controller->addMP3( netstr2cppstr( filePath).c_str()); // # to be deleted
 
 						 myTrackManager->addTrack(netstr2cppstr( filePath).c_str(), *m_trackData );
 						 tb_Interpret->Text = gcnew System::String(m_trackData->mAlbum.c_str());
@@ -331,23 +328,21 @@ namespace MP3Tool
 
 					 }
 					 // Create new index
-					 myMP3Controller->createIndex();
+					 //myMP3Controller->createIndex();
 
 					 // Update file count
-					 unsigned int numTracks = myMP3Controller->getTrackList()->getLength();
-					 lb_count->Text =  gcnew System::String( "" + numTracks);
+					 //unsigned int numTracks = myMP3Controller->getTrackList()->getLength();
 
 					 // Update status message
-					 if( numTracks > 1)
-						 toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " tracks.";
-					 else
-						 toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " track.";
+					 //if( numTracks > 1)
+						// toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " tracks.";
+					 //else
+						// toolStripStatusLabel1->Text = "Successfully loaded " + numTracks + " track.";
 
 					 // Update gui list
 					 updateListBox("", mySearchID);
 					 // Reset search
 					 searchfield->Text = "";
-					 myMP3Controller->resetSearchResult();
 				 }
 				 else
 				 {
@@ -356,7 +351,6 @@ namespace MP3Tool
 				 }
 				 // Reset selection if file opener is canceled
 				 myListBox->SelectedIndex = -1;
-				 myMP3Controller->print();
 
 			 }
 
@@ -369,14 +363,13 @@ namespace MP3Tool
 				 if( selection > max || selection < 0) return;
 
 				 // Retrieve metadata from search result or tracklist
-				 NodeList * searchResult = myMP3Controller->getSearchResult();
 				 MP3Data * selectedMP3Data = NULL;
 				 // Identify in search result
-				 if( searchResult && !searchResult->isEmpty())
-					 selectedMP3Data = searchResult->at( selection);
+				 /*if( searchResult && !searchResult->isEmpty())
+					 selectedMP3Data = searchResult->at( selection);*/
 				 // Identify in track list
-				 else
-					 selectedMP3Data = myMP3Controller->getTrackList()->at( selection);					 
+				 /*else
+					 selectedMP3Data = myMP3Controller->getTrackList()->at( selection);					 */
 
 				 clearTextboxes();
 				 if( selectedMP3Data)
@@ -410,139 +403,36 @@ namespace MP3Tool
 			 {
 				bool t_foo = false;
 				t_foo = myTrackManager->removeTrack(m_trackData->mIndex);
-
+					
 				 bool t_2foo =false;
-				 /*int selection = myListBox->SelectedIndex;
-				 int max = myListBox->Items->Count;
+				// Wenn In einer Suche gelöscht dann Neue Suche auslösen
+				 // Ansonsten alle Elemente neue anzeigen lassen
+				 updateListBox("", mySearchID);
 
-				 // Stop handler when selected item is invalid
-				 if( selection > max || selection < 0)
-				 {
-					 if( myMP3Controller->getTrackList()->isEmpty())
-						 toolStripStatusLabel1->Text = "No tracks loaded.";
-					 else
-						 toolStripStatusLabel1->Text = "No track selected.";
-					 return;
-				 }
-
-				 if( selection >= 0)
-				 {
-					 // Remove item from gui list
-					 myListBox->Items->RemoveAt( selection);
-					 // Get the current search result
-					int searchResult = myMP3Controller->getSearchResult();
-					 // No search result -> identify item in tracklist
-					 if( searchResult == 0)
-					 {
-
-						 myMP3Controller->getTrackList()->removeObjByFilePath( myMP3Controller->getTrackList()->at( selection));					 
-						 myMP3Controller->createIndex();
-					 }
-					 // Search result available -> identify item in last search result
-					 else
-					 {
-						 // Remove from track list after identifying in search result
-						 //myMP3Controller->getTrackList()->removeObjByFilePath( searchResult->at( selection));
-						 myTrackManager->removeTrack(0);
-						 // Update index
-						 myMP3Controller->createIndex();
-						 // Update search result
-						 processSearch();
-						 // Update gui list if new search result is available
-						 if( searchResult = myMP3Controller->getSearchResult())
-							 updateListBox( mySearchID);
-						 // Update gui list if new is empty considering the current search term as a filter
-						 else
-						 {
-							 System::String ^ term = searchfield->Text;
-							 unsigned int termLength = term->Length;
-							 if( termLength == 0)
-								 updateListBox(mySearchID);
-						 }
-					 }
-					 // Update file count
-					 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
-					 // Reset selection
-					 clearTextboxes();
-					 toolStripStatusLabel1->Text = "Successfully removed track.";
-				 }
-				 else
-					 toolStripStatusLabel1->Text = "No track selected to delete.";
-					 */
+				
 			 } 
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 NodeList * tracklist = myMP3Controller->getTrackList();
-
-				 if( tracklist->isEmpty())
-				 {
-					 toolStripStatusLabel1->Text = "No tracks loaded.";
-					 return;
-				 }
 
 				 System::String ^ term = searchfield->Text->ToLower();
 				 unsigned int termLength = term->Length;
-				 //NodeList * searchResult = myMP3Controller->getSearchResult();
 
-				 // Search term is set
-				/* if( termLength > 0)
-				 {
-					 // No search result
-					 if( searchResult->isEmpty())
-					 {
-						 toolStripStatusLabel1->Text = "No tracks to delete.";
-					 }
-					 // One or more tracks listed
-					 else
-					 {
-						 unsigned int searchResultLength = searchResult->getLength();
-						 for( unsigned int i = 0; i < searchResultLength; ++i)
-						 {
-							 MP3Data * current = searchResult->at( i);
-							 tracklist->removeObjByFilePath( current);
-						 }
-						 myMP3Controller->createIndex();
-						 searchfield->Text = "";
-						 clearTextboxes();
-						 if( searchResultLength > 1)
-							 toolStripStatusLabel1->Text = "Successfully removed " + searchResultLength + " tracks.";
-						 else
-							 toolStripStatusLabel1->Text = "Successfully removed " + searchResultLength + " track.";
-					 } */
-				 //}
-				 // No search term, show full track list
-				 /* 
-				 else
-				 {
-					 myMP3Controller->resetIndexList();
-					 myMP3Controller->resetTracklist();
-					 myListBox->Items->Clear();
-					 clearTextboxes();
-					 toolStripStatusLabel1->Text = "Successfully removed all tracks.";
-				 } */
-				 // Update file count
-				 lb_count->Text =  gcnew System::String( "" + myMP3Controller->getTrackList()->getLength());
+				 // Am besten indem man sich alle Daten ausgeben lässt und diese einzelnd löscht
+				 // teuer, aber nachvollziehbarer weg
+
 			 }
 			 // Resets the search term
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 // Reset search result
 				 
-				 myMP3Controller->resetSearchResult();
-				 mySearchID = 0;
+				 myTrackManager->trackSearchStop(mySearchID);
+				 mySearchID = INVALID_SEARCH_ID;
 				 // Reset gui elements
 				 searchfield->Text = "";
 				 clearTextboxes();
 				 // Load current track list
-				 NodeList * tracklist = myMP3Controller->getTrackList();
-				 if( tracklist != NULL && !tracklist->isEmpty())
-				 {
-					 updateListBox("", mySearchID);
-					 toolStripStatusLabel1->Text = "Successfully cleared search.";
-				 }
-				 else
-					 toolStripStatusLabel1->Text = "Successfully cleared search. No tracks loaded.";
+				 updateListBox("", mySearchID);
 
 			 }
 			 // Updates the gui list
@@ -551,6 +441,7 @@ namespace MP3Tool
 				 myListBox->Items->Clear();
 				 int t_SearchID = mySearchID;
 				 myTrackManager->trackSearchStart(pTitleBegin, t_SearchID);
+				 mySearchID = t_SearchID;
 				 bool t_hasNext = true;
 				 while (true)
 				 {
@@ -564,47 +455,22 @@ namespace MP3Tool
 			 {
 				 System::String ^ term = searchfield->Text->ToLower();
 				 unsigned int termLength = term->Length;
-
+				 int t_Search = mySearchID;
 				 if( termLength > 0)
 				 {
-					 // Retrieve search term from gui element
-					 int t_SearchID = mySearchID;
-					 int searchCount = myTrackManager->trackSearchStart(netstr2cppstr(term).c_str(),  t_SearchID);
-					 mySearchID = t_SearchID;
-
-					 //NodeList * found = myMP3Controller->getSearchResult( netstr2cppstr( term).c_str());
-					 if( searchCount > 0)
-					 {
-						 // One or more element(s) found
-						 myListBox->Items->Clear();
-						 updateListBox("", mySearchID);
-						 if( searchCount> 1)
-							 toolStripStatusLabel1->Text = searchCount + " tracks found.";
-						 else
-							 toolStripStatusLabel1->Text = searchCount + " track found.";
-					 }
-					 else
-					 {
-						 // No element found
-						 myListBox->Items->Clear();
-						 clearTextboxes();
-						 if( myMP3Controller->getTrackList()->isEmpty())
-							 toolStripStatusLabel1->Text = "No tracks loaded.";
-						 else
-							 toolStripStatusLabel1->Text = "No tracks found.";
-					 }
+					//term = netstr2cppstr(term).c_str();
 				 }
 				 else
 				 {
-					 // Empty search term.
-					 searchfield->Text = "";
-					 myMP3Controller->resetSearchResult();
-					 updateListBox("",mySearchID);
-				 }
+					 t_Search = -1;
+					 term = "";
+				 } 
+				 myTrackManager->trackSearchStart(netstr2cppstr(term).c_str(), t_Search);
+				 updateListBox(netstr2cppstr(term).c_str(), t_Search);
+				 mySearchID = t_Search;
 			 }
-	private: System::Void Form1_Load( System::Object ^ sender, System::EventArgs ^ e)
-			 {
-			 }
+
+	private: System::Void Form1_Load( System::Object ^ sender, System::EventArgs ^ e) {	 }
 	};  // eo MP3ToolGUI class
 }// eo namespace MP3Tool
 
