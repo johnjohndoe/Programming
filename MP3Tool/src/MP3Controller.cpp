@@ -24,12 +24,13 @@ MP3Data * MP3Controller::addMP3( const char * p_filePath)
 {
 	MP3Data * tempMP3Data = myGenerator->readMetadata( p_filePath);
 	if( tempMP3Data)
-		trackList->insertByFilePath( tempMP3Data);
+		trackList->insertById( tempMP3Data);
 	else
 	{
 		throw "Error: MP3Controller::addMP3(), MP3DataGenerator could not build metadata object.";
 		exit( -1);
 	}
+	trackList->print(std::ofstream("..\\data\\nodelist.log"));
 	return tempMP3Data;
 }
 void MP3Controller::createIndex( void)
