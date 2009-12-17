@@ -319,12 +319,11 @@ namespace MP3Tool
 					 {
 						 // Retrieve metadata and add them to the track list
 						 System::String ^ filePath = ( System::String ^) fileEnumerator->Current;
-						 //myMP3Controller->addMP3( netstr2cppstr( filePath).c_str()); // # to be deleted
-
 						 myTrackManager->addTrack( netstr2cppstr( filePath).c_str(), *m_trackData );
-						 tb_Interpret->Text = gcnew System::String( m_trackData->mAlbum.c_str());
+						 //tb_Interpret->Text = gcnew System::String( m_trackData->mAlbum.c_str());  // # 2-b-Del
 					 }
 					 // Update gui list and file count
+
 					 unsigned int numTracks = updateListBox( "", mySearchID);
 
 					 // Update status message
