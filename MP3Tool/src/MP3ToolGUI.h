@@ -372,6 +372,7 @@ namespace MP3Tool
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {	
+				 //updateListBox("", mySearchID);
 				 System::Collections::IEnumerator ^ myEnum = myListBox->Items->GetEnumerator();
 				 //myEnum->Reset();
 				int t_id = 0;
@@ -384,8 +385,7 @@ namespace MP3Tool
 				 }
 				 searchfield->Text = "";
 				 updateMetadataFields();
-				 updateListBox("", mySearchID);
-				 lb_count->Text = "0";
+				 lb_count->Text = "" + updateListBox("", mySearchID);
 				 toolStripStatusLabel1->Text = "Successfully " + deleteCount + " tracks removed.";
 			 }
 			 // Resets the search term
