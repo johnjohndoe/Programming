@@ -34,7 +34,7 @@ void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 	if( found)
 	{
 		// Extend the list of associates of the existing word node.
-		found->wordData->associates->insertByFilePath( p_associate);
+		found->wordData->associates->insertByFilePathWithoutID( p_associate);
 	}
 	else
 	{
@@ -42,7 +42,7 @@ void WordNodeList::insert( const char * p_word, MP3Data * p_associate)
 		WordNode * node = root->next;
 		while( node != root && Helper::compareCaseSensitive( node->wordData->word, t_word->c_str()) == Helper::SMALLER)
 			node = node->next;
-		WordNode * newNode = new WordNode( t_word->c_str(), p_associate);
+		WordNode * newNode = new WordNode( t_word->c_str(), p_associate); // Hier setzt er die ID zurpcl
 		lastNode = newNode;
 		node->prev->next = newNode;
 		newNode->prev = node->prev;
