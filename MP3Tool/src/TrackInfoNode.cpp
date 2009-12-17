@@ -18,7 +18,7 @@ CTrackInfo * TrackInfoNode::getTrackInfo( void)
 {
 	return trackInfo;
 }
-System::String ^ TrackInfoNode::ToString()
+System::String ^ TrackInfoNode::ToString( void)
 {
 	return gcnew System::String( trackInfo->mTitle.c_str());
 }

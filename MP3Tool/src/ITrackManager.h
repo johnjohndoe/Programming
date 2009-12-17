@@ -6,16 +6,14 @@
 //////////////////////////////////////////////////////////////////////////////
 // Programming - Übung 3
 // Schnittstelle ITrackManager.h
-// Tim Wöhrle, 2009-11-24
-// 
-// 2009-12-07: Ergänzung CTrackInfo::mIndex
+// Tim Wöhrle, 2009-12-07
 //////////////////////////////////////////////////////////////////////////////
 
 #include <string>
 using namespace std;
 
 
-// MP3-Metadaten. 
+/// \brief Stores track information.
 struct CTrackInfo
 {
    int mIndex;
@@ -25,37 +23,35 @@ struct CTrackInfo
 };
 
 
-// Handle für einen Suchdurchlauf
+/// \brief Handle for a search.
 typedef int TSearchID;
 
-// Konstanten für ungültigen Index bzw. SearchID
+
+/// \brief Constant for a invalid track index.
 #define INVALID_INDEX -1
+/// \brief Constant for a invalid search result id.
 #define INVALID_SEARCH_ID -1
 
 
+/**
+ * \class	ITrackManager
+ * \brief	Interface to manage all input and output processes concerning tracks.
+**/
 class ITrackManager
 {
 public:
 
-   // Liest ein MP3-File ein, legt die Metadaten in der Gesamtliste ab,
-   // und liefert die sie zurück
-   // param: 
-   // return: index, mit dem auf den Track zugegriffen werden kann
-   //         INVALID_INDEX, wenn der Track bereits enthalten ist.
-   virtual int addTrack( const string pFileName, /*out*/ CTrackInfo & pTrackData) = 0;
+	/// \brief Adds a track into the track list and returns the CTrackInfo object and the associated identifier.
+	virtual int addTrack( const string pFileName, CTrackInfo & pTrackData) = 0;
+	/// \brief Removes a track from the track list and response success or failure.
+	virtual bool removeTrack( int pIndex) = 0;
+	/// \brief Initiates a new search and returns an identifier for the search process.
+	virtual int trackSearchStart( const string & pTitleBeginn, TSearchID & pID) = 0;
+	/// \brief Returns the next CTrackInfo object of the search process specified by its identifier.
+	virtual bool trackGetNext( TSearchID pID, CTrackInfo & pNextTrack) = 0;
+	/// \brief Interrupts the search process specified by its identifier.
+	virtual void trackSearchStop( TSearchID pID) = 0;
 
-   // Entfernt einen Track mit dem gegebenen Index
-   // return: false, wenn der Index nicht enthalten war
-   virtual bool removeTrack( int pIndex) = 0;
-
-   // Startet eine Suche nach den Wortanfängen der Track-Titel. 
-   // Es werden noch keine gefundenen Tracks zurückgeliefert, sondern nur die Anzahl der 
-   // passenden Tracks, und eine Such-ID.  Mit der Such-ID können anschließend per 
-   // trackGetNext() die einzelnen gefundenen Track abgerufen werden. 
-   // Mit trackSearchStop() wird die aktuelle Suche beendet.
-   virtual int trackSearchStart( const string & pTitleBeginn, /*out*/ TSearchID & pID) = 0;
-   virtual bool trackGetNext( TSearchID pID, /*out*/ CTrackInfo & pNextTrack) = 0;
-   virtual void trackSearchStop( TSearchID pID) = 0;
 };
 
 #endif;

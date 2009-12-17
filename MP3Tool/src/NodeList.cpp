@@ -28,16 +28,16 @@ NodeList::~NodeList( void)
 		node = tmpNode;
 	}
 }
-MP3Data * NodeList::getFirst()
+MP3Data * NodeList::getFirst( void)
 {
 	currentNode = root->next;
 	return currentNode->data;
 }
-void NodeList::begin()
+void NodeList::begin( void)
 {
 	currentNode = root;
 }
-MP3Data * NodeList::getNext()
+MP3Data * NodeList::getNext( void)
 {
 	if( currentNode->next != NULL)
 	{
@@ -58,7 +58,7 @@ MP3Data * NodeList::at( unsigned int pos)
 	}
 	return currentNode->data;
 }
-bool NodeList::hasNext()
+bool NodeList::hasNext( void)
 {
 	if( currentNode->next->data == NULL)
 	{
@@ -69,7 +69,7 @@ bool NodeList::hasNext()
 		return true;
 	}
 }
-bool NodeList::isEmpty()
+bool NodeList::isEmpty( void)
 {
 	return ( length == 0) ? true : false;
 }

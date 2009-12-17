@@ -30,9 +30,9 @@ public:
 	/// \brief Returns the track list.
 	NodeList * getTrackList( void);
 	/// \brief Builds an index of all words contained in the title field of all track list elements.
-	void createIndex();
+	void createIndex( void);
 	/// \brief Removes all elements from the track list and the index.
-	void clearLists();
+	void clearLists( void);
 	/// \brief Removes all indexed words.
 	void resetIndexList( void);
 	/// \brief Removes all elements from the track list.

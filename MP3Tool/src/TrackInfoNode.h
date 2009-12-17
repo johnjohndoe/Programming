@@ -18,6 +18,7 @@ public:
 
 	/// \brief Constructor.
 	TrackInfoNode( CTrackInfo & p_trackInfo);
+	/// \brief Destructor.
 	~TrackInfoNode( void);
 	/// \brief Return the track info object.
 	CTrackInfo * getTrackInfo( void);

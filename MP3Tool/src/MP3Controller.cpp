@@ -30,12 +30,11 @@ MP3Data * MP3Controller::addMP3( const char * p_filePath)
 		throw "Error: MP3Controller::addMP3(), MP3DataGenerator could not build metadata object.";
 		exit( -1);
 	}
-	trackList->print(std::ofstream("..\\data\\nodelist.log"));
 	return tempMP3Data;
 }
 void MP3Controller::createIndex( void)
 {
-	if(trackList->getLength()>0)
+	if( trackList->getLength() > 0)
 	{
 		// Index all words of the first element in the track list
 		this->indexList = new WordNodeList();
@@ -59,7 +58,6 @@ void MP3Controller::createIndex( void)
 				indexList->insert( tokenVec->at( i).c_str(), t_data);
 			}
 		}
-		trackList->print(std::ofstream("..\\data\\nodelist2.log"));
 	}
 }
 void MP3Controller::clearLists( void)

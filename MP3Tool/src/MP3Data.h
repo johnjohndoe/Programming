@@ -3,6 +3,7 @@
 #define MP3DATA_H
 
 
+/// \brief Constant for the initial track id.
 #define INITIAL_MP3DATA_ID -1
 
 

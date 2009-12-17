@@ -36,17 +36,17 @@ public:
 	/// \brief Removes a node from the list. The node is identified by its id.
 	bool removeObjById( int p_id);
 	/// \brief Returns the root node.
-	MP3Data * getFirst();
+	MP3Data * getFirst( void);
 	/// \brief Sets the Pointer to the first Node
-	void begin();
+	void begin( void);
 	/// \brief Returns the next node.
-	MP3Data * getNext();
+	MP3Data * getNext( void);
 	/// \brief Returns the MP3Data object at a certain position.
 	MP3Data * at( unsigned int pos);
 	/// \brief Checks if there is a next item in the list.
-	bool hasNext();
+	bool hasNext( void);
 	/// \brief Returns true if the node list is empty.
-	bool isEmpty();
+	bool isEmpty( void);
 	/// \brief All elements of the bypassed node list become integrated into this node list.
 	void merge( NodeList * p_nodeList);
 	/// \brief Returns the current length.

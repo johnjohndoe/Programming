@@ -121,7 +121,7 @@ void  WordNodeList::printExtensive( std::ostream & os)
 	os << std::endl;
 
 }
-bool WordNodeList::hasNext()
+bool WordNodeList::hasNext( void)
 {
 	return ( !currentNode->next->wordData->word) ? true : false;
 }

@@ -30,7 +30,7 @@ public:
 	/// \brief Removes a node from the list.
 	void remove( const char * p_word);
 	/// \brief Checks if next node is available.
-	bool hasNext();
+	bool hasNext( void);
 	/// \brief search-method for finding a substring in the Titel-Words; uses the Devide 
 	void searchForSubstring( NodeList * p_searchResult, const char * p_word);
 

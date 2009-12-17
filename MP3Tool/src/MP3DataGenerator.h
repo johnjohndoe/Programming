@@ -33,7 +33,7 @@ private:
 	/// \brief Stores the text encoding type of the frames read in.
 	std::string encoding;
 	/// \brief Returns the text encoding type.
-	std::string getEncoding();
+	std::string getEncoding( void);
 	/// \brief Container stores frame ids of the metadata of interest.
 	std::set<ID3_FrameID> * interestingID3_FrameIDs;
 	/// \brief Removes the round brackets surrounding the text (array index).
