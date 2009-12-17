@@ -24,7 +24,7 @@ MP3Data * MP3Controller::addMP3( const char * p_filePath)
 {
 	MP3Data * tempMP3Data = myGenerator->readMetadata( p_filePath);
 	if( tempMP3Data)
-		trackList->insertById( tempMP3Data);
+		trackList->insertByFilePath( tempMP3Data);
 	else
 	{
 		throw "Error: MP3Controller::addMP3(), MP3DataGenerator could not build metadata object.";
@@ -35,26 +35,29 @@ MP3Data * MP3Controller::addMP3( const char * p_filePath)
 }
 void MP3Controller::createIndex( void)
 {
-	// Index all words of the first element in the track list
-	this->indexList = new WordNodeList();
-	std::vector<std::string> * tokenVec = new std::vector<std::string>;
-	Helper::tokenize( ( trackList->getFirst()->getTitle()), *tokenVec);
-	std::vector<std::string>::iterator dIter( tokenVec->begin());
-	for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
+	if(trackList->getLength()>0)
 	{
-		indexList->insert( tokenVec->at( i).c_str(), trackList->getFirst());
-	}
-
-	// Index all words of the following elements in the track list
-	while( trackList->hasNext())
-	{
-		tokenVec = new std::vector<std::string>;
-		MP3Data * t_data = trackList->getNext();
-		Helper::tokenize( ( t_data->getTitle()), *tokenVec);
+		// Index all words of the first element in the track list
+		this->indexList = new WordNodeList();
+		std::vector<std::string> * tokenVec = new std::vector<std::string>;
+		Helper::tokenize( ( trackList->getFirst()->getTitle()), *tokenVec);
 		std::vector<std::string>::iterator dIter( tokenVec->begin());
 		for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
 		{
-			indexList->insert( tokenVec->at( i).c_str(), t_data);
+			indexList->insert( tokenVec->at( i).c_str(), trackList->getFirst());
+		}
+
+		// Index all words of the following elements in the track list
+		while( trackList->hasNext())
+		{
+			tokenVec = new std::vector<std::string>;
+			MP3Data * t_data = trackList->getNext();
+			Helper::tokenize( ( t_data->getTitle()), *tokenVec);
+			std::vector<std::string>::iterator dIter( tokenVec->begin());
+			for( unsigned int i = 0 ;  dIter != tokenVec->end(); i++, dIter++)
+			{
+				indexList->insert( tokenVec->at( i).c_str(), t_data);
+			}
 		}
 	}
 }
