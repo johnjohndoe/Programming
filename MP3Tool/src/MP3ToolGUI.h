@@ -2,6 +2,10 @@
 #if !defined ( MP3TOOLGUI_H )
 #define MP3TOOLGUI_H
 
+
+#define INVALID_TRACK_SELECTION -1
+
+
 #include <string>
 #include <iostream>
 #include "MP3Data.h"
@@ -41,6 +45,7 @@ namespace MP3Tool
 		ITrackManager * myTrackManager;
 		TSearchID mySearchID;
 		CTrackInfo * m_trackData;
+		unsigned int totalTracksCount;
 
 
 	public:
@@ -50,6 +55,7 @@ namespace MP3Tool
 			myTrackManager = TrackManagerFactory::getTrackManager();
 			mySearchID = INVALID_SEARCH_ID;
 			m_trackData = new CTrackInfo;
+			totalTracksCount = 0;
 		}
 
 	protected:
@@ -203,6 +209,7 @@ namespace MP3Tool
 			this->lb_count->Size = System::Drawing::Size(13, 13);
 			this->lb_count->TabIndex = 4;
 			this->lb_count->Text = L"0";
+			this->lb_count->Click += gcnew System::EventHandler(this, &MP3ToolGUI::lb_count_Click);
 			// 
 			// statusStrip1
 			// 
@@ -216,8 +223,7 @@ namespace MP3Tool
 			// toolStripStatusLabel1
 			// 
 			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(76, 17);
-			//this->toolStripStatusLabel1->Text = L"Selected file: ";
+			this->toolStripStatusLabel1->Size = System::Drawing::Size(0, 17);
 			// 
 			// bt_delete
 			// 
@@ -320,35 +326,27 @@ namespace MP3Tool
 						 // Retrieve metadata and add them to the track list
 						 System::String ^ filePath = ( System::String ^) fileEnumerator->Current;
 						 myTrackManager->addTrack( netstr2cppstr( filePath).c_str(), *m_trackData );
-						 //tb_Interpret->Text = gcnew System::String( m_trackData->mAlbum.c_str());  // # 2-b-Del
 					 }
 					 // Update gui list and file count
+					 totalTracksCount = updateListBox( "", mySearchID);
 
-					 unsigned int numTracks = updateListBox( "", mySearchID);
-
-					 // Update status message
-					 if( numTracks > 1)
-						 toolStripStatusLabel1->Text = "The Database now contains " + numTracks + " tracks.";
-					 else
-						 toolStripStatusLabel1->Text = "The Database now contains " + numTracks + " track.";
 					 // Reset search
 					 searchfield->Text = "";
-					 lb_count->Text = "" + numTracks;
 				 }
 				 else
 				 {
 					 toolStripStatusLabel1->Text = "No tracks loaded.";
 					 lb_count->Text =  L"0";
 				 }
-				 updateMetadataFields();
+				 updateGuiElements();
 				 // Reset selection if file opener is canceled
-				 myListBox->SelectedIndex = -1;
+				 myListBox->SelectedIndex = INVALID_TRACK_SELECTION;
 			 }
 			 // Change handler for the list box.
 	private: System::Void myListBox_SelectedIndexChanged( System::Object ^  sender, System::EventArgs ^ e) 
 			 {
 			 	 TrackInfoNode ^ selection = (TrackInfoNode ^) myListBox->SelectedItem;
-				 updateMetadataFields( selection);
+				 updateGuiElements( selection);
 			 }
 			 // Initiate a new index search
 	private: System::Void searchfield_changed( System::Object ^ sender, System::EventArgs ^ e) 
@@ -358,35 +356,35 @@ namespace MP3Tool
 			 // Delete the selected item
 	private: System::Void bt_delete_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {
-				 if( myListBox->SelectedIndex >= 0)
+				 if( myListBox->SelectedIndex > INVALID_TRACK_SELECTION)
 				 {
-					 deleteTrack( ( ( TrackInfoNode ^)myListBox->SelectedItem)->getTrackInfo()->mIndex);
+					 unsigned int deleteCount = deleteTrack( ( ( TrackInfoNode ^)myListBox->SelectedItem)->getTrackInfo()->mIndex);
+					 toolStripStatusLabel1->Text = "Successfully removed " + deleteCount + " track.";
+					 totalTracksCount -= deleteCount;
 				 }
+				 updateGuiElements();
 				 processSearch();
 			 }
 			 // Removes a single track from the track list.
-	private: System::Void deleteTrack( unsigned int trackID)
+	private: unsigned int deleteTrack( unsigned int trackId)
 			 {
-				 myTrackManager->removeTrack( trackID);
+				 return ( myTrackManager->removeTrack( trackId)) ? 1 : 0;
 			 }
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
 			 {	
-				 //updateListBox("", mySearchID);
 				 System::Collections::IEnumerator ^ myEnum = myListBox->Items->GetEnumerator();
-				 //myEnum->Reset();
-				int t_id = 0;
-				unsigned int deleteCount = 0;
-				 while(myEnum->MoveNext())
+				 int trackId = INVALID_TRACK_SELECTION;
+				 unsigned int deleteCount = 0;
+				 while( myEnum->MoveNext())
 				 {
-					t_id = ((TrackInfoNode ^)myEnum->Current)->getTrackInfo()->mIndex;
-					if(myTrackManager->removeTrack(t_id)) deleteCount++;
-
+					 trackId = ( ( TrackInfoNode ^)myEnum->Current)->getTrackInfo()->mIndex;
+					 deleteCount += deleteTrack( trackId);
 				 }
 				 searchfield->Text = "";
-				 updateMetadataFields();
-				 lb_count->Text = "" + updateListBox("", mySearchID);
-				 toolStripStatusLabel1->Text = "Successfully " + deleteCount + " tracks removed.";
+				 totalTracksCount = updateListBox( "", mySearchID);
+				 updateGuiElements();
+				 toolStripStatusLabel1->Text = "Successfully removed " + deleteCount + " tracks.";
 			 }
 			 // Resets the search term
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
@@ -395,7 +393,7 @@ namespace MP3Tool
 				 mySearchID = INVALID_SEARCH_ID;
 				 // Reset gui elements
 				 searchfield->Text = "";
-				 updateMetadataFields();
+				 updateGuiElements();
 				 // Load current track list
 				 updateListBox( "", mySearchID);
 			 }
@@ -421,21 +419,18 @@ namespace MP3Tool
 				 System::String ^ term = searchfield->Text->ToLower();
 				 unsigned int termLength = term->Length;
 				 int t_Search = mySearchID;
-				 if( termLength > 0)
+				 if( termLength == 0)
 				 {
-					 //term = netstr2cppstr( term).c_str();
-				 }
-				 else
-				 {
-					 t_Search = -1;
+					 t_Search = INVALID_SEARCH_ID;
 					 term = "";
 				 } 
 				 myTrackManager->trackSearchStart( netstr2cppstr( term).c_str(), t_Search);
-				 updateListBox( netstr2cppstr( term).c_str(), t_Search);
+				 unsigned int foundCount = updateListBox( netstr2cppstr( term).c_str(), t_Search);
+				 toolStripStatusLabel1->Text = "Found " + foundCount + " track(s).";
 				 mySearchID = t_Search;
 			 }
 			 // Updates the metadata fields with the information of the currently selected track.
-	private: System::Void updateMetadataFields( TrackInfoNode ^ selection)
+	private: System::Void updateGuiElements( TrackInfoNode ^ selection)
 			 {
 				 if( selection)
 				 {
@@ -451,17 +446,20 @@ namespace MP3Tool
 					 tb_Album->Text = "<nothing selected>";
 					 toolStripStatusLabel1->Text = "No track selected.";
 				 }
+				 lb_count->Text = "" + totalTracksCount;
 			 }
 			 // Updates the metadata fields with the information of the currently selected track.
-	private: System::Void updateMetadataFields()
+	private: System::Void updateGuiElements()
 			 {
 				 // Null object.
 				 TrackInfoNode ^ selection;
-				 updateMetadataFields( selection);
+				 updateGuiElements( selection);
 			 }
 
 
-	};  // eo MP3ToolGUI class
+	private: System::Void lb_count_Click(System::Object^  sender, System::EventArgs^  e) {
+			 }
+};  // eo MP3ToolGUI class
 }// eo namespace MP3Tool
 
 #endif;
