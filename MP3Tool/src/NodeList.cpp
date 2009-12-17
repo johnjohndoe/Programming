@@ -84,7 +84,9 @@ void NodeList::insertByFilePath( MP3Data * p_mp3Data)
 	while( node != NULL && node != root && *node->data < *p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
-	if(p_mp3Data->getId() < 0) p_mp3Data->setId( ++nodeId);
+	// Only set unique id if object has never been touched before.
+	if( p_mp3Data->getId() <= INITIAL_MP3DATA_ID) p_mp3Data->setId( ++nodeId);
+	// Deep copy of the current object into a new object.
 	newNode->data = new MP3Data( *p_mp3Data);
 
 	if( node == NULL) return;
@@ -94,7 +96,6 @@ void NodeList::insertByFilePath( MP3Data * p_mp3Data)
 	node->prev = newNode;
 	length++;
 }
-
 void NodeList::insertById( MP3Data * p_mp3Data)
 {
 	// Skip insert if node already exists.
@@ -106,7 +107,9 @@ void NodeList::insertById( MP3Data * p_mp3Data)
 	while( node != NULL && node != root && *node->data < *p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
-	p_mp3Data->setId( nodeId);
+	// Only set unique id if object has never been touched before.
+	if( p_mp3Data->getId() <= INITIAL_MP3DATA_ID) p_mp3Data->setId( ++nodeId);
+	// Deep copy of the current object into a new object.
 	newNode->data = new MP3Data( *p_mp3Data);
 
 	if( node == NULL) return;

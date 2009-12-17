@@ -4,7 +4,7 @@
 
 MP3Data::MP3Data( void)
 {
-	this->id = -1;
+	this->id = INITIAL_MP3DATA_ID;
 	this->title = NULL;
 	this->artist = NULL;
 	this->album = NULL;
