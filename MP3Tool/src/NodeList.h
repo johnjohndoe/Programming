@@ -25,8 +25,6 @@ public:
 	~NodeList( void);
 	/// \brief Adds a node in respect to the lexical order of the title string. Existing nodes are identified by their file paths.
 	void insertByFilePath( MP3Data * p_mp3Data);
-	/// \brief Adds a node in respect to the lexical order of the title string. Existing nodes are identified by their file paths.
-	void insertByFilePathWithoutID( MP3Data * p_mp3Data);
 	/// \brief Adds a node in respect to the lexical order of the title string. Existing nodes are identified by their id.
 	void insertById( MP3Data * p_mp3Data);
 	/// \brief Returns the MP3Data object or NULL.

@@ -59,6 +59,7 @@ void MP3Controller::createIndex( void)
 				indexList->insert( tokenVec->at( i).c_str(), t_data);
 			}
 		}
+		trackList->print(std::ofstream("..\\data\\nodelist2.log"));
 	}
 }
 void MP3Controller::clearLists( void)
