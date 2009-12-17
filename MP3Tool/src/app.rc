@@ -80,7 +80,7 @@ BEGIN
         BEGIN
             VALUE "Comments", "MP3-Tag-Viewer 2009 for Windows, Reads metadata from MP3 files using the id3lib framework."
             VALUE "CompanyName", "Alexander Kramer & Tobias Preuss"
-            VALUE "FileDescription", "MP3-Tag-Viewer 2009.12.03"
+            VALUE "FileDescription", "MP3-Tag-Viewer 2009.12.17"
             VALUE "FileVersion", "1.0.0.0"
             VALUE "InternalName", "MP3-Tag-Viewer"
             VALUE "LegalCopyright", "Copyright (C) 2009"
