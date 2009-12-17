@@ -371,9 +371,22 @@ namespace MP3Tool
 			 }
 			 // Resets all gui elements
 	private: System::Void bt_clear_clicked( System::Object ^ sender, System::EventArgs ^ e) 
-			 {				
-				 System::String ^ term = searchfield->Text->ToLower();
-				 unsigned int termLength = term->Length;
+			 {	
+				 System::Collections::IEnumerator ^ myEnum = myListBox->Items->GetEnumerator();
+				 //myEnum->Reset();
+				int t_id = 0;
+				unsigned int deleteCount = 0;
+				 while(myEnum->MoveNext())
+				 {
+					t_id = ((TrackInfoNode ^)myEnum->Current)->getTrackInfo()->mIndex;
+					if(myTrackManager->removeTrack(t_id)) deleteCount++;
+
+				 }
+				 searchfield->Text = "";
+				 updateMetadataFields();
+				 updateListBox("", mySearchID);
+				 lb_count->Text = "0";
+				 toolStripStatusLabel1->Text = "Successfully " + deleteCount + " tracks removed.";
 			 }
 			 // Resets the search term
 	private: System::Void bt_clearsearch_Click( System::Object ^ sender, System::EventArgs ^ e) 
