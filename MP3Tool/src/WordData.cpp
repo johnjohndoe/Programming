@@ -6,7 +6,7 @@ WordData::WordData( const char * p_word, MP3Data * p_associate)
 : word( p_word)
 {
 	associates = new NodeList();
-	associates->insertByFilePath( p_associate);
+	associates->insertByFilePathWithoutID( p_associate);
 }
 WordData::~WordData( void)
 {
