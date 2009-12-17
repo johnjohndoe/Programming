@@ -39,14 +39,11 @@ int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID
 	}
 	else
 	{
-		myController->getSearchResult(pTitleBeginn.c_str());
+		myController->getSearchResult( pTitleBeginn.c_str());
 		pID = 2;
 		return myController->getSearchResult()->getLength();
 	}
 }
-
-
-
 bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 {
 	MP3Data * t_Data = NULL;
@@ -95,6 +92,4 @@ bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 }
 void TrackManager::trackSearchStop( TSearchID pID)
 {
-	
-
 }
