@@ -1,5 +1,6 @@
 --- 
 + October/November/December 2009
++ January 2010
 
 --- Background:
 * International media and computer science, Master's program, Programming course
@@ -17,8 +18,10 @@
 
 
 --- Libraries:
-* The application uses the OpenSource id3lib framework version 3.8.3.
+* The application uses the open source id3lib framework version 3.8.3.
 * http://id3lib.sourceforge.net/
+* For multithreading purposes the open source implementation Pthreads Win32 version 2.8.0 is used.
+* http://sources.redhat.com/pthreads-win32/
 
 
 --- Project structure / paths:
@@ -28,6 +31,7 @@
 + libs\
 + libs\id3lib-3.8.3\
 + libs\id3lib-3.8.3binaries\
++ libs\pthreads-w32-2-8-0-release\
 + MP3Tool\
 + MP3Tool\bin
 + MP3Tool\data

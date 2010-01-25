@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\"
+				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;ID3LIB_LINKOPTION=1"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -62,11 +62,11 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="false"
 				UseLibraryDependencyInputs="true"
-				AdditionalDependencies="id3lib.lib"
+				AdditionalDependencies="id3lib.lib pthreadVCE2.lib"
 				ShowProgress="0"
 				OutputFile=".\..\bin\MP3ToolD.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Debug"
+				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Debug;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				SubSystem="2"
@@ -93,7 +93,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Debug\id3lib.dll ..\bin\"
+				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Debug\id3lib.dll ..\bin\ &#x0D;&#x0A;copy ..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib\pthreadVCE2.dll ..\bin\"
 			/>
 		</Configuration>
 		<Configuration
@@ -122,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\"
+				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\include"
 				PreprocessorDefinitions="ID3LIB_LINKOPTION=1"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -140,10 +140,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="id3lib.lib"
+				AdditionalDependencies="id3lib.lib pthreadVCE2.lib"
 				OutputFile=".\..\bin\MP3Tool.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Release"
+				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Release;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				EntryPointSymbol="main"
@@ -169,7 +169,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Release\id3lib.dll ..\bin\"
+				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Release\id3lib.dll ..\bin\ &#x0D;&#x0A;copy ..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib\pthreadVCE2.dll ..\bin\"
 			/>
 		</Configuration>
 	</Configurations>
