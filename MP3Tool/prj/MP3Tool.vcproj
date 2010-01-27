@@ -22,7 +22,7 @@
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="1"
 			CharacterSet="1"
-			ManagedExtensions="1"
+			ManagedExtensions="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -42,10 +42,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\include"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\boost\boost_1_40&quot;;&quot;.\..\..\libs\id3lib-3.8.3\include\&quot;;&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;ID3LIB_LINKOPTION=1"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -62,11 +62,11 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="false"
 				UseLibraryDependencyInputs="true"
-				AdditionalDependencies="id3lib.lib pthreadVCE2.lib"
+				AdditionalDependencies="id3lib.lib"
 				ShowProgress="0"
 				OutputFile=".\..\bin\MP3ToolD.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Debug;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;.\..\..\libs\id3lib-3.8.3binaries\Debug&quot;;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				SubSystem="2"
@@ -93,7 +93,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Debug\id3lib.dll ..\bin\ &#x0D;&#x0A;copy ..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib\pthreadVCE2.dll ..\bin\"
+				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Debug\id3lib.dll ..\bin\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -122,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\include"
+				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\;"
 				PreprocessorDefinitions="ID3LIB_LINKOPTION=1"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -140,10 +140,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="id3lib.lib pthreadVCE2.lib"
+				AdditionalDependencies="id3lib.lib"
 				OutputFile=".\..\bin\MP3Tool.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Release;.\..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib"
+				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Release;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				EntryPointSymbol="main"
@@ -169,7 +169,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Release\id3lib.dll ..\bin\ &#x0D;&#x0A;copy ..\..\libs\pthreads-w32-2-8-0-release\Pre-built.2\lib\pthreadVCE2.dll ..\bin\"
+				CommandLine="copy ..\..\libs\id3lib-3.8.3binaries\Release\id3lib.dll ..\bin\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -206,10 +206,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath="..\src\AssemblyInfo.cpp"
-				>
-			</File>
 			<File
 				RelativePath="..\src\Helper.cpp"
 				>
@@ -319,16 +315,6 @@
 			<File
 				RelativePath="..\src\MP3DataGenerator.h"
 				>
-			</File>
-			<File
-				RelativePath="..\src\MP3ToolGUI.h"
-				FileType="3"
-				>
-				<File
-					RelativePath="..\src\MP3ToolGUI.resX"
-					SubType="Designer"
-					>
-				</File>
 			</File>
 			<File
 				RelativePath="..\src\Node.h"
