@@ -35,6 +35,10 @@ public:
 	void clearLists( void);
 	/// \brief Removes all indexed words.
 	void resetIndexList( void);
+
+	// TODO: Remove hinzufügen 
+
+
 	/// \brief Removes all elements from the track list.
 	void resetTracklist( void);
 	/// \brief Removes all elements from the search result.

@@ -11,7 +11,7 @@
  * \class	TrackInfoNode
  * \brief	Encapsulates the track information to be used as an gui object.
 **/
-ref class TrackInfoNode
+class TrackInfoNode
 {
 
 public:
@@ -23,7 +23,7 @@ public:
 	/// \brief Return the track info object.
 	CTrackInfo * getTrackInfo( void);
 	/// \brief Overrides the Object method.
-	virtual System::String ^ ToString( void) override;
+	//virtual System::String ^ ToString( void) override;
 
 private:
 

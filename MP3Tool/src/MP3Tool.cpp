@@ -6,23 +6,43 @@
  *
 **/
 
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+
+#include <iostream>
+#include "boost/thread/mutex.hpp"
 #include "stdafx.h"
-#include "MP3ToolGUI.h"
+//#include "MP3ToolGUI.h"
+#include "pthread.h"
+#include "boost/thread.hpp"
 
+boost::mutex io_mutex;
+// using namespace MP3Tool;
 
-using namespace MP3Tool;
-
-[STAThreadAttribute]
-int main(array<System::String ^> ^args)
+struct count
 {
-	// Enabling Windows XP visual effects before any controls are created
-	Application::EnableVisualStyles();
-	Application::SetCompatibleTextRenderingDefault( false); 
+  count(int id) : id(id) { }
+  void operator()()
+  {
+    for (int i = 0; i < 10; ++i)
+    {
+      boost::mutex::scoped_lock lock(io_mutex);
+      std::cout << id << ": " << i << std::endl;
+    }
+  }
+  int id;
+};
 
-	// Create the main window and run it
-	Application::Run( gcnew MP3ToolGUI());
+
+
+int main( int argc, char* argv[])
+{
+
+	boost::thread thrd1(count(0));
+
+	thrd1.join();
 
 
 	return 0;
 
 } // eo main
+
