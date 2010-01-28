@@ -47,12 +47,12 @@ int main( int argc, char* argv[])
 	std::string dummyPath = "C:\\01_MP3Test";	
 	//ThreadTest myThreadTest( argv[ 1]);
 	ThreadTest myThreadTest( dummyPath.c_str());
+	myThreadTest.processAllTests();
 
 
+	//boost::thread thrd1(count(0));
 
-	boost::thread thrd1(count(0));
-
-	thrd1.join();
+	//thrd1.join();
 
 
 	return 0;

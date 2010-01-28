@@ -30,7 +30,7 @@ public:
 	/// \brief Convert a string to lower case
 	static void toLowerCase(std::string & str);
 	/// \brief Returns a collection of file paths.
-	static std::vector<std::string> getFiles( const char * p_path);
+	static std::vector<std::string> * getFiles( const char * p_path);
 
 private:
 
