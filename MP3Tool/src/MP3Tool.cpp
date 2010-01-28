@@ -9,14 +9,15 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 
 #include <iostream>
-#include "boost/thread/mutex.hpp"
+#include <string>
 #include "stdafx.h"
-//#include "MP3ToolGUI.h"
-#include "pthread.h"
 #include "boost/thread.hpp"
+#include "boost/thread/mutex.hpp"
+#include "ThreadTest.h"
+
 
 boost::mutex io_mutex;
-// using namespace MP3Tool;
+
 
 struct count
 {
@@ -36,6 +37,18 @@ struct count
 
 int main( int argc, char* argv[])
 {
+	/*
+	if( argc < 2)
+	{
+		std::cout << "Please enter the path as the 1. argument for the executable." << std::endl;
+		return 1;
+	}
+	*/
+	std::string dummyPath = "C:\\01_MP3Test";	
+	//ThreadTest myThreadTest( argv[ 1]);
+	ThreadTest myThreadTest( dummyPath.c_str());
+
+
 
 	boost::thread thrd1(count(0));
 
