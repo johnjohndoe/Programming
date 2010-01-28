@@ -3,8 +3,10 @@
 #define HELPER_H
 
 
-#include <string> // tokenize()
-#include <vector> // tokenize()
+//#define BOOST_FILESYSTEM_NO_DEPRECATED // Deprecated features are excluded.
+#include <string>
+#include <vector>
+#include <boost/filesystem.hpp>
 
 
 /**
@@ -27,6 +29,8 @@ public:
 	static void tokenize( const std::string & str, std::vector<std::string> & tokens, const std::string & delimiters = " ");
 	/// \brief Convert a string to lower case
 	static void toLowerCase(std::string & str);
+	/// \brief Returns a collection of file paths.
+	static std::vector<std::string> getFiles( const char * p_path);
 
 private:
 

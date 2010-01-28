@@ -72,4 +72,28 @@ void Helper::toLowerCase(std::string &str)
 		str[i] = std::tolower(str[i]);
 	}
 }
+std::vector<std::string> Helper::getFiles( const char * p_path)
+{
+	// The collection to store the files in.
+	std::vector<std::string> files;
 
+	// Build a fully qualified path. 
+	boost::filesystem::path relativePath( p_path);
+	boost::filesystem::path absolutePath = boost::filesystem::system_complete( relativePath);
+
+	// Return the empty collection if the file system bars access.
+	if( !boost::filesystem::exists( absolutePath)) return files;
+	if( !boost::filesystem::is_directory( absolutePath)) return files;
+
+	// Collect files from directory.
+	boost::filesystem::directory_iterator current( absolutePath);
+	boost::filesystem::directory_iterator last;
+	for( current; current != last; ++current)
+	{
+		if ( !boost::filesystem::is_directory( current->status() ) )
+		{
+			files.push_back( current->path().string());
+		}
+	}
+	return files;
+}
