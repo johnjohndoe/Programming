@@ -5,6 +5,7 @@
 
 #include "ITrackManager.h"
 #include "MP3Controller.h"
+#include "boost/thread/mutex.hpp"
 
 
 /**
@@ -32,10 +33,12 @@ public:
 	/// \brief Interrupts the search process specified by its identifier.
 	void trackSearchStop( TSearchID pID);
 
+	bool isEqual(TrackManager* trkMngr);
+/// \brief Local representation of the MP3Controller.
+	MP3Controller * myController;
 private:
 
-	/// \brief Local representation of the MP3Controller.
-	MP3Controller * myController;
+	
 };
 
 #endif;

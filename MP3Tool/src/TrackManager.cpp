@@ -12,6 +12,7 @@ TrackManager::~TrackManager( void)
 }
 int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 {
+	boost::mutex::scoped_lock add_lock(boost::mutex);
 	MP3Data * currentMP3Data = myController->addMP3( pFileName.c_str());
 	int id = currentMP3Data->getId();
 	if( id != INVALID_INDEX)
@@ -26,6 +27,7 @@ int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 }
 bool TrackManager::removeTrack( int pIndex)
 {
+	boost::mutex::scoped_lock remove_lock(boost::mutex);
 	bool isRemoved = myController->getTrackList()->removeObjById( pIndex);
 	myController->createIndex();
 	return isRemoved;
@@ -92,4 +94,16 @@ bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 }
 void TrackManager::trackSearchStop( TSearchID pID)
 {
+}
+
+bool TrackManager::isEqual(TrackManager* trkMngr)
+{
+	if(this->myController->trackList->equals(trkMngr->myController->trackList))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
