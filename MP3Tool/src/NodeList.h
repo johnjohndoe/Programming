@@ -57,6 +57,8 @@ public:
 	// #include <ostream> where function call takes place.
 	void print( std::ostream & os = std::cout);
 
+	bool equals(NodeList * ndList);
+
 private:
 
 	/// \brief Base node to build a linked list.

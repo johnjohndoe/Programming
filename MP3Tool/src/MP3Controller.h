@@ -43,6 +43,9 @@ public:
 	void resetTracklist( void);
 	/// \brief Removes all elements from the search result.
 	void resetSearchResult( void);
+		/// \brief Stores all MP3Data objects.
+	NodeList * trackList;
+
 
 private:
 
@@ -50,8 +53,7 @@ private:
 	MP3DataGenerator * myGenerator;
 	/// \brief Stores a temporary subset of the track list.
 	NodeList * searchResult;
-	/// \brief Stores all MP3Data objects.
-	NodeList * trackList;
+
 	/// \brief Stores the index of all title words.
 	WordNodeList * indexList;
 

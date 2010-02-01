@@ -95,6 +95,7 @@ void MP3Data::setFilename( const char * p_filename)
 	if( filename) delete[] filename;
 	filename = new char[ numBytes + 1];
 	memmove( filename, p_filename, numBytes + 1);		
+
 }
 void MP3Data::setAll( const char * p_value)
 {
@@ -143,4 +144,18 @@ void MP3Data::print( std::ostream & os)
 	os << "Genre: " << getGenre() << "\n";
 	os << "Filename: " << getFilename() << "\n";
 	os << "Filepath: " << getFilepath() << std::endl;
+}
+
+bool MP3Data::equals(const MP3Data * rhs)
+{
+	if( Helper::compareCaseSensitive(this->filepath, rhs->filepath) == Helper::EQUAL) 
+	{
+		std::cout << "gleichgross" << std::endl;
+		return true;
+	}
+	else 
+	{
+		std::cout << "nicht gleichlang" << std::endl;
+		return false;
+	}
 }
