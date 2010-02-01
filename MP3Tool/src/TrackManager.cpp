@@ -1,5 +1,9 @@
 #include "StdAfx.h"
 #include "TrackManager.h"
+#include <boost/thread.hpp>
+
+
+boost::shared_mutex mySharedMutex;
 
 
 TrackManager::TrackManager( void)
@@ -12,7 +16,9 @@ TrackManager::~TrackManager( void)
 }
 int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 {
-	boost::mutex::scoped_lock add_lock(boost::mutex);
+
+	mySharedMutex.lock();
+
 	MP3Data * currentMP3Data = myController->addMP3( pFileName.c_str());
 	int id = currentMP3Data->getId();
 	if( id != INVALID_INDEX)
@@ -23,6 +29,7 @@ int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 		pTrackData.mTitle = currentMP3Data->getTitle();
 	}
 	myController->createIndex();
+	mySharedMutex.unlock();
 	return id;
 }
 bool TrackManager::removeTrack( int pIndex)

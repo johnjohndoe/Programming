@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include "TrackManager.h"
 
 
 /**
@@ -27,7 +28,7 @@ public:
 private:
 
 	/// \brief Stores the test files.
-	std::vector<std::string> files;
+	std::vector<std::string> * files;
 
 };
 
