@@ -36,14 +36,48 @@ static void addFiles( TrackManager * p_trackManager, std::vector<std::string> & 
 }
 static bool testAddSingleFileMultipleTimes( std::vector<std::string> * p_files)
 {
-	TrackManager * trackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
-	std::vector<boost::thread *> threadCollection;
+	std::cout << "Test 1: Insert differnt Files and also one File more than once:" << std::endl;
 
-	threadCollection.push_back( new boost::thread( addFiles, trackManager, *p_files, 0, 1));
-	threadCollection.push_back( new boost::thread( addFiles, trackManager, *p_files, 1, 2));
-	threadCollection.push_back( new boost::thread( addFiles, trackManager, *p_files, 0, 1));
+	TrackManager * testTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
+	TrackManager * referenceTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
+	std::vector<boost::thread *> threadCollection;
+	TSearchID threadedSearchId;
+	TSearchID serialSearchId;
+
+	threadCollection.push_back( new boost::thread( addFiles, testTrackManager, *p_files, 0, 1));
+	threadCollection.push_back( new boost::thread( addFiles, testTrackManager, *p_files, 1, 2));
+	threadCollection.push_back( new boost::thread( addFiles, testTrackManager, *p_files, 0, 1));
 
 	join( threadCollection);
+
+	// Add Files without MultiThread
+
+	CTrackInfo * r_trackInfo = new CTrackInfo;
+	CTrackInfo * r_trackInfoCmpr = new CTrackInfo;
+	referenceTrackManager->addTrack(p_files->at(0), * r_trackInfo);
+	referenceTrackManager->addTrack(p_files->at(1), * r_trackInfo);
+	referenceTrackManager->addTrack(p_files->at(0), * r_trackInfo);
+
+	int threadedSearchLength = testTrackManager->trackSearchStart("", threadedSearchId);
+	int serialSearchLength = referenceTrackManager->trackSearchStart("", serialSearchId);
+
+	// Check Length
+	if((threadedSearchLength == serialSearchLength) && threadedSearchLength > 0)
+	{
+		// Get Tracks until nothing left
+		while(testTrackManager->trackGetNext(threadedSearchId, * r_trackInfo) && (referenceTrackManager->trackGetNext(threadedSearchId, * r_trackInfoCmpr)))
+		{
+			// Compare titles
+			if(Helper::compareCaseSensitive(r_trackInfo->mTitle.c_str() , r_trackInfoCmpr->mTitle.c_str()) != Helper::EQUAL)
+			{
+				return false;
+			}
+		}
+	}
+	else
+	{
+		return false;
+	}
 	return true;
 }
 static bool testAddMultipleFiles( std::vector<std::string> * p_files)
@@ -56,7 +90,7 @@ static bool testAddMultipleFiles( std::vector<std::string> * p_files)
 	// Random index. Possible values are zero till files size.
 	unsigned int randomIndex = rand() % p_files->size() + 1;
 	
-	CTrackInfo trackInformation;
+	CTrackInfo * trackInformation;
 	std::vector<boost::thread *> threadCollection;
 
 	// Add as many times files as files size. This allows duplicate files.
@@ -65,7 +99,7 @@ static bool testAddMultipleFiles( std::vector<std::string> * p_files)
 	{
 		const char * file = p_files->at( randomIndex).c_str();
 		// Add file to reference list. Sequentially.
-		referenceTrackManager->addTrack( file, trackInformation);
+		referenceTrackManager->addTrack( file, * trackInformation);
 		// Add file to test list. Threaded.
 		threadCollection.push_back( new boost::thread( addFiles, testTrackManager, *p_files, randomIndex, randomIndex + 1));
 		countIndex++;
@@ -93,6 +127,8 @@ ThreadTest::ThreadTest( const char * p_path)
 	}
 	std::cout << "Successfully read " << files->size() << " files." << std::endl;
 }
+
+
 ThreadTest::~ThreadTest(void)
 {
 	delete files;
@@ -100,6 +136,16 @@ ThreadTest::~ThreadTest(void)
 void ThreadTest::processAllTests( void)
 {
 	// Todo: Call individual tests here. A test factory would be suitable also.
-	//testAddSingleFileMultipleTimes( files);
-	testAddMultipleFiles( files);
+	if(testAddSingleFileMultipleTimes( files))
+	{std::cout << "Test 1 passed." << std::endl;}
+	else
+	{std::cout << "Test One failed" << std::endl;}
+	
+	//if(testAddMultipleFiles( files))
+	//{std::cout << "Test 2 passed." << std::endl;}
+	//else
+	//{std::cout << "Test One failed" << std::endl;}
+
+
+
 }

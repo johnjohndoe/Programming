@@ -24,21 +24,6 @@
 boost::mutex io_mutex;
 
 
-struct count2
-{
-  count2(int id) : id(id) { }
-  void operator()()
-  {
-    for (int i = 0; i < 10; ++i)
-    {
-      boost::mutex::scoped_lock lock(io_mutex);
-      std::cout << id << ": " << i << std::endl;
-    }
-  }
-  int id;
-};
-
-
 void addTrackWithoutThread(TrackManager * trckMngr, const std::string file)
 {
 	CTrackInfo * trackInfo = new CTrackInfo;
@@ -60,9 +45,6 @@ void testOne(TrackManager * trckMngr, TrackManager * trckMngrCmpr,  vector<const
     {
 		// Diesen Vorgang in einen Thread auslagern
 		addTrackWithThread(trckMngr, musicFiles->at(i));
-
-
-
 		// Das selbe ohne Thread in einen zweiten Manager einfügen
 		addTrackWithoutThread(trckMngrCmpr, musicFiles->at(i));
 
@@ -84,18 +66,14 @@ void testOne(TrackManager * trckMngr, TrackManager * trckMngrCmpr,  vector<const
 int main( int argc, char* argv[])
 {
 
-	vector<const std::string> * musicFiles = new vector<const std::string>;
-	musicFiles->push_back("c:\\a3b.mp3");
-	musicFiles->push_back("c:\\a3a.mp3");
-	musicFiles->push_back("c:\\a4.mp3");
-	musicFiles->push_back("c:\\a4-2.mp3");
+	//vector<const std::string> * musicFiles = new vector<const std::string>;
+	//musicFiles->push_back("c:\\a3b.mp3");
+	//musicFiles->push_back("c:\\a3a.mp3");
+	//musicFiles->push_back("c:\\a4.mp3");
+	//musicFiles->push_back("c:\\a4-2.mp3");
 	
-
-
-	ITrackManager * trckMngr = TrackManagerFactory::getTrackManager();
-	ITrackManager * trckMngrCmpr = TrackManagerFactory::getTrackManager();
-
-	testOne((TrackManager*)trckMngr, (TrackManager*)trckMngrCmpr , musicFiles);
+	ThreadTest * t_test = new ThreadTest("c:\\");
+	t_test->processAllTests();
 
 
 	//boost::thread thrd1(count2(0));
