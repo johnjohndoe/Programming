@@ -29,6 +29,10 @@ private:
 
 	/// \brief Stores the test files.
 	std::vector<std::string> * files;
+	/// \brief Processes the threaded information.
+	TrackManager * threadedTrackManager;
+	/// \brief Processes the unthreaded information.
+	TrackManager * unthreadedTrackManager;
 
 };
 
