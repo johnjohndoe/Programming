@@ -23,6 +23,16 @@ static void addFile( TrackManager * p_trackManager, const char * p_file)
 	p_trackManager->addTrack( p_file, trackInformation);
 
 }
+
+static void removeFile( TrackManager * p_trackManager, int Index)
+{
+	CTrackInfo trackInformation;
+	//std::cout << "Thread Id " << boost::this_thread::get_id() << " ___ Adding " << p_file << "." << std::endl;
+	//std::cout << "Thread Id " << boost::this_thread::get_id() << " ___ Return value: " << p_trackManager->addTrack( p_file, trackInformation) << std::endl;
+	p_trackManager->removeTrack(Index);
+
+}
+
 static void addFiles( TrackManager * p_trackManager, std::vector<std::string> & p_files, unsigned int fromIndex, unsigned int toIndex)
 {
 	if( toIndex > p_files.size())
@@ -123,6 +133,53 @@ static bool testAddMultipleFiles( std::vector<std::string> * p_files, TrackManag
 
 
 
+ static bool testDeleteSingleFiles( std::vector<std::string> * p_files, TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
+ {
+	 std::vector<boost::thread *> threadCollection;
+	// Fülle die TrackManager mit mehreren Dateien und dann lösch Random eine Datei aus dem TrackManager und Füge Random wieder eine Datei hinzu
+
+	 testAddMultipleFiles(p_files, threadedTrackManager, unthreadedTrackManager);
+	// Initialize random seed.
+	srand ( (unsigned int) time( NULL));
+	// Random index. Possible values are zero till files size.
+	unsigned int randomIndex = rand() % p_files->size();
+	TSearchID unthreadedSearchID = INVALID_SEARCH_ID;
+	CTrackInfo * tempTrackInfo = new CTrackInfo;
+
+	// Lösche Maximal 3 Dateien
+	for (unsigned int i = 0; i < 1; i++)
+	{
+		const char * file = p_files->at( randomIndex).c_str();
+		unsigned int unthreadedSearchLength = unthreadedTrackManager->trackSearchStart("", unthreadedSearchID);
+		if( unthreadedSearchLength > 0)
+		{
+			// Lösche den ersten Eintrag aus dem TrackManager
+			unthreadedTrackManager->trackGetNext(unthreadedSearchID, * tempTrackInfo);
+			// Läsche den ersten eintrag -> threaded
+			threadCollection.push_back(new boost::thread(removeFile, threadedTrackManager , tempTrackInfo->mAlbum));
+
+			bool successfullRemoved = unthreadedTrackManager->removeTrack(tempTrackInfo->mIndex);
+			if(successfullRemoved)
+			{
+				std::cout << "Entfernen hat funktionier" << std::endl;
+			}
+			else
+			{
+				std::cout << "Entfernen hat NICHT funktionier" << std::endl;
+			}
+			unthreadedTrackManager->addTrack(file,  tempTrackInfo);
+		}
+	}
+
+	join(threadCollection);
+	 
+	// Speichere das Suchergebiss in einen Vector und vergleiche diesen Vector
+
+	return compare(threadedTrackManager, unthreadedTrackManager);
+
+ }
+
+
 // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 
@@ -161,7 +218,7 @@ void ThreadTest::processAllTests( void)
 	if( threadedTrackManager != NULL) delete threadedTrackManager;
 	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;
 
-	// ---------------------------
+	// ----------- Test 2 ----------------
 
 	threadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 	unthreadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
@@ -177,4 +234,42 @@ void ThreadTest::processAllTests( void)
 	if( threadedTrackManager != NULL) delete threadedTrackManager;
 	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;
 
+		// --------- Test 3 ------------------
+
+	/*
+
+	threadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
+	unthreadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
+	testAddMultipleFiles( files, threadedTrackManager, unthreadedTrackManager);
+	if( testReadMultibleFiles(files, threadedTrackManager, unthreadedTrackManager) )
+	{
+		std::cout << "Test 3 passed." << std::endl;
+	}
+	else
+	{
+		std::cout << "Test 3 failed" << std::endl;
+	}
+	if( threadedTrackManager != NULL) delete threadedTrackManager;
+	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;
+	*/
+
+
+	
+		// --------- Test 4 ------------------
+
+	threadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
+	unthreadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
+	std::cout << "Füllen der TrackMaager" << std::endl;
+	testAddMultipleFiles( files, threadedTrackManager, unthreadedTrackManager);
+	std::cout << "Löschen eines Eintrages aus dem TrackManager" << std::endl;
+	if( testDeleteSingleFiles(files, threadedTrackManager, unthreadedTrackManager) )
+	{
+		std::cout << "Test 3 passed." << std::endl;
+	}
+	else
+	{
+		std::cout << "Test 3 failed" << std::endl;
+	}
+	if( threadedTrackManager != NULL) delete threadedTrackManager;
+	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;
 }
