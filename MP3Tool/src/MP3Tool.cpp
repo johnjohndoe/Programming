@@ -20,7 +20,7 @@
 
 int main( int argc, char* argv[])
 {	
-	ThreadTest * t_test = new ThreadTest("c:\\mp3\\");
+	ThreadTest * t_test = new ThreadTest("c:\\01_MP3Test\\");
 	t_test->processAllTests();
 	return 0;
 
