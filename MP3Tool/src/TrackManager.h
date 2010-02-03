@@ -2,6 +2,9 @@
 #if !defined ( TRACKMANAGER_H )
 #define TRACKMANAGER_H
 
+/// \brief Id used to return the whole track list.
+#define ALL_TRACKS_SEARCH_ID 0
+
 
 #include "ITrackManager.h"
 #include "MP3Controller.h"
@@ -34,7 +37,7 @@ public:
 	void trackSearchStop( TSearchID pID);
 
 private:
-/// \brief Local representation of the MP3Controller.
+	/// \brief Local representation of the MP3Controller.
 	MP3Controller * myController;
 
 	
