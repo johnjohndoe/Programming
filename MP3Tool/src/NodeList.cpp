@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "NodeList.h"
+#include "ITrackManager.h"
 
 
 NodeList::NodeList( void)
@@ -85,7 +86,7 @@ void NodeList::insertByFilePath( MP3Data * p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
 	// Only set unique id if object has never been touched before.
-	if( p_mp3Data->getId() <= INITIAL_MP3DATA_ID) p_mp3Data->setId( ++nodeId);
+	if( p_mp3Data->getId() <= INVALID_INDEX) p_mp3Data->setId( ++nodeId);
 	// Deep copy of the current object into a new object.
 	newNode->data = new MP3Data( *p_mp3Data);
 
@@ -108,7 +109,7 @@ void NodeList::insertById( MP3Data * p_mp3Data)
 		node = node->next;
 	Node * newNode = new Node();
 	// Only set unique id if object has never been touched before.
-	if( p_mp3Data->getId() <= INITIAL_MP3DATA_ID) p_mp3Data->setId( ++nodeId);
+	if( p_mp3Data->getId() <= INVALID_INDEX) p_mp3Data->setId( ++nodeId);
 	// Deep copy of the current object into a new object.
 	newNode->data = new MP3Data( *p_mp3Data);
 
