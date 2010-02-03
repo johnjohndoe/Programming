@@ -180,32 +180,53 @@ static bool testRemoveSingleFiles( std::vector<std::string> * p_files, TrackMana
 	return compare(threadedTrackManager, unthreadedTrackManager);
 
 }
-static void testSearchFile( TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
-{
-	std::cout << "Method: Search.." << std::endl;
-	TSearchID sId = INVALID_SEARCH_ID;
-	unthreadedTrackManager->trackSearchStart( "b", sId);
-	std::cout << "Search result id: " << sId << std::endl;
-	
-	CTrackInfo * ti = new CTrackInfo();
-	bool hasNext = false;
-	do 
-	{
-		hasNext = unthreadedTrackManager->trackGetNext( sId, *ti);
-		std::cout << ti->mTitle << std::endl;
-	}
-	while ( hasNext);
-	if( ti != NULL) delete ti;
-}
-static void printTrackInformation( std::vector<CTrackInfo> * trackInformationCollection)
+static void printTrackInformation( std::vector<CTrackInfo *> * trackInformationCollection)
 {
 	if( trackInformationCollection == NULL)
 	{
 		std::cerr << "Error: No track information available for printing." << std::endl;
 		return;
 	}
-
+	for( unsigned int i = 0; i < trackInformationCollection->size(); ++i)
+	{
+		CTrackInfo * ti = trackInformationCollection->at( i);
+		std::cout << ti->mTitle << std::endl;
+	}
 }
+static void testSearchFile( TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
+{
+	std::cout << "Method: Search.." << std::endl;
+	TSearchID sId = INVALID_SEARCH_ID;
+	unthreadedTrackManager->trackSearchStart( "", sId);
+	
+	// Fill vector of CTrackInfo.
+	std::vector<CTrackInfo *> * trackInformationCollection = new std::vector<CTrackInfo *>();
+	std::vector<CTrackInfo *>::iterator iterTIC = trackInformationCollection->begin();
+
+	CTrackInfo * ti = NULL;
+	bool hasNext = false;
+	do 
+	{
+		ti = new CTrackInfo();
+		hasNext = unthreadedTrackManager->trackGetNext( sId, *ti);
+		std::cout << ti->mTitle << std::endl;
+		// Add CTrackInfo to vector.
+		trackInformationCollection->insert( iterTIC, ti);
+		//if( ti != NULL) delete ti;
+	}
+	while ( hasNext);
+
+	//printTrackInformation( trackInformationCollection);
+	
+	// Pick title from vector.
+
+	// Multiple threaded search in threadedTrackManager.
+	
+	// Output CTrackInfo results from threaded search.
+	
+	
+}
+
 
 // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
