@@ -1,10 +1,11 @@
 #include "StdAfx.h"
 #include "MP3Data.h"
+#include "ITrackManager.h"
 
 
 MP3Data::MP3Data( void)
 {
-	this->id = INITIAL_MP3DATA_ID;
+	this->id = INVALID_INDEX;
 	this->title = NULL;
 	this->artist = NULL;
 	this->album = NULL;

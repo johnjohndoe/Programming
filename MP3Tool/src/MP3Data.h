@@ -3,9 +3,6 @@
 #define MP3DATA_H
 
 
-/// \brief Constant for the initial track id.
-#define INITIAL_MP3DATA_ID -1
-
 
 #include <ostream>	// Only needed for print method.
 #include <iostream>	// Only needed for print method.
