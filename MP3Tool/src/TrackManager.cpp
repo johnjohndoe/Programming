@@ -32,9 +32,10 @@ int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 }
 bool TrackManager::removeTrack( int pIndex)
 {
-	boost::mutex::scoped_lock remove_lock(boost::mutex);
+	mySharedMutex.lock();
 	bool isRemoved = myController->getTrackList()->removeObjById( pIndex);
 	myController->createIndex();
+	mySharedMutex.unlock();
 	return isRemoved;
 }
 int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID)
