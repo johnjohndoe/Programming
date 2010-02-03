@@ -206,27 +206,3 @@ void NodeList::print( std::ostream & os)
 	}
 	os << std::endl;
 }
-
-bool NodeList::equals(NodeList * ndList)
-{
-	if(this->getLength() != ndList->getLength())
-	{
-		return false;
-	}
-	else
-	{
-		if(!ndList->getFirst()->equals(this->getFirst()))
-		{
-			return false;
-		}
-		for(unsigned int i = 1; i < this->length; i++)
-		{
-			if(!this->getNext()->equals(ndList->getNext()))
-			{
-				return false;
-			}
-		}
-
-	}
-	return true;
-}

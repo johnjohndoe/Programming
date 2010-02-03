@@ -33,10 +33,9 @@ public:
 	/// \brief Interrupts the search process specified by its identifier.
 	void trackSearchStop( TSearchID pID);
 
-	bool isEqual(TrackManager* trkMngr);
+private:
 /// \brief Local representation of the MP3Controller.
 	MP3Controller * myController;
-private:
 
 	
 };

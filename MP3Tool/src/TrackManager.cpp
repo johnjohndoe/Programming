@@ -18,7 +18,7 @@ int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 {
 
 	mySharedMutex.lock();
-
+	std::cout << "Start Locking" << std::endl;
 	MP3Data * currentMP3Data = myController->addMP3( pFileName.c_str());
 	int id = currentMP3Data->getId();
 	if( id != INVALID_INDEX)
@@ -29,7 +29,9 @@ int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 		pTrackData.mTitle = currentMP3Data->getTitle();
 	}
 	myController->createIndex();
+	std::cout << "Stop Locking" << std::endl;
 	mySharedMutex.unlock();
+	
 	return id;
 }
 bool TrackManager::removeTrack( int pIndex)
@@ -103,14 +105,4 @@ void TrackManager::trackSearchStop( TSearchID pID)
 {
 }
 
-bool TrackManager::isEqual(TrackManager* trkMngr)
-{
-	if(this->myController->trackList->equals(trkMngr->myController->trackList))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
+

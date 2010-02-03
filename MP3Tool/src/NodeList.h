@@ -57,7 +57,6 @@ public:
 	// #include <ostream> where function call takes place.
 	void print( std::ostream & os = std::cout);
 
-	bool equals(NodeList * ndList);
 
 private:
 
