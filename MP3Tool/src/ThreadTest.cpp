@@ -6,6 +6,8 @@
 #include "TrackManagerFactory.h"
 #include <time.h>
 #include <vector>
+#include <ctype.h>
+
 
 
 static void join( std::vector<boost::thread *> & p_threadCollection)
@@ -35,6 +37,30 @@ static bool removeFile( TrackManager * p_trackManager, int index)
 	return result;
 }
 
+std::string StringToLower(std::string strToConvert)
+{//change each element of the string to lower case
+   for(unsigned int i=0;i<strToConvert.length();i++)
+   {
+      strToConvert[i] = tolower(strToConvert[i]);
+   }
+   return strToConvert;//return the converted string
+} 
+
+static bool searchFile( TrackManager * p_trackManager, std::string searchTitle)
+{
+	CTrackInfo * tempTrackInfo = new CTrackInfo;
+	TSearchID searchID = INVALID_SEARCH_ID;
+	std::string searchString = StringToLower(searchTitle.substr(0,1));
+	int searchLength = p_trackManager->trackSearchStart(searchString, searchID);
+	std::cout << "Method for searchFile - search for "  << searchString << " SearchLength: " << searchLength << std::endl;
+	for( int i = 0; i < searchLength; i++)
+	{
+		p_trackManager->trackGetNext(searchID, * tempTrackInfo);
+		std::cout << boost::this_thread::get_id() << " " << tempTrackInfo->mTitle << std::endl;
+	}
+	return true;
+}
+
 static std::vector<CTrackInfo *> * addFiles( TrackManager * p_trackManager, std::vector<std::string> & p_files, unsigned int fromIndex, unsigned int toIndex)
 {
 	if( toIndex > p_files.size())
@@ -60,7 +86,7 @@ static std::vector<CTrackInfo *> * addFiles( TrackManager * p_trackManager, std:
 static bool compare( TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
 {
 	// Todo: Compare track manager lists.
-
+	std::cout << "Method: compare" << std::endl;
 	CTrackInfo * threadedTrackInfo = new CTrackInfo;
 	CTrackInfo * unthreadedTrackInfo = new CTrackInfo;
 	TSearchID threadedSearchId = INVALID_SEARCH_ID;
@@ -85,6 +111,7 @@ static bool compare( TrackManager * threadedTrackManager, TrackManager * unthrea
 	{
 		return false;
 	}
+	std::cout << "Method: compare - END" << std::endl;
 	return true;
 }
 static bool testAddSingleFileMultipleTimes( std::vector<std::string> * p_files, TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
@@ -137,7 +164,7 @@ static bool testAddMultipleFiles( std::vector<std::string> * p_files, TrackManag
 	}
 	
 	join( threadCollection);
-	
+	std::cout << "Method: testAddMultipleFiles - END" << std::endl;
 	return compare( threadedTrackManager, unthreadedTrackManager);
 }
 
@@ -195,35 +222,53 @@ static void printTrackInformation( std::vector<CTrackInfo *> * trackInformationC
 }
 static void testSearchFile( TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
 {
-	std::cout << "Method: Search.." << std::endl;
+	std::cout << "Method: testSearchFile" << std::endl;
 	TSearchID sId = INVALID_SEARCH_ID;
-	unthreadedTrackManager->trackSearchStart( "", sId);
+	int searchLength = threadedTrackManager->trackSearchStart( "", sId);
 	
 	// Fill vector of CTrackInfo.
 	std::vector<CTrackInfo *> * trackInformationCollection = new std::vector<CTrackInfo *>();
-	std::vector<CTrackInfo *>::iterator iterTIC = trackInformationCollection->begin();
 
 	CTrackInfo * ti = NULL;
 	bool hasNext = false;
-	do 
+	for(int i = 0; i < searchLength; i++)
 	{
 		ti = new CTrackInfo();
 		hasNext = unthreadedTrackManager->trackGetNext( sId, *ti);
-		std::cout << ti->mTitle << std::endl;
-		// Add CTrackInfo to vector.
-		trackInformationCollection->insert( iterTIC, ti);
-		//if( ti != NULL) delete ti;
+		// std::cout << ti->mTitle << std::endl;
+		trackInformationCollection->push_back(ti);
 	}
-	while ( hasNext);
+	std::cout << "Groesse des TrackInfo-Vectors: " << trackInformationCollection->size() << std::endl;
+	
 
 	//printTrackInformation( trackInformationCollection);
 	
 	// Pick title from vector.
+	std::vector<boost::thread *> threadCollection;
+	srand ( (unsigned int) time( NULL));
+	for(int i = 0; i < 3; i++)
+	{	
+		unsigned int randomIndex = rand() % trackInformationCollection->size();
+		threadCollection.push_back( new boost::thread( searchFile, threadedTrackManager, trackInformationCollection->at(randomIndex)->mTitle));
+	}
+	std::cout << "Method: testSearchFile - END" << std::endl;
+	join(threadCollection);
+
 
 	// Multiple threaded search in threadedTrackManager.
+
+	
 	
 	// Output CTrackInfo results from threaded search.
-	
+
+
+
+	// Delete TrackInfos
+	for(unsigned int i = 0; i < trackInformationCollection->size(); i++)
+	{
+		if(trackInformationCollection->at(i) != NULL) delete trackInformationCollection->at(i);
+	}
+	if(trackInformationCollection != NULL) delete trackInformationCollection;
 	
 }
 

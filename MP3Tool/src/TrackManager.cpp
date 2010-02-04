@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "TrackManager.h"
 #include <boost/thread.hpp>
+#include <map>
 
 
 boost::shared_mutex mySharedMutex;
@@ -9,6 +10,8 @@ boost::shared_mutex mySharedMutex;
 TrackManager::TrackManager( void)
 {
 	myController = new MP3Controller();	
+	searchResultCount = 0;
+	
 }
 TrackManager::~TrackManager( void)
 {
@@ -48,8 +51,9 @@ int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID
 	}
 	else
 	{
-		myController->getSearchResult( pTitleBeginn.c_str());
-		pID = 2;
+		searchResultList[searchResultCount++] = myController->getSearchResult( pTitleBeginn.c_str());
+		pID = searchResultCount++;
+		std::cout << "search started, searchID: " << pID << std::endl;
 		return myController->getSearchResult()->getLength();
 	}
 }
@@ -60,6 +64,7 @@ bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 	if(pID == ALL_TRACKS_SEARCH_ID) // Get whole track list
 	{
 		t_Data = myController->getTrackList()->getNext();
+	
 		if(t_Data != NULL)	// returns current iterator-item
 		{
 			pNextTrack.mAlbum = t_Data->getAlbum();
@@ -74,7 +79,11 @@ bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 		}
 	}
 	else // get node list for the search-ID
-	{
+	{	
+		map<int, NodeList*>::iterator iter = searchResultList.begin();
+		iter = searchResultList.find(pID);
+		if(iter != searchResultList.end())  t_Data = iter->second->getNext();
+
 		NodeList * t_searchResult = myController->getSearchResult();
 		if(t_searchResult)
 		{

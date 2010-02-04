@@ -39,6 +39,9 @@ public:
 private:
 	/// \brief Local representation of the MP3Controller.
 	MP3Controller * myController;
+	
+	map<int, NodeList*> searchResultList;
+	int searchResultCount;
 
 	
 };
