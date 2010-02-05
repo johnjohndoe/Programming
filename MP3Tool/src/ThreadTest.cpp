@@ -8,8 +8,13 @@
 #include <vector>
 #include <ctype.h>
 
-boost::shared_mutex t_sharedMutex;
 
+
+/**
+ * \brief Joins all threads of the collection.
+ *
+ * \param [in,out]	p_threadCollection	[in,out] The collection of threads. 
+**/
 static void join( std::vector<boost::thread *> & p_threadCollection)
 {
 	std::vector<boost::thread *>::iterator iterBegin = p_threadCollection.begin();
@@ -19,6 +24,14 @@ static void join( std::vector<boost::thread *> & p_threadCollection)
 		(*iterBegin)->join();
 	}
 }
+/**
+ * \brief Adds a file to the track manager.
+ *
+ * \param [in,out]	p_trackManager	The track manager
+ * \param [in,out]	p_file			The file. 
+ *
+ * \return The track information.
+**/
 static CTrackInfo * addFile( TrackManager * p_trackManager, const char * p_file)
 {
 	CTrackInfo * trackInformation = new CTrackInfo();
@@ -29,30 +42,50 @@ static CTrackInfo * addFile( TrackManager * p_trackManager, const char * p_file)
 	//else std::cout << "Threaded adding, file already contained." << std::endl;
 	return trackInformation;
 }
-
+/**
+ * \brief Removes a file at a specific index. 
+ *
+ * \param [in,out]	p_trackManager	The track manager.
+ * \param	index					The index. 
+ *
+ * \return	true if it succeeds, false if it fails. 
+**/
 static bool removeFile( TrackManager * p_trackManager, int index)
 {
 	bool result = p_trackManager->removeTrack( index);
 	//std::cout << "Threaded remove: " << result << std::endl;
 	return result;
 }
-
+/**
+ * \brief Converts a string to lower case. 
+ *
+ * \param	strToConvert	The string to convert. 
+ *
+ * \return The lower case string. 
+**/
 std::string StringToLower(std::string strToConvert)
-{//change each element of the string to lower case
-   for(unsigned int i=0;i<strToConvert.length();i++)
-   {
-      strToConvert[i] = tolower(strToConvert[i]);
-   }
-   return strToConvert;//return the converted string
+{
+	for( unsigned int i = 0; i < strToConvert.length(); ++i)
+	{
+		strToConvert[i] = tolower( strToConvert[i]);
+	}
+	return strToConvert;
 } 
-
+/**
+ * \brief Searches for a file. 
+ *
+ * \param [in,out]	p_trackManager	The track manager.
+ * \param	searchTitle				The search title. 
+ *
+ * \return	true if it succeeds, false if it fails. 
+**/
 static bool searchFile( TrackManager * p_trackManager, std::string searchTitle)
 {
 	CTrackInfo * tempTrackInfo = new CTrackInfo;
 	TSearchID searchID = INVALID_SEARCH_ID;
 	std::string searchString = StringToLower(searchTitle.substr(0,1));
 	int searchLength = p_trackManager->trackSearchStart(searchString, searchID);
-	std::cout << "Search for \""  << searchString << "\" - Searchresult-Length: " << searchLength << std::endl;
+	std::cout << "Search for \""  << searchString << "\" - Search result length: " << searchLength << std::endl;
 
 	for( int i = 0; i < searchLength; i++)
 	{
@@ -62,7 +95,16 @@ static bool searchFile( TrackManager * p_trackManager, std::string searchTitle)
 	}
 	return true;
 }
-
+/**
+ * \brief	Adds multiple files. 
+ *
+ * \param [in,out]	p_trackManager	The track manager. 
+ * \param [in,out]	p_files			The collection of files. 
+ * \param	fromIndex				The start index. 
+ * \param	toIndex					The end index. 
+ *
+ * \return The collection of track information. 
+**/
 static std::vector<CTrackInfo *> * addFiles( TrackManager * p_trackManager, std::vector<std::string> & p_files, unsigned int fromIndex, unsigned int toIndex)
 {
 	if( toIndex > p_files.size())
@@ -85,6 +127,14 @@ static std::vector<CTrackInfo *> * addFiles( TrackManager * p_trackManager, std:
 	}
 	return trackInformation;
 }
+/**
+ * \brief Compares two track manager for equality. 
+ *
+ * \param [in,out]	threadedTrackManager	The track manager for threaded handling. 
+ * \param [in,out]	unthreadedTrackManager	The track manager for unthreaded handling. 
+ *
+ * \return true if equal, false if not.
+**/
 static bool compare( TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
 {
 	// Todo: Compare track manager lists.
@@ -96,35 +146,34 @@ static bool compare( TrackManager * threadedTrackManager, TrackManager * unthrea
 	int threadedSearchLength = threadedTrackManager->trackSearchStart("", threadedSearchId);
 	int unthreadedSearchLength = unthreadedTrackManager->trackSearchStart("", unthreadedSearchId);
 
-	// Check Length
+	// Check length.
 	if(threadedSearchLength == unthreadedSearchLength)
 	{
-		// Get Tracks until nothing left
+		// Get tracks until none is left.
 		while(threadedTrackManager->trackGetNext(threadedSearchId, * threadedTrackInfo) && (unthreadedTrackManager->trackGetNext(unthreadedSearchId, * unthreadedTrackInfo)))
 		{
-			// Compare titles
+			// Compare titles.
 			if(Helper::compareCaseSensitive(threadedTrackInfo->mTitle.c_str() , unthreadedTrackInfo->mTitle.c_str()) != Helper::EQUAL)
 			{
-				std::cout << "Method: compare - ABORT cause of not equal" << std::endl;
+				std::cout << "Method: compare - ABORT cause of unequal." << std::endl;
 				return false;
 			}
 		}
 	}
 	else
 	{
-		std::cout << "Method: compare - ABORT cause of length" << std::endl;
+		std::cout << "Method: compare - ABORT cause of length." << std::endl;
 		return false;
 	}
 	std::cout << "Method: compare - END" << std::endl;
 	return true;
 }
-
 /**
  * \brief Test to insert a file multiple times, both threaded and unthreaded.
  *
  * \param [in,out]	p_files					The collection of files. 
- * \param [in,out]	threadedTrackManager	The track manager for threaded test part. 
- * \param [in,out]	unthreadedTrackManager	The track manager for unthreaded test part.
+ * \param [in,out]	threadedTrackManager	The track manager for threaded handling. 
+ * \param [in,out]	unthreadedTrackManager	The track manager for unthreaded handling.
  * \param numThreads						Number of threads. 
  *
  * \return true if the test passes, false if the test fails. 
@@ -132,7 +181,6 @@ static bool compare( TrackManager * threadedTrackManager, TrackManager * unthrea
 static bool testAddSingleFileMultipleTimes( std::vector<std::string> * p_files, TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager, unsigned int numThreads)
 {
 	std::cout << "Method: testAddSingleFileMultipleTimes" << std::endl;
-	std::cout << "Insert different files and also one file more than once." << std::endl;
 
 	std::vector<boost::thread *> threadCollection;
 	CTrackInfo * tempTrackInfo = new CTrackInfo;
@@ -146,9 +194,18 @@ static bool testAddSingleFileMultipleTimes( std::vector<std::string> * p_files, 
 	join( threadCollection);
 	if( tempTrackInfo != NULL) delete tempTrackInfo;
 
+	std::cout << "Method: testAddSingleFileMultipleTimes - END" << std::endl;
 	return compare( threadedTrackManager, unthreadedTrackManager);
 }
-
+/**
+ * \brief Tests to add multiple files. 
+ *
+ * \param [in,out]	p_files					The collection of files. 
+ * \param [in,out]	threadedTrackManager	The track manager for threaded handling. 
+ * \param [in,out]	unthreadedTrackManager	The track manager for unthreaded handling. 
+ * \param [in,out]	trackIndices			The track indices. 
+ * \param	randomFill						Boolean switch to use random files. 
+**/
 static void testAddMultipleFiles( std::vector<std::string> * p_files, TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager, std::vector<int> * trackIndices, bool randomFill)
 {
 	std::cout << "Method: testAddMultipleFiles" << std::endl;
@@ -195,10 +252,18 @@ static void testAddMultipleFiles( std::vector<std::string> * p_files, TrackManag
 	join( threadCollection);
 	std::cout << "Method: testAddMultipleFiles - END" << std::endl;
 }
-
+/**
+ *
+ * \brief	Tests to remove single files. 
+ *
+ * \param [in,out]	p_files					The collection of files. 
+ * \param [in,out]	threadedTrackManager	The track manager for threaded handling. 
+ * \param [in,out]	unthreadedTrackManager	The track manager for unthreaded handling. 
+ * \param [in,out]	trackIndices			The track indices. 
+**/
 static void testRemoveSingleFiles( std::vector<std::string> * p_files, TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager, std::vector<int> * trackIndices)
 {
-	std::cout << "Method: testDeleteSingleFiles" << std::endl;
+	std::cout << "Method: testRemoveSingleFiles" << std::endl;
 
 	if( trackIndices == NULL || trackIndices->size() < 1)
 	{
@@ -207,18 +272,13 @@ static void testRemoveSingleFiles( std::vector<std::string> * p_files, TrackMana
 	}
 
 	std::vector<boost::thread *> threadCollection;
-	// Fülle die TrackManager mit mehreren Dateien und dann löscht Random eine Datei aus dem TrackManager und Füge Random wieder eine Datei hinzu
 
-	//testAddMultipleFiles( p_files, threadedTrackManager, unthreadedTrackManager, NULL, false);
-
-	// Initialize random seed.
 	srand ( (unsigned int) time( NULL));
-	// Random index. Possible values are zero till files size.
 
 	TSearchID unthreadedSearchID = INVALID_SEARCH_ID;
 	CTrackInfo * tempTrackInfo = new CTrackInfo;
 
-	// Lösche Maximal 3 Dateien
+	// Delete up to three files.
 	for( unsigned int i = 0; i < 3; i++)
 	{
 		unsigned int randomIndex = rand() % trackIndices->size();
@@ -227,26 +287,19 @@ static void testRemoveSingleFiles( std::vector<std::string> * p_files, TrackMana
 		unthreadedTrackManager->removeTrack(tempTrackIndex);		
 	}
 	join(threadCollection);
-	if(tempTrackInfo != NULL) delete tempTrackInfo;
+	if( tempTrackInfo != NULL) delete tempTrackInfo;
+	std::cout << "Method: testRemoveSingleFiles - END" << std::endl;
 }
-
-
-static void printTrackInformation( std::vector<CTrackInfo *> * trackInformationCollection)
-{
-	if( trackInformationCollection == NULL)
-	{
-		std::cerr << "Error: No track information available for printing." << std::endl;
-		return;
-	}
-	for( unsigned int i = 0; i < trackInformationCollection->size(); ++i)
-	{
-		CTrackInfo * ti = trackInformationCollection->at( i);
-		std::cout << ti->mTitle << std::endl;
-	}
-}
+/**
+ * \brief Test to search files.
+ *
+ * \param [in,out]	threadedTrackManager	The track manager for threaded handling. 
+ * \param [in,out]	unthreadedTrackManager	The track manager for unthreaded handling. 
+**/
 static void testSearchFile( TrackManager * threadedTrackManager, TrackManager * unthreadedTrackManager)
 {
 	std::cout << "Method: testSearchFile" << std::endl;
+
 	TSearchID sId = INVALID_SEARCH_ID;
 	int searchLength = threadedTrackManager->trackSearchStart( "", sId);
 	
@@ -259,33 +312,36 @@ static void testSearchFile( TrackManager * threadedTrackManager, TrackManager * 
 	{
 		ti = new CTrackInfo();
 		hasNext = unthreadedTrackManager->trackGetNext( sId, *ti);
-		// std::cout << ti->mTitle << std::endl;
 		trackInformationCollection->push_back(ti);
 	}
 	
 	// Pick title from vector.
 	std::vector<boost::thread *> threadCollection;
-	srand ( (unsigned int) time( NULL));
-	for(int i = 0; i < 4; i++)
+	srand ( ( unsigned int) time( NULL));
+	for( unsigned int i = 0; i < 4; i++)
 	{	
 		unsigned int randomIndex = rand() % trackInformationCollection->size();
 		threadCollection.push_back( new boost::thread( searchFile, threadedTrackManager, trackInformationCollection->at(randomIndex)->mTitle));
 	}
-	std::cout << "Method: testSearchFile - END" << std::endl;
 	join(threadCollection);
 
-	for(unsigned int i = 0; i < trackInformationCollection->size(); i++)
+	for( unsigned int i = 0; i < trackInformationCollection->size(); i++)
 	{
-		if(trackInformationCollection->at(i) != NULL) delete trackInformationCollection->at(i);
+		if( trackInformationCollection->at(i) != NULL) delete trackInformationCollection->at(i);
 	}
-	if(trackInformationCollection != NULL) delete trackInformationCollection;
-	
+	if( trackInformationCollection != NULL) delete trackInformationCollection;	
+	std::cout << "Method: testSearchFile - END" << std::endl;
 }
 
 
 // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 
+/**
+ * \brief	Constructor. 
+ *
+ * \param [in,out]	p_path	The file path. 
+**/
 ThreadTest::ThreadTest( const char * p_path)
 {
 	files = Helper::getFiles( p_path);
@@ -296,21 +352,28 @@ ThreadTest::ThreadTest( const char * p_path)
 	}
 	std::cout << "Successfully read " << files->size() << " files.\n\n" << std::endl;
 }
-
-
+/**
+ * \brief	Destructor. 
+**/
 ThreadTest::~ThreadTest(void)
 {
 	if( files != NULL) delete files;
 }
+/**
+ * \brief	Processes all tests. 
+**/
 void ThreadTest::processAllTests( void)
 {
 	// Waits for input to start the tests.
-	std::cout << "Press ENTER to begin ... " << std::endl;
+	std::cout << "Press ENTER to execute the tests." << std::endl;
 	std::string input;
 	std::getline( std::cin, input, '\n');
 
+
+
 	// ----------- Test 1 ---------------- Add single file multiple times.
-	std::cout << "TEST 1 START" << std::endl;
+
+	std::cout << "TEST 1 START\n------------" << std::endl;
 	threadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 	unthreadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 
@@ -324,10 +387,15 @@ void ThreadTest::processAllTests( void)
 	}
 	if( threadedTrackManager != NULL) delete threadedTrackManager;
 	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;
-	std::cout << "TEST 1 FINISH\n\n" << std::endl;
+	std::cout << "------------\nTEST 1 FINISH\n\n\n" << std::endl;
+
+
+
+
 
 	// ----------- Test 2 ---------------- Add multiple different files. Multiple files per thread.
-	std::cout << "TEST 2 START" << std::endl;
+
+	std::cout << "TEST 2 START\n------------" << std::endl;
 	threadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 	unthreadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 	testAddMultipleFiles( files, threadedTrackManager, unthreadedTrackManager, NULL, true);
@@ -341,17 +409,17 @@ void ThreadTest::processAllTests( void)
 	}
 	if( threadedTrackManager != NULL) delete threadedTrackManager;
 	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;
-	std::cout << "TEST 2 FINISH\n\n" << std::endl;
+	std::cout << "------------\nTEST 2 FINISH\n\n\n" << std::endl;
 
 
 
 
 	// --------- Test 3 ------------------ Add and remove files.
 
-	std::cout << "TEST 3 START" << std::endl;
+	std::cout << "TEST 3 START\n------------" << std::endl;
 	threadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 	unthreadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
-	std::cout << "Fuellen der TrackManager" << std::endl;
+	std::cout << "Fill the track manager." << std::endl;
 
 
 	std::vector<int> * trackIndices = new std::vector<int>();
@@ -366,7 +434,7 @@ void ThreadTest::processAllTests( void)
 		std::cerr << "Test 3-1 failed." << std::endl;
 	}
 
-	std::cout << "Loeschen eines Eintrages aus dem TrackManager" << std::endl;
+	std::cout << "Delete files from the track manager." << std::endl;
 	testRemoveSingleFiles( files, threadedTrackManager, unthreadedTrackManager, trackIndices);
 
 	if(compare(threadedTrackManager, unthreadedTrackManager ))
@@ -381,24 +449,24 @@ void ThreadTest::processAllTests( void)
 	if( trackIndices != NULL) delete trackIndices;
 	if( threadedTrackManager != NULL) delete threadedTrackManager;
 	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;	
-	std::cout << "TEST 3 FINISH\n\n" << std::endl;
+	std::cout << "------------\nTEST 3 FINISH\n\n\n" << std::endl;
 
 
 
-	// --------- Test 4 ------------------ Add and remove files.
+	// --------- Test 4 ------------------ Add and search files.
 
-	std::cout << "TEST 4 START" << std::endl;
+	std::cout << "TEST 4 START\n------------" << std::endl;
 	threadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 	unthreadedTrackManager = (TrackManager *) TrackManagerFactory::getTrackManager();
 
 	testAddMultipleFiles( files, threadedTrackManager, unthreadedTrackManager, NULL, false);
 	bool addResult = compare(threadedTrackManager, unthreadedTrackManager);
-	if( addResult) std::cout << "Successful add." << std::endl;
-	else std::cout << "Unsuccessful add." << std::endl;
+	if( addResult) std::cout << "Added successfully." << std::endl;
+	else std::cout << "Added failed." << std::endl;
 	testSearchFile( threadedTrackManager, unthreadedTrackManager);
 
 	if( threadedTrackManager != NULL) delete threadedTrackManager;
 	if( unthreadedTrackManager != NULL) delete unthreadedTrackManager;	
-	std::cout << "TEST 4 FINISH\n\n" << std::endl;
+	std::cout << "------------\nTEST 4 FINISH\n\n\n" << std::endl;
 
 }
