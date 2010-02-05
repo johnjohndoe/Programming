@@ -52,7 +52,7 @@ private:
 	/// \brief Local representation of the MP3DataGenerator.
 	MP3DataGenerator * myGenerator;
 	/// \brief Stores a temporary subset of the track list.
-	NodeList * searchResult;
+	//NodeList * searchResult;
 
 	/// \brief Stores the index of all title words.
 	WordNodeList * indexList;

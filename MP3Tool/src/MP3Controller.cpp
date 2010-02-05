@@ -11,11 +11,11 @@ MP3Controller::MP3Controller( void)
 	myGenerator = new MP3DataGenerator();
 	trackList = new NodeList();
 	indexList = new WordNodeList();
-	searchResult = NULL;
+	//searchResult = NULL;
 }
 MP3Controller::~MP3Controller( void)
 {
-	if( searchResult != NULL) delete searchResult;
+	//if( searchResult != NULL) delete searchResult;
 	if( indexList != NULL) delete indexList;
 	if( trackList != NULL) delete trackList;
 	if( myGenerator != NULL) delete myGenerator;
@@ -79,17 +79,19 @@ void MP3Controller::resetTracklist( void)
 }
 void MP3Controller::resetSearchResult( void)
 {
-	if( searchResult != NULL) delete searchResult;
-	this->searchResult = new NodeList();
+	//if( searchResult != NULL) delete searchResult;
+	//this->searchResult = new NodeList();
 }
 NodeList * MP3Controller::getSearchResult( const char * searchString)
 {
+	// Generate new search result pointer to be returned. Caller guarantees deallocation.
+	NodeList * searchResult2 = new NodeList();
 	if( searchString != NULL)
 	{
 		resetSearchResult();
-		indexList->searchForSubstring( searchResult, searchString);
+		indexList->searchForSubstring( searchResult2, searchString);
 	}
-	return searchResult;
+	return searchResult2;
 }
 NodeList * MP3Controller::getTrackList( void)
 {
