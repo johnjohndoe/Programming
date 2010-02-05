@@ -52,12 +52,12 @@ static bool searchFile( TrackManager * p_trackManager, std::string searchTitle)
 	TSearchID searchID = INVALID_SEARCH_ID;
 	std::string searchString = StringToLower(searchTitle.substr(0,1));
 	int searchLength = p_trackManager->trackSearchStart(searchString, searchID);
-	std::cout << "Search for \""  << searchString << "\" - SearchLength: " << searchLength << std::endl;
+	std::cout << "Search for \""  << searchString << "\" - Searchresult-Length: " << searchLength << std::endl;
 
 	for( int i = 0; i < searchLength; i++)
 	{
 		p_trackManager->trackGetNext(searchID, * tempTrackInfo);
-		for(int j = 2; j < searchID; j++){std::cout << "      ";	}
+		for(int j = 2; j < searchID; j++){std::cout << "  ";	}
 		std::cout<< "Thread " << boost::this_thread::get_id() << " - " << tempTrackInfo->mTitle << std::endl;
 	}
 	return true;
@@ -262,16 +262,14 @@ static void testSearchFile( TrackManager * threadedTrackManager, TrackManager * 
 		// std::cout << ti->mTitle << std::endl;
 		trackInformationCollection->push_back(ti);
 	}
-	std::cout << "Groesse des TrackInfo-Vectors: " << trackInformationCollection->size() << std::endl;
 	
 	// Pick title from vector.
 	std::vector<boost::thread *> threadCollection;
 	srand ( (unsigned int) time( NULL));
-	for(int i = 0; i < 1; i++)
+	for(int i = 0; i < 4; i++)
 	{	
 		unsigned int randomIndex = rand() % trackInformationCollection->size();
-		threadCollection.push_back( new boost::thread( searchFile, threadedTrackManager, "hh"));
-		threadCollection.push_back( new boost::thread( searchFile, threadedTrackManager, "bb"));
+		threadCollection.push_back( new boost::thread( searchFile, threadedTrackManager, trackInformationCollection->at(randomIndex)->mTitle));
 	}
 	std::cout << "Method: testSearchFile - END" << std::endl;
 	join(threadCollection);
@@ -307,6 +305,7 @@ ThreadTest::~ThreadTest(void)
 void ThreadTest::processAllTests( void)
 {
 	// Waits for input to start the tests.
+	std::cout << "Press ENTER to begin ... " << std::endl;
 	std::string input;
 	std::getline( std::cin, input, '\n');
 
