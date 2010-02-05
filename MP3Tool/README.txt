@@ -20,8 +20,8 @@
 --- Libraries:
 * The application uses the open source id3lib framework version 3.8.3.
 * http://id3lib.sourceforge.net/
-* For multithreading purposes the open source implementation Pthreads Win32 version 2.8.0 is used.
-* http://sources.redhat.com/pthreads-win32/
+* Further the boost framework version 1.40 is used.
+* http://www.boost.org/
 
 
 --- Project structure / paths:
@@ -29,9 +29,10 @@
 * The location set in the project settings is the following:
 + build\Programming.sln
 + libs\
++ libs\boost_1_40\boost
++ libs\boost_1_40\lib
 + libs\id3lib-3.8.3\
 + libs\id3lib-3.8.3binaries\
-+ libs\pthreads-w32-2-8-0-release\
 + MP3Tool\
 + MP3Tool\bin
 + MP3Tool\data

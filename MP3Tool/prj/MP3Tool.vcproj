@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\boost\boost_1_40&quot;;&quot;.\..\..\libs\id3lib-3.8.3\include\&quot;"
+				AdditionalIncludeDirectories="&quot;.\..\..\libs\boost_1_40&quot;;&quot;.\..\..\libs\id3lib-3.8.3\include\&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;ID3LIB_LINKOPTION=1"
 				StringPooling="false"
 				RuntimeLibrary="3"
@@ -63,7 +63,7 @@
 				AdditionalDependencies="id3lib.lib"
 				OutputFile=".\..\bin\MP3ToolD.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\boost\boost_1_40\lib&quot;;&quot;.\..\..\libs\id3lib-3.8.3binaries\Debug&quot;;"
+				AdditionalLibraryDirectories="&quot;.\..\..\libs\boost_1_40\lib&quot;;&quot;.\..\..\libs\id3lib-3.8.3binaries\Debug&quot;;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				TargetMachine="1"
@@ -117,7 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".\..\..\libs\id3lib-3.8.3\include\;"
+				AdditionalIncludeDirectories="&quot;.\..\..\libs\boost_1_40&quot;;.\..\..\libs\id3lib-3.8.3\include\"
 				PreprocessorDefinitions="ID3LIB_LINKOPTION=1"
 				RuntimeLibrary="2"
 				WarningLevel="3"
@@ -137,7 +137,7 @@
 				AdditionalDependencies="id3lib.lib"
 				OutputFile=".\..\bin\MP3Tool.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=".\..\..\libs\id3lib-3.8.3binaries\Release;"
+				AdditionalLibraryDirectories="&quot;.\..\..\libs\boost_1_40\lib&quot;;.\..\..\libs\id3lib-3.8.3binaries\Release;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -343,6 +343,22 @@
 			</File>
 			<File
 				RelativePath="..\src\app.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libs\boost_1_40\lib\libboost_date_time-vc90-mt-gd-1_40.lib"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libs\boost_1_40\lib\libboost_filesystem-vc90-mt-gd-1_40.lib"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libs\boost_1_40\lib\libboost_system-vc90-mt-gd-1_40.lib"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libs\boost_1_40\lib\libboost_thread-vc90-mt-gd-1_40.lib"
 				>
 			</File>
 		</Filter>
