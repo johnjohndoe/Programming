@@ -10,12 +10,18 @@ boost::shared_mutex mySharedMutex;
 TrackManager::TrackManager( void)
 {
 	myController = new MP3Controller();	
-	searchResultCount = 0;
+	searchResultCount = 1;
 	
 }
 TrackManager::~TrackManager( void)
 {
+	// iterates over the std::map with the search-result NodeLists, deallocates all collected searchresults
+	for(std::map<int, NodeList*>::const_iterator i = searchResultList.begin(); i != searchResultList.end(); ++i)
+	{
+		if(i->second != NULL) delete i->second;
+	}
 	delete myController;
+
 }
 int TrackManager::addTrack( const string pFileName, CTrackInfo & pTrackData)
 {
@@ -43,7 +49,7 @@ bool TrackManager::removeTrack( int pIndex)
 }
 int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID)
 {
-	if(pTitleBeginn == "")
+	if( pTitleBeginn == "")
 	{
 		myController->getTrackList()->begin();
 		pID = ALL_TRACKS_SEARCH_ID;
@@ -51,16 +57,20 @@ int TrackManager::trackSearchStart( const string & pTitleBeginn, TSearchID & pID
 	}
 	else
 	{
-		searchResultList[searchResultCount++] = myController->getSearchResult( pTitleBeginn.c_str());
-		pID = searchResultCount++;
+		mySharedMutex.lock();
+		searchResultCount++;
+		searchResultList[searchResultCount] = myController->getSearchResult( pTitleBeginn.c_str());
+		pID = searchResultCount;
 		std::cout << "search started, searchID: " << pID << std::endl;
-		return myController->getSearchResult()->getLength();
+		unsigned int length = searchResultList[searchResultCount]->getLength();
+		mySharedMutex.unlock();
+		return length;
 	}
 }
 bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 {
 	MP3Data * t_Data = NULL;
-
+	mySharedMutex.lock_shared();
 	if(pID == ALL_TRACKS_SEARCH_ID) // Get whole track list
 	{
 		t_Data = myController->getTrackList()->getNext();
@@ -71,20 +81,19 @@ bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 			pNextTrack.mInterpret = t_Data->getArtist();
 			pNextTrack.mTitle = t_Data->getTitle();
 			pNextTrack.mIndex = t_Data->getId();
+			mySharedMutex.unlock_shared();
 			return true;	// successfully retrieved item
 		}
 		else	// current iterator-item is NULL
 		{
+			mySharedMutex.unlock_shared();
 			return false;
 		}
 	}
 	else // get node list for the search-ID
 	{	
-		map<int, NodeList*>::iterator iter = searchResultList.begin();
-		iter = searchResultList.find(pID);
-		if(iter != searchResultList.end())  t_Data = iter->second->getNext();
+		NodeList * t_searchResult = searchResultList[pID];
 
-		NodeList * t_searchResult = myController->getSearchResult();
 		if(t_searchResult)
 		{
 			t_Data = t_searchResult->getNext();
@@ -95,21 +104,23 @@ bool TrackManager::trackGetNext( TSearchID pID, CTrackInfo & pNextTrack)
 				pNextTrack.mInterpret = t_Data->getArtist();
 				pNextTrack.mTitle = t_Data->getTitle();
 				pNextTrack.mIndex = t_Data->getId();
+				mySharedMutex.unlock_shared();
 				return true;
 			}
 			else
 			{
+				mySharedMutex.unlock_shared();
 				return false;
 			}
 		}
 		else
 		{
+			mySharedMutex.unlock_shared();
 			return false;
 		}
+
 	}
 }
 void TrackManager::trackSearchStop( TSearchID pID)
 {
 }
-
-
